@@ -2,10 +2,15 @@
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
+  background-color: #F5F3F5; /* Fondo claro pastel */
 }
 
 .App {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+main {
+  flex: 1;
 }
