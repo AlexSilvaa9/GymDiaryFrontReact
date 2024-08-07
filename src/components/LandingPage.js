@@ -1,8 +1,22 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import colors from '../styles/colors';
 import Cohete from './animations/Cohete'; // Asegúrate de que la ruta sea correcta
+import { Link } from 'react-router-dom'; // Importa Link para la navegación
 
+// Animación para que el cohete suba desde abajo
+const rocketAnimation = keyframes`
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+// Estilo para el contenedor de la landing page
 const LandingContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -17,6 +31,7 @@ const LandingContainer = styled.div`
   margin: 0; /* Asegura que no haya márgenes */
 `;
 
+// Estilo para el contenido
 const Content = styled.div`
   text-align: center;
   position: relative;
@@ -24,6 +39,7 @@ const Content = styled.div`
   color: rgba(255, 255, 255, 0.8); /* Texto semi-transparente */
 `;
 
+// Estilo para el título
 const Title = styled.h1`
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -31,6 +47,7 @@ const Title = styled.h1`
   text-shadow: 0 4px 6px rgba(0, 0, 0, 0.7); /* Sombra del texto */
 `;
 
+// Estilo para el subtítulo
 const Subtitle = styled.h2`
   font-size: 1.5rem;
   margin-bottom: 2rem;
@@ -38,7 +55,8 @@ const Subtitle = styled.h2`
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra del texto */
 `;
 
-const Button = styled.button`
+// Estilo para el enlace que actúa como botón
+const Button = styled(Link)`
   background-color: ${colors.primary};
   color: ${colors.text};
   border: none;
@@ -46,6 +64,8 @@ const Button = styled.button`
   font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
+  text-decoration: none; /* Elimina el subrayado del enlace */
+  display: inline-block; /* Asegura que el botón se ajuste al tamaño del texto */
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   opacity: 0.9; /* Botón semi-transparente */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
@@ -57,6 +77,7 @@ const Button = styled.button`
   }
 `;
 
+// Estilo para la animación de fondo
 const BackgroundAnimation = styled.div`
   position: absolute;
   top: 0;
@@ -65,18 +86,27 @@ const BackgroundAnimation = styled.div`
   height: 100%;
   z-index: 1; /* Asegura que el cohete esté detrás del contenido */
   overflow: hidden; /* Asegura que la animación no se salga del contenedor */
+  display: flex;
+  align-items: flex-end; /* Alinea el cohete al fondo del contenedor */
+`;
+
+// Estilo para el componente de cohete
+const AnimatedCohete = styled(Cohete)`
+  animation: ${rocketAnimation} 2s ease-out; /* Aplica la animación */
+  width: 100%;
+  height: auto; /* Mantiene la proporción del cohete */
 `;
 
 const LandingPage = () => {
   return (
     <LandingContainer>
       <BackgroundAnimation>
-        <Cohete />
+        <AnimatedCohete />
       </BackgroundAnimation>
       <Content>
         <Title>Ready to boost your experience?</Title>
         <Subtitle>Prepare yourself for the next level</Subtitle>
-        <Button onClick={() => console.log('Redirect to Log In page')}>Log In</Button>
+        <Button to="/login">Log In</Button>
       </Content>
     </LandingContainer>
   );
