@@ -4,6 +4,7 @@ import colors from '../styles/colors';
 import Cohete from './animations/Cohete'; // Asegúrate de que la ruta sea correcta
 import { Link } from 'react-router-dom'; // Importa Link para la navegación
 
+
 // Animación para que el cohete suba desde abajo
 const rocketAnimation = keyframes`
   0% {
@@ -96,7 +97,11 @@ const AnimatedCohete = styled(Cohete)`
   width: 100%;
   height: auto; /* Mantiene la proporción del cohete */
 `;
-
+const Highlight = styled.span`
+  color: ${colors.secondary}; /* Color del texto resaltado */
+  text-shadow: 0 0 10px ${colors.secondary}, 0 0 15px ${colors.secondary}; /* Sombra más sutil para el brillo */
+  filter: brightness(1.2); /* Brillo general sutil del texto */
+`;
 const LandingPage = () => {
   return (
     <LandingContainer>
@@ -104,8 +109,10 @@ const LandingPage = () => {
         <AnimatedCohete />
       </BackgroundAnimation>
       <Content>
-        <Title>Ready to boost your experience?</Title>
-        <Subtitle>Prepare yourself for the next level</Subtitle>
+        <Title>Are You Ready to <Highlight>Challenge</Highlight> Your <Highlight>Limits</Highlight>?</Title>
+        <Subtitle>Push Beyond Boundaries and Achieve More</Subtitle>
+
+
         <Button to="/login">Log In</Button>
       </Content>
     </LandingContainer>
