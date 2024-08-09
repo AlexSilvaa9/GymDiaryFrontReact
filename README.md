@@ -10,7 +10,7 @@ FitTrack is a web application designed to help users track their nutrition and e
 
 ## Live Demo
 
-You can view the live version of the project at [https://alexsilvaa9.github.io/landingPage](https://alexsilvaa9.github.io/landingPage).
+You can view the live version of the project at [https://alexsilvaa9.github.io/ReactApp](https://alexsilvaa9.github.io/ReactApp).
 
 ## Getting Started
 
