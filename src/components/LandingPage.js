@@ -1,9 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import colors from '../styles/colors';
 import Cohete from './animations/Cohete'; // Asegúrate de que la ruta sea correcta
 import { Link } from 'react-router-dom'; // Importa Link para la navegación
-
 
 // Animación para que el cohete suba desde abajo
 const rocketAnimation = keyframes`
@@ -25,8 +23,8 @@ const LandingContainer = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: ${colors.background}; /* Fondo oscuro */
-  color: ${colors.text}; /* Texto claro */
+  background-color: ${({ theme }) => theme.background}; /* Fondo según el tema */
+  color: ${({ theme }) => theme.text}; /* Texto según el tema */
   position: relative;
   overflow: hidden;
   margin: 0; /* Asegura que no haya márgenes */
@@ -58,8 +56,8 @@ const Subtitle = styled.h2`
 
 // Estilo para el enlace que actúa como botón
 const Button = styled(Link)`
-  background-color: ${colors.primary};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.primary}; /* Fondo del botón según el tema */
+  color: ${({ theme }) => theme.text}; /* Texto del botón según el tema */
   border: none;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -72,7 +70,7 @@ const Button = styled(Link)`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
 
   &:hover {
-    background-color: ${colors.secondary};
+    background-color: ${({ theme }) => theme.secondary}; /* Fondo del botón en hover según el tema */
     opacity: 1; /* Botón completamente opaco al pasar el ratón */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4); /* Sombra más intensa al hacer hover */
   }
@@ -97,11 +95,13 @@ const AnimatedCohete = styled(Cohete)`
   width: 100%;
   height: auto; /* Mantiene la proporción del cohete */
 `;
+
 const Highlight = styled.span`
-  color: ${colors.secondary}; /* Color del texto resaltado */
-  text-shadow: 0 0 10px ${colors.secondary}, 0 0 15px ${colors.secondary}; /* Sombra más sutil para el brillo */
+  color: ${({ theme }) => theme.secondary}; /* Color del texto resaltado según el tema */
+  text-shadow: 0 0 10px ${({ theme }) => theme.secondary}, 0 0 15px ${({ theme }) => theme.secondary}; /* Sombra más sutil para el brillo */
   filter: brightness(1.2); /* Brillo general sutil del texto */
 `;
+
 const LandingPage = () => {
   return (
     <LandingContainer>
@@ -111,8 +111,6 @@ const LandingPage = () => {
       <Content>
         <Title>Are You Ready to <Highlight>Challenge</Highlight> Your <Highlight>Limits</Highlight>?</Title>
         <Subtitle>Push Beyond Boundaries and Achieve More</Subtitle>
-
-
         <Button to="/login">Log In</Button>
       </Content>
     </LandingContainer>

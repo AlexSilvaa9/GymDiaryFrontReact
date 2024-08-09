@@ -2,16 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import BiometricScanner from '../animations/BiometricScanner'; // Ajusta la ruta si es necesario
 
-// Colores actualizados para el modo oscuro
-const colors = {
-    background: "#1e1e1e", // Fondo oscuro
-    text: "#e0e0e0", // Texto claro
-    secondaryText: "#c0c0c0", // Texto secundario
-    primary: "#ffffff", // Color principal (blanco)
-    secondary: "#3f3f3f", // Color secundario (gris oscuro)
-    terciary: "#0a74da" // Color terciario
-};
-
 // Contenedor principal para las métricas
 const MetricsContainer = styled.div`
     display: flex;
@@ -20,8 +10,8 @@ const MetricsContainer = styled.div`
     padding: 2rem;
     width: 100%;
     min-height: 70vh; /* Asegura suficiente altura */
-    background: ${colors.background}; /* Fondo oscuro */
-
+    background: ${({ theme }) => theme.background}; /* Fondo oscuro */
+    color: ${({ theme }) => theme.primary};
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     position: relative; /* Permite colocar elementos adicionales */
 `;
@@ -40,7 +30,7 @@ const ContentWrapper = styled.div`
 const ScannerContainer = styled.div`
     width: 45%; /* Ancho reducido para dejar espacio para la línea divisoria */
     height: 300px;
-    background: ${colors.secondary}; /* Fondo de la animación */
+    background: ${({ theme }) => theme.secondary}; /* Fondo de la animación */
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     display: flex;
@@ -61,14 +51,14 @@ const StyledBiometricScanner = styled(BiometricScanner)`
 const Divider = styled.div`
     width: 2px;
     height: 300px; /* Altura igual a la del escáner */
-    background: ${colors.secondaryText}; /* Color de la línea divisoria */
+    background: ${({ theme }) => theme.secondaryText}; /* Color de la línea divisoria */
     margin: 0 2rem; /* Espacio a ambos lados de la línea divisoria */
 `;
 
 // Contenedor para los datos de métricas
 const MetricsData = styled.div`
     width: 45%; /* Ancho reducido para dejar espacio para la línea divisoria */
-    color: ${colors.text};
+    color: ${({ theme }) => theme.text};
     text-align: center;
     font-family: 'Roboto', sans-serif;
     padding: 1rem;
@@ -78,20 +68,20 @@ const MetricsData = styled.div`
 const SectionTitle = styled.h2`
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: ${colors.primary};
+    color: ${({ theme }) => theme.text};
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 `;
 
 const SectionSubtitle = styled.h3`
     font-size: 1.2rem;
     margin-bottom: 2rem;
-    color: ${colors.secondaryText};
+    color: ${({ theme }) => theme.secondaryText};
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 `;
 
 // Contenedor para cada métrica individual
 const MetricItem = styled.div`
-    background: rgba(0, 0, 0, 0.7);
+    background: ${({ theme }) => theme.secondary};
     border-radius: 10px;
     padding: 1rem;
     margin: 0.5rem 0;
@@ -99,7 +89,7 @@ const MetricItem = styled.div`
     transition: background 0.3s ease, transform 0.3s ease;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: ${({ theme }) => theme.terciary};
         transform: scale(1.05);
     }
 `;
@@ -107,12 +97,12 @@ const MetricItem = styled.div`
 const MetricTitle = styled.h4`
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
-    color: ${colors.primary};
+    color: ${({ theme }) => theme.text};
 `;
 
 const MetricValue = styled.p`
     font-size: 1rem;
-    color: ${colors.secondaryText};
+    color: ${({ theme }) => theme.secondaryText};
 `;
 
 // Contenedor para gráficos y recomendaciones
@@ -138,13 +128,13 @@ const InfoCard = styled.div`
 
 const InfoTitle = styled.h4`
     font-size: 1.2rem;
-    color: ${colors.primary};
+    color: ${({ theme }) => theme.primary};
     margin-bottom: 0.5rem;
 `;
 
 const InfoText = styled.p`
     font-size: 1rem;
-    color: ${colors.secondaryText};
+    color: ${({ theme }) => theme.secondaryText};
 `;
 
 // Componente de métricas

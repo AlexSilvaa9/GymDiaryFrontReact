@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import colors from '../../styles/colors'; // Importa las variables de color
 
 const Container = styled.div`
   padding: 2rem;
-  background-color: ${colors.background};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
   height: 100%;
 `;
 
@@ -14,26 +13,26 @@ const Section = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${colors.primary};
+  color: ${({ theme }) => theme.primary};
 `;
 
 const Input = styled.input`
-  background-color: ${colors.inputBackground};
-  color: ${colors.text};
-  border: 1px solid ${colors.border};
+  background-color: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.text};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 5px;
   padding: 0.5rem;
   margin-right: 0.5rem;
   width: calc(50% - 1rem);
   
   &::placeholder {
-    color: ${colors.placeholder};
+    color: ${({ theme }) => theme.placeholder};
   }
 `;
 
 const Button = styled.button`
-  background-color: ${colors.primary};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
   border: none;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -43,7 +42,7 @@ const Button = styled.button`
   margin-top: 1rem;
 
   &:hover {
-    background-color: ${colors.secondary};
+    background-color: ${({ theme }) => theme.secondary};
   }
 `;
 

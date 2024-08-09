@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import colors from '../../styles/colors';
 
 // Estilo para el contenedor principal del perfil
 const ProfileContainer = styled.div`
@@ -11,8 +10,8 @@ const ProfileContainer = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: ${colors.background};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
   padding: 2rem;
 `;
 
@@ -31,15 +30,15 @@ const ProfileForm = styled.div`
 const Title = styled.h1`
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.text};
 `;
 
 // Estilo para los campos del formulario
 const Input = styled.input`
-  background-color: ${colors.primary};
+  background-color: ${({ theme }) => theme.primary};
   border: none;
   border-radius: 5px;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.text};
   padding: 0.75rem;
   font-size: 1rem;
   margin-bottom: 1rem;
@@ -55,8 +54,8 @@ const Input = styled.input`
 
 // Estilo para el botón
 const Button = styled.button`
-  background-color: ${colors.primary};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
   border: none;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -67,7 +66,7 @@ const Button = styled.button`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background-color: ${colors.secondary};
+    background-color: ${({ theme }) => theme.secondary};
     opacity: 1;
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
   }
@@ -75,7 +74,7 @@ const Button = styled.button`
 
 // Estilo para los mensajes de error
 const ErrorMessage = styled.p`
-  color: red;
+  color: ${({ theme }) => theme.error};
 `;
 
 const Profile = () => {

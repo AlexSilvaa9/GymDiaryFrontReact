@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import colors from '../styles/colors';
 import { Link } from 'react-router-dom';
 
-// Estilo para el contenedor principal del Registro
 const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -11,8 +9,8 @@ const RegisterContainer = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: ${colors.background}; /* Fondo oscuro */
-  color: ${colors.text}; /* Texto claro */
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -20,80 +18,71 @@ const RegisterContainer = styled.div`
   overflow: hidden;
 `;
 
-// Estilo para el formulario de registro
 const RegisterForm = styled.div`
-  background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
-  border-radius: 10px;
   padding: 2rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra del formulario */
   width: 90%;
   max-width: 400px;
   text-align: center;
   position: relative;
-  z-index: 2; /* Asegura que el formulario esté sobre los elementos decorativos */
+  z-index: 2;
 `;
 
-// Estilo para los títulos
 const Title = styled.h1`
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.text};
 `;
 
-// Estilo para los subtítulos
 const Subtitle = styled.h2`
   font-size: 1.2rem;
   margin-bottom: 2rem;
-  color: ${colors.secondaryText};
+  color: ${({ theme }) => theme.secondaryText};
 `;
 
-// Estilo para los campos del formulario
 const Input = styled.input`
-  background-color: ${colors.primary};
+  background-color: ${({ theme }) => theme.primary};
   border: none;
   border-radius: 5px;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.text};
   padding: 0.75rem;
   font-size: 1rem;
   margin-bottom: 1rem;
   width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra de los campos */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease;
   
   &:focus {
     outline: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Sombra más intensa al enfocar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
   }
 `;
 
-// Estilo para el botón
 const Button = styled.button`
-  background-color: ${colors.primary};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
   border: none;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0.9; /* Botón semi-transparente */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+  opacity: 0.9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background-color: ${colors.secondary};
-    opacity: 1; /* Botón completamente opaco al pasar el ratón */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4); /* Sombra más intensa al hacer hover */
+    background-color: ${({ theme }) => theme.secondary};
+    opacity: 1;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
   }
 `;
 
-// Estilo para el enlace de inicio de sesión
 const LoginLink = styled.p`
   margin-top: 1rem;
-  color: ${colors.secondary};
+  color: ${({ theme }) => theme.secondary};
   font-size: 0.9rem;
 
   a {
-    color: ${colors.secondary};
+    color: ${({ theme }) => theme.secondary};
     text-decoration: none;
 
     &:hover {
@@ -102,16 +91,15 @@ const LoginLink = styled.p`
   }
 `;
 
-// Estilo para los elementos decorativos
 const GymDecor = styled.div`
   position: absolute;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1; /* Asegura que los elementos decorativos estén detrás del formulario */
+  z-index: 1;
   width: 100%;
-  height: 100px; /* Ajusta la altura según sea necesario */
-  background-image: url('/gym-decor.png'); /* Ruta de la imagen decorativa relacionada con el gimnasio */
+  height: 100px;
+  background-image: url('/gym-decor.png');
   background-size: cover;
   background-position: center;
 `;
@@ -144,7 +132,6 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // Handle successful registration logic here
       console.log('Registration successful');
     }
   };

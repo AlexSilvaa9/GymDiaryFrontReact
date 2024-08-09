@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import colors from "../../styles/colors"; // Importa las variables de color
 import Panda from "../../Assets/panda.png"; // Imagen de ejemplo
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // Importa el CSS del calendario
@@ -12,8 +11,8 @@ const HomeContainer = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: ${colors.background}; /* Fondo oscuro */
-  color: ${colors.text}; /* Texto claro */
+  background-color: ${({ theme }) => theme.background}; /* Fondo según el tema */
+  color: ${({ theme }) => theme.text}; /* Texto según el tema */
   overflow: hidden;
   padding: 2rem; /* Añadir espacio alrededor */
 `;
@@ -21,14 +20,14 @@ const HomeContainer = styled.div`
 const Title = styled.h1`
   font-size: 3rem;
   margin: 1rem 0; /* Espaciado ajustado */
-  color: ${colors.text}; /* Color primario */
+  color: ${({ theme }) => theme.text}; /* Color primario */
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Sombra para el texto */
 `;
 
 const Subtitle = styled.h2`
   font-size: 1.5rem;
   margin: 1rem 0; /* Espaciado ajustado */
-  color: ${colors.secondaryText}; /* Color secundario */
+  color: ${({ theme }) => theme.secondaryText}; /* Color secundario */
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Sombra para el texto */
 `;
 
@@ -83,10 +82,7 @@ const Home = () => {
         </Block>
         <Block>
           <CalendarWrapper>
-            <Calendar
-              onChange={handleDateChange}
-              value={date}
-            />
+            <Calendar onChange={handleDateChange} value={date} />
           </CalendarWrapper>
         </Block>
       </ContentWrapper>

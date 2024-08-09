@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
-import colors from "../styles/colors"; // Importa las nuevas variables de color
-import { FaMoon, FaSun } from "react-icons/fa"; // Importa los íconos de luna y sol
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const Nav = styled.nav`
   background: ${({ theme }) => theme.primary};
@@ -106,10 +105,9 @@ const ThemeToggle = styled.div`
   }
 `;
 
-const Navbar = () => {
+const Navbar = ({ toggleTheme, isDarkMode }) => {
   const [hoveredLink, setHoveredLink] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const linkRefs = useRef({});
 
   useEffect(() => {
@@ -120,10 +118,6 @@ const Navbar = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  useEffect(() => {
-    document.body.style.backgroundColor = isDarkMode ? colors('dark').background : colors('light').background;
-  }, [isDarkMode]);
 
   const handleMouseEnter = (name) => {
     setHoveredLink(name);
@@ -137,80 +131,72 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const theme = colors(isDarkMode ? 'dark' : 'light');
-
   return (
-    <ThemeProvider theme={theme}>
-      <Nav>
-        <Logo>FitTrack</Logo>
-        <Hamburger onClick={toggleMenu}>
-          <Bar />
-          <Bar />
-          <Bar />
-        </Hamburger>
-        <NavLinks isOpen={isOpen}>
-          <NavLink
-            to="/home"
-            onMouseEnter={() => handleMouseEnter('home')}
-            onMouseLeave={handleMouseLeave}
-            ref={(el) => linkRefs.current['home'] = el}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/nutrition"
-            onMouseEnter={() => handleMouseEnter('nutrition')}
-            onMouseLeave={handleMouseLeave}
-            ref={(el) => linkRefs.current['nutrition'] = el}
-          >
-            Nutrition
-          </NavLink>
-          <NavLink
-            to="/exercise"
-            onMouseEnter={() => handleMouseEnter('exercise')}
-            onMouseLeave={handleMouseLeave}
-            ref={(el) => linkRefs.current['exercise'] = el}
-          >
-            Exercise
-          </NavLink>
-          <NavLink
-            to="/metrics"
-            onMouseEnter={() => handleMouseEnter('metrics')}
-            onMouseLeave={handleMouseLeave}
-            ref={(el) => linkRefs.current['metrics'] = el}
-          >
-            Metrics
-          </NavLink>
-          <NavLink
-            to="/profile"
-            onMouseEnter={() => handleMouseEnter('profile')}
-            onMouseLeave={handleMouseLeave}
-            ref={(el) => linkRefs.current['profile'] = el}
-          >
-            Profile
-          </NavLink>
-          <ProgressBar
-            width={
-              hoveredLink && linkRefs.current[hoveredLink]
-                ? `${linkRefs.current[hoveredLink].offsetWidth}px`
-                : '0px'
-            }
-            left={
-              hoveredLink && linkRefs.current[hoveredLink]
-                ? `${linkRefs.current[hoveredLink].offsetLeft}px`
-                : '0px'
-            }
-          />
-        </NavLinks>
-        <ThemeToggle onClick={toggleTheme}>
-          {isDarkMode ? <FaSun /> : <FaMoon />}
-        </ThemeToggle>
-      </Nav>
-    </ThemeProvider>
+    <Nav>
+      <Logo>FitTrack</Logo>
+      <Hamburger onClick={toggleMenu}>
+        <Bar />
+        <Bar />
+        <Bar />
+      </Hamburger>
+      <NavLinks isOpen={isOpen}>
+        <NavLink
+          to="/home"
+          onMouseEnter={() => handleMouseEnter('home')}
+          onMouseLeave={handleMouseLeave}
+          ref={(el) => linkRefs.current['home'] = el}
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/nutrition"
+          onMouseEnter={() => handleMouseEnter('nutrition')}
+          onMouseLeave={handleMouseLeave}
+          ref={(el) => linkRefs.current['nutrition'] = el}
+        >
+          Nutrition
+        </NavLink>
+        <NavLink
+          to="/exercise"
+          onMouseEnter={() => handleMouseEnter('exercise')}
+          onMouseLeave={handleMouseLeave}
+          ref={(el) => linkRefs.current['exercise'] = el}
+        >
+          Exercise
+        </NavLink>
+        <NavLink
+          to="/metrics"
+          onMouseEnter={() => handleMouseEnter('metrics')}
+          onMouseLeave={handleMouseLeave}
+          ref={(el) => linkRefs.current['metrics'] = el}
+        >
+          Metrics
+        </NavLink>
+        <NavLink
+          to="/profile"
+          onMouseEnter={() => handleMouseEnter('profile')}
+          onMouseLeave={handleMouseLeave}
+          ref={(el) => linkRefs.current['profile'] = el}
+        >
+          Profile
+        </NavLink>
+        <ProgressBar
+          width={
+            hoveredLink && linkRefs.current[hoveredLink]
+              ? `${linkRefs.current[hoveredLink].offsetWidth}px`
+              : '0px'
+          }
+          left={
+            hoveredLink && linkRefs.current[hoveredLink]
+              ? `${linkRefs.current[hoveredLink].offsetLeft}px`
+              : '0px'
+          }
+        />
+      </NavLinks>
+      <ThemeToggle onClick={toggleTheme}>
+        {isDarkMode ? <FaSun /> : <FaMoon />}
+      </ThemeToggle>
+    </Nav>
   );
 };
 

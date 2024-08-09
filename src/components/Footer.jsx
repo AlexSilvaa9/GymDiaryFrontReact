@@ -1,54 +1,69 @@
-import React from 'react';
-import styled from 'styled-components';
-import colors from '../styles/colors';
-import { FaGithub, FaTwitter, FaInstagram } from 'react-icons/fa'; // Importa íconos de redes sociales
+import React from "react";
+import styled, { ThemeProvider } from "styled-components";
+import { FaGithub, FaTwitter, FaInstagram } from 'react-icons/fa';
+import colors from "../styles/colors"; // Asegúrate de que esta importación esté correcta
 
 const FooterContainer = styled.footer`
-  background: ${colors.primary}; /* Color de fondo del footer */
-  color: ${colors.text}; /* Color del texto */
-  padding: 1rem 0; /* Reducido el padding para ocupar menos espacio vertical */
-  width: 100%;
+  background: ${({ theme }) => theme.primary}; /* Color de fondo del footer */
+  color: ${({ theme }) => theme.text}; /* Color del texto */
+  padding: 1rem 2rem;
   position: relative;
+  width: 100%;
   bottom: 0;
+  @media (max-width: 768px) {
+    padding: 1rem;
+    text-align: center;
+  }
 `;
 
 const FooterContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
   display: flex;
-  flex-direction: row; /* Alinea los bloques principales en una fila */
-  justify-content: space-between; /* Espacia los bloques principales horizontalmente */
-  align-items: center; /* Centra los bloques verticalmente */
-  text-align: center;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const FooterBlock = styled.div`
   display: flex;
-  flex-direction: column; /* Alinea los elementos internos en una columna */
-  align-items: center; /* Centra los elementos internos horizontalmente */
+  flex-direction: column;
+  align-items: center;
 `;
 
 const SocialLinks = styled.div`
-  display: flex; /* Usa flexbox para alinear los íconos en una fila */
-  gap: 1rem; /* Espacio entre íconos */
-  margin: 0; /* Elimina margen adicional para mantener el tamaño compacto */
+  display: flex;
+  gap: 1rem;
+  margin: 0;
 `;
 
 const SocialLink = styled.a`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.text};
   font-size: 1.5rem;
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${colors.secondary}; /* Cambia el color al pasar el ratón */
+    color: ${({ theme }) => theme.terciary};
   }
 `;
 
 const FooterText = styled.p`
   margin: 0;
-  color: ${colors.text}; /* Asegura que el texto esté en el color correcto */
-  font-size: 0.875rem; /* Tamaño de fuente reducido para un pie de página compacto */
+  color: ${({ theme }) => theme.text};
+  font-size: 0.875rem;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    margin: 0 0.5rem;
+  }
+
+  a:hover {
+    color: ${({ theme }) => theme.terciary};
+  }
 `;
 
 const Footer = () => {
@@ -73,8 +88,8 @@ const Footer = () => {
         </FooterBlock>
         <FooterBlock>
           <FooterText>
-            <a href="/privacy-policy" style={{ color: colors.text, textDecoration: 'none' }}>Privacy Policy</a> | 
-            <a href="/contact" style={{ color: colors.text, textDecoration: 'none' }}> Contact</a>
+            <a href="/privacy-policy">Privacy Policy</a> | 
+            <a href="/contact"> Contact</a>
           </FooterText>
         </FooterBlock>
       </FooterContent>

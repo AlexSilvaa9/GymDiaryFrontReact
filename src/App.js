@@ -37,10 +37,9 @@ function App() {
     <Router>
       <ThemeProvider theme={theme}>
         <AppContainer>
-          <Navbar toggleTheme={toggleTheme} />
+          <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
           <MainContent>
             <Routes>
-              {/* Redirige la raíz ("/") y "/ReactApp" a "/landingPage" */}
               <Route path="/" element={<Navigate to="/landingPage" replace />} />
               <Route path="/ReactApp" element={<Navigate to="/landingPage" replace />} />
               <Route path="/landingPage" element={<LandingPage />} />
