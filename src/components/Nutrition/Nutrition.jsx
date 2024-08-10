@@ -1,29 +1,56 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // Importa el CSS del calendario
 
 const Container = styled.div`
   padding: 2rem;
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
   height: 100%;
-`;
-
-const Section = styled.div`
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Title = styled.h1`
-  color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 1rem;
+`;
+
+const CalendarWrapper = styled.div`
+  margin: 1rem 0;
+`;
+
+const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 2rem;
+  background-color: ${({ theme }) => theme.inputBackground};
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+  & > input {
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const Input = styled.input`
   background-color: ${({ theme }) => theme.inputBackground};
   color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme }) => theme.text};
   border-radius: 5px;
-  padding: 0.5rem;
-  margin-right: 0.5rem;
-  width: calc(50% - 1rem);
+  padding: 0.75rem;
+  width: 100%;
   
   &::placeholder {
     color: ${({ theme }) => theme.placeholder};
@@ -46,48 +73,121 @@ const Button = styled.button`
   }
 `;
 
-const ListItem = styled.li`
-  margin: 0.5rem 0;
+const MealsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+`;
+
+const MealCard = styled.div`
+  background-color: ${({ theme }) => theme.inputBackground};
+  color: ${({ theme }) => theme.text};
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  & > h3 {
+    margin: 0;
+  }
 `;
 
 const Nutrition = () => {
   const [meals, setMeals] = useState([]);
-  const [recipe, setRecipe] = useState('');
+  const [mealName, setMealName] = useState('');
   const [calories, setCalories] = useState('');
+  const [protein, setProtein] = useState('');
+  const [carbs, setCarbs] = useState('');
+  const [fats, setFats] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // Filtra las comidas para la fecha seleccionada
+  const filteredMeals = meals.filter(meal => meal.date.toDateString() === selectedDate.toDateString());
 
   const handleAddMeal = () => {
-    if (recipe && calories) {
-      setMeals([...meals, { recipe, calories }]);
-      setRecipe('');
+    if (mealName && calories && protein && carbs && fats) {
+      setMeals([...meals, {
+        date: selectedDate,
+        name: mealName,
+        calories: parseInt(calories),
+        macros: {
+          protein: parseInt(protein),
+          carbs: parseInt(carbs),
+          fats: parseInt(fats)
+        }
+      }]);
+      setMealName('');
       setCalories('');
+      setProtein('');
+      setCarbs('');
+      setFats('');
     }
   };
 
   return (
     <Container>
-      <Section>
-        <Title>Comida de Hoy</Title>
-        <div>
+      <Title>Nutrition Tracker</Title>
+
+      <CalendarWrapper>
+        <Calendar
+          onChange={setSelectedDate}
+          value={selectedDate}
+        />
+      </CalendarWrapper>
+
+      <Form>
+        <InputGroup>
           <Input
             type="text"
-            placeholder="Receta"
-            value={recipe}
-            onChange={(e) => setRecipe(e.target.value)}
+            placeholder="Meal Name"
+            value={mealName}
+            onChange={(e) => setMealName(e.target.value)}
           />
           <Input
             type="number"
-            placeholder="Calorías"
+            placeholder="Calories"
             value={calories}
             onChange={(e) => setCalories(e.target.value)}
           />
-        </div>
-        <Button onClick={handleAddMeal}>Añadir Comida</Button>
-        <ul>
-          {meals.map((meal, index) => (
-            <ListItem key={index}>{`${meal.recipe}: ${meal.calories} Calorías`}</ListItem>
-          ))}
-        </ul>
-      </Section>
+          <Input
+            type="number"
+            placeholder="Protein (g)"
+            value={protein}
+            onChange={(e) => setProtein(e.target.value)}
+          />
+          <Input
+            type="number"
+            placeholder="Carbs (g)"
+            value={carbs}
+            onChange={(e) => setCarbs(e.target.value)}
+          />
+          <Input
+            type="number"
+            placeholder="Fats (g)"
+            value={fats}
+            onChange={(e) => setFats(e.target.value)}
+          />
+        </InputGroup>
+        <Button onClick={handleAddMeal}>Add Meal</Button>
+      </Form>
+
+      <MealsList>
+        <Title>Meals for {selectedDate.toDateString()}</Title>
+        {filteredMeals.length > 0 ? (
+          filteredMeals.map((meal, index) => (
+            <MealCard key={index}>
+              <h3>{meal.name}</h3>
+              <p>{meal.calories} Calories</p>
+              <p>Protein: {meal.macros.protein}g</p>
+              <p>Carbs: {meal.macros.carbs}g</p>
+              <p>Fats: {meal.macros.fats}g</p>
+            </MealCard>
+          ))
+        ) : (
+          <MealCard>No meals recorded for this day.</MealCard>
+        )}
+      </MealsList>
     </Container>
   );
 };

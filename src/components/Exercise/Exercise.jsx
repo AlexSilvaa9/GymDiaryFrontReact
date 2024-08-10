@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Container = styled.div`
   padding: 2rem;
@@ -13,7 +15,7 @@ const Section = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
 `;
 
 const Input = styled.input`
@@ -24,7 +26,7 @@ const Input = styled.input`
   padding: 0.5rem;
   margin-right: 0.5rem;
   width: calc(50% - 1rem);
-  
+
   &::placeholder {
     color: ${({ theme }) => theme.placeholder};
   }
@@ -68,27 +70,51 @@ const RemoveButton = styled.button`
   }
 `;
 
+const CalendarWrapper = styled.div`
+  margin: 2rem 0;
+`;
+
 const Exercise = () => {
   const [exercises, setExercises] = useState([]);
   const [exerciseName, setExerciseName] = useState('');
   const [duration, setDuration] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [exerciseLog, setExerciseLog] = useState({});
 
   const handleAddExercise = () => {
     if (exerciseName && duration) {
-      setExercises([...exercises, { exerciseName, duration }]);
+      const dateKey = selectedDate.toISOString().split('T')[0];
+      const newLog = {
+        ...exerciseLog,
+        [dateKey]: [
+          ...(exerciseLog[dateKey] || []),
+          { name: exerciseName, duration },
+        ],
+      };
+      setExerciseLog(newLog);
       setExerciseName('');
       setDuration('');
     }
   };
 
-  const handleRemoveExercise = (index) => {
-    setExercises(exercises.filter((_, i) => i !== index));
+  const handleRemoveExercise = (date, index) => {
+    const updatedLog = { ...exerciseLog };
+    updatedLog[date] = updatedLog[date].filter((_, i) => i !== index);
+    if (updatedLog[date].length === 0) delete updatedLog[date];
+    setExerciseLog(updatedLog);
   };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const dateKey = selectedDate.toISOString().split('T')[0];
+  const exercisesForSelectedDate = exerciseLog[dateKey] || [];
 
   return (
     <Container>
       <Section>
-        <Title>Mis Entrenamientos</Title>
+        <Title>Mi Registro de Ejercicios</Title>
         <div>
           <Input
             type="text"
@@ -98,19 +124,32 @@ const Exercise = () => {
           />
           <Input
             type="text"
-            placeholder="Duración"
+            placeholder="Duración (min)"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
           />
         </div>
         <Button onClick={handleAddExercise}>Añadir Ejercicio</Button>
+      </Section>
+      <CalendarWrapper>
+        <Calendar
+          onChange={handleDateChange}
+          value={selectedDate}
+        />
+      </CalendarWrapper>
+      <Section>
+        <Title>Ejercicios del {dateKey}</Title>
         <ul>
-          {exercises.map((exercise, index) => (
-            <ListItem key={index}>
-              {`${exercise.exerciseName}: ${exercise.duration}`}
-              <RemoveButton onClick={() => handleRemoveExercise(index)}>Eliminar</RemoveButton>
-            </ListItem>
-          ))}
+          {exercisesForSelectedDate.length === 0 ? (
+            <ListItem>No hay ejercicios para este día.</ListItem>
+          ) : (
+            exercisesForSelectedDate.map((exercise, index) => (
+              <ListItem key={index}>
+                {`${exercise.name}: ${exercise.duration} min`}
+                <RemoveButton onClick={() => handleRemoveExercise(dateKey, index)}>Eliminar</RemoveButton>
+              </ListItem>
+            ))
+          )}
         </ul>
       </Section>
     </Container>

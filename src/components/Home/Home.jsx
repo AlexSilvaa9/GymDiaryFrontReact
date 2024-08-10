@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Panda from "../../Assets/panda.png"; // Imagen de ejemplo
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // Importa el CSS del calendario
+import React from 'react';
+import styled from 'styled-components';
+import Panda from '../../Assets/panda.png'; // Imagen del panda
 
+// Estilos para la página de inicio
 const HomeContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -11,83 +10,177 @@ const HomeContainer = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: ${({ theme }) => theme.background}; /* Fondo según el tema */
-  color: ${({ theme }) => theme.text}; /* Texto según el tema */
+  background: ${({ theme }) => theme.background}; /* Fondo según el tema */
+  color: ${({ theme }) => theme.text}; /* Color del texto principal */
   overflow: hidden;
-  padding: 2rem; /* Añadir espacio alrededor */
+  text-align: center;
+  padding: 2rem;
 `;
 
 const Title = styled.h1`
-  font-size: 3rem;
-  margin: 1rem 0; /* Espaciado ajustado */
+  font-size: 4rem;
+  margin: 1rem 0;
+  font-weight: bold;
   color: ${({ theme }) => theme.text}; /* Color primario */
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Sombra para el texto */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 `;
 
 const Subtitle = styled.h2`
-  font-size: 1.5rem;
-  margin: 1rem 0; /* Espaciado ajustado */
-  color: ${({ theme }) => theme.secondaryText}; /* Color secundario */
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Sombra para el texto */
+  font-size: 1.75rem;
+  margin: 1rem 0;
+  font-weight: 300;
+  color: ${({ theme }) => theme.secondaryText}; /* Color secundario del texto */
+  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
 `;
 
-const ContentWrapper = styled.div`
+const BenefitsSection = styled.div`
   display: flex;
-  flex-direction: row; /* Alinea los bloques en una fila */
+  flex-direction: row;
+  justify-content: center;
+  margin: 2rem 0;
+  max-width: 1200px;
   width: 100%;
-  height: 100%;
-  max-width: 1200px; /* Establece un ancho máximo */
-  margin-top: 2rem; /* Espaciado superior para separar del título */
+  gap: 1.5rem;
 
   @media (max-width: 768px) {
-    flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+    flex-direction: column;
+    align-items: center;
   }
 `;
 
-const Block = styled.div`
+const Benefit = styled.div`
+  background: ${({ theme }) => theme.terciary}; /* Fondo terciario para los bloques de beneficios */
   border-radius: 15px;
+  padding: 1rem;
+  flex: 1;
+  max-width: 300px;
   text-align: center;
-  flex: 1; /* Ocupa igual espacio en la fila */
-  min-width: 0; /* Asegura que los bloques no se desborden */
-  height: 100%; /* Ocupa la altura completa del contenedor */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  color: ${({ theme }) => theme.text}; /* Color del texto */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+  h3 {
+    margin: 0.5rem 0;
+    font-size: 1.25rem;
+    color: ${({ theme }) => theme.text}; /* Color primario para los encabezados */
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
 `;
 
 const PandaImage = styled.img`
-  max-width: 100%; /* Asegura que la imagen no se desborde del bloque */
-  height: auto; /* Mantiene la relación de aspecto */
+  max-width: 200px;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0,{
+  "id": 1,
+  "account": {
+    "email": "example@gmail.com",
+    "username": "example",
+    "password": "****"
+  },
+  "metrics": {
+    "body_fat": 15,
+    "body_mass": 22,
+    "weight": 80,
+    "date": "2024-01-20",
+    "height": 175,
+    "bmi": 22.5
+  },
+  "exercise_log": [
+    {
+      "date": "2024-01-20",
+      "exercises": [
+        {
+          "name": "Running",
+          "duration_minutes": 30,
+          "calories_burned": 300
+        }
+      ]
+    }
+  ],
+  "nutrition_log": [
+    {
+      "date": "2024-01-20",
+      "meals": [
+        {
+          "name": "Breakfast",
+          "calories": 350,
+          "macros": {
+            "protein": 20,
+            "carbs": 50,
+            "fats": 10
+          }
+        }
+      ]
+    }
+  ],
+  "sleep_log": {
+    "date": "2024-01-20",
+    "hours_slept": 8
+  },
+  "hydration_log": {
+    "date": "2024-01-20",
+    "liters": 2.5
+  },
+  "goals": {
+    "weight_goal": 75,
+    "body_fat_goal": 10,
+    "exercise_goal": "Run 5km in 30 minutes"
+  },
+  "reminders": [
+    {
+      "type": "exercise",
+      "message": "Time to workout!",
+      "time": "07:00"
+    }
+  ]
+}
 `;
 
-const CalendarWrapper = styled.div`
-  /* Agrega estilos específicos para el contenedor del calendario si es necesario */
+const StartButton = styled.a`
+  display: inline-block;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: ${({ theme }) => theme.text}; /* Color del texto del botón */
+  background-color: ${({ theme }) => theme.secondary}; /* Color del botón */
+  border-radius: 25px;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.primary}; /* Color de hover del botón */
+  }
 `;
 
 const Home = () => {
-  const [date, setDate] = useState(new Date());
-
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-  };
-
   return (
     <HomeContainer>
-      <Title>Welcome to our App</Title>
-      <Subtitle>Select a date to get started</Subtitle>
-      <ContentWrapper>
-        <Block>
-          <PandaImage src={Panda} alt="Cute panda illustration" />
-        </Block>
-        <Block>
-          <CalendarWrapper>
-            <Calendar onChange={handleDateChange} value={date} />
-          </CalendarWrapper>
-        </Block>
-      </ContentWrapper>
+      <Title>Welcome Back to FitTrack!</Title>
+      <Subtitle>Track your nutrition and exercise to achieve your health goals</Subtitle>
+      <PandaImage src={Panda} alt="Cute panda illustration" />
+      <BenefitsSection>
+        <Benefit>
+          <h3>Track Your Nutrition</h3>
+          <p>Monitor your daily food intake and make healthier choices with ease.</p>
+        </Benefit>
+        <Benefit>
+          <h3>Log Your Workouts</h3>
+          <p>Keep track of your exercise routines and progress over time.</p>
+        </Benefit>
+        <Benefit>
+          <h3>Set and Achieve Goals</h3>
+          <p>Set personal fitness goals and stay motivated to achieve them.</p>
+        </Benefit>
+      </BenefitsSection>
+      <StartButton href="/dashboard">Go to Dashboard</StartButton>
     </HomeContainer>
   );
 };
 
 export default Home;
+

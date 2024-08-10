@@ -1,0 +1,45 @@
+{
+    "id": 1,
+    "account": {
+      "email": "example@gmail.com",
+      "username": "example",
+      "password": "****"
+    },
+    "metrics": {
+      "body_fat": 15,
+      "body_mass": 22,
+      "weight": 80,
+      "date": "2024-01-20",
+      "height": 175,
+      "bmi": 22.5
+    },
+    "exercise_log": [
+      {
+        "date": "2024-01-20",
+        "exercises": [
+          {
+            "name": "Running",
+            "duration_minutes": 30,
+            "calories_burned": 300
+          }
+        ]
+      }
+    ],
+    "nutrition_log": [
+      {
+        "date": "2024-01-20",
+        "meals": [
+          {
+            "name": "Breakfast",
+            "calories": 350,
+            "macros": {
+              "protein": 20,
+              "carbs": 50,
+              "fats": 10
+            }
+        }
+        
+        ]
+        }
+    ]
+}

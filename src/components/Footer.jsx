@@ -1,7 +1,7 @@
 import React from "react";
-import styled, { ThemeProvider } from "styled-components";
+import styled  from "styled-components";
 import { FaGithub, FaTwitter, FaInstagram } from 'react-icons/fa';
-import colors from "../styles/colors"; // Asegúrate de que esta importación esté correcta
+
 
 const FooterContainer = styled.footer`
   background: ${({ theme }) => theme.primary}; /* Color de fondo del footer */
