@@ -9,7 +9,7 @@ const RegisterContainer = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: ${({ theme }) => theme.background};
+  background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
   margin: 0;
   padding: 0;
@@ -40,7 +40,7 @@ const Subtitle = styled.h2`
 `;
 
 const Input = styled.input`
-  background-color: ${({ theme }) => theme.primary};
+  background: ${({ theme }) => theme.primary};
   border: none;
   border-radius: 5px;
   color: ${({ theme }) => theme.text};
@@ -58,7 +58,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: ${({ theme }) => theme.primary};
+  background: ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.text};
   border: none;
   padding: 0.75rem 1.5rem;
@@ -70,7 +70,7 @@ const Button = styled.button`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background-color: ${({ theme }) => theme.secondary};
+    background: ${({ theme }) => theme.secondary};
     opacity: 1;
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
   }

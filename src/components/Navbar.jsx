@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { FaMoon, FaSun } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const Nav = styled.nav`
   background: ${({ theme }) => theme.primary};
@@ -9,9 +9,8 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem; /* Ajusta el padding para definir la altura */
+  padding: 1rem 2rem;
   position: relative;
-
   @media (max-width: 768px) {
     padding: 1rem;
   }
@@ -27,7 +26,6 @@ const NavLinks = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-
   @media (max-width: 768px) {
     flex-direction: column;
     position: absolute;
@@ -36,7 +34,7 @@ const NavLinks = styled.div`
     right: 0;
     background: ${({ theme }) => theme.primary};
     overflow: hidden;
-    max-height: ${({ isOpen }) => (isOpen ? '300px' : '0')};
+    max-height: ${({ isOpen }) => (isOpen ? "300px" : "0")};
     transition: max-height 0.3s ease-in-out;
     z-index: 9;
   }
@@ -53,7 +51,7 @@ const NavLink = styled(Link)`
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.terciary};
+    color: ${({ theme }) => theme.tertiary};
   }
 
   @media (max-width: 768px) {
@@ -65,7 +63,7 @@ const NavLink = styled(Link)`
 
 const ProgressBar = styled.div`
   height: 6px;
-  background: ${({ theme }) => theme.terciary};
+  background: ${({ theme }) => theme.tertiary};
   position: absolute;
   bottom: 0;
   left: ${({ left }) => left};
@@ -78,7 +76,6 @@ const Hamburger = styled.div`
   display: none;
   flex-direction: column;
   cursor: pointer;
-
   @media (max-width: 768px) {
     display: flex;
   }
@@ -97,14 +94,12 @@ const ThemeToggle = styled.div`
   align-items: center;
   cursor: pointer;
   margin-left: auto;
-
   svg {
     fill: ${({ theme }) => theme.text};
     width: 24px;
     height: 24px;
     transition: fill 0.3s ease;
   }
-
   @media (max-width: 768px) {
     margin-left: 0;
   }
@@ -120,8 +115,8 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
       setHoveredLink((prev) => prev);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleMouseEnter = (name) => {
@@ -149,7 +144,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
           to="/home"
           onMouseEnter={() => handleMouseEnter('home')}
           onMouseLeave={handleMouseLeave}
-          ref={(el) => (linkRefs.current['home'] = el)}
+          ref={(el) => linkRefs.current['home'] = el}
         >
           Home
         </NavLink>
@@ -157,7 +152,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
           to="/nutrition"
           onMouseEnter={() => handleMouseEnter('nutrition')}
           onMouseLeave={handleMouseLeave}
-          ref={(el) => (linkRefs.current['nutrition'] = el)}
+          ref={(el) => linkRefs.current['nutrition'] = el}
         >
           Nutrition
         </NavLink>
@@ -165,7 +160,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
           to="/exercise"
           onMouseEnter={() => handleMouseEnter('exercise')}
           onMouseLeave={handleMouseLeave}
-          ref={(el) => (linkRefs.current['exercise'] = el)}
+          ref={(el) => linkRefs.current['exercise'] = el}
         >
           Exercise
         </NavLink>
@@ -173,7 +168,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
           to="/metrics"
           onMouseEnter={() => handleMouseEnter('metrics')}
           onMouseLeave={handleMouseLeave}
-          ref={(el) => (linkRefs.current['metrics'] = el)}
+          ref={(el) => linkRefs.current['metrics'] = el}
         >
           Metrics
         </NavLink>
@@ -181,7 +176,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
           to="/profile"
           onMouseEnter={() => handleMouseEnter('profile')}
           onMouseLeave={handleMouseLeave}
-          ref={(el) => (linkRefs.current['profile'] = el)}
+          ref={(el) => linkRefs.current['profile'] = el}
         >
           Profile
         </NavLink>

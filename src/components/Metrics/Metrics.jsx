@@ -1,117 +1,68 @@
+// src/pages/Metrics.js
 import React, { useState } from 'react';
+import CardCarousel from './CardCarousel';
 import styled from 'styled-components';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import AddCardForm from './AddCardForm';
 
-const CalendarWrapper = styled.div`
-    margin: 1rem 0;
+// Estilos para los componentes
+const Container = styled.div`
+  padding: 2rem;
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
 `;
 
-const MetricsForm = styled.div`
-    width: 100%;
-    max-width: 600px;
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+const TabContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
 `;
 
-const InputGroup = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 1rem;
-`;
+const TabButton = styled.button`
+  background: ${({ active, theme }) => (active ? theme.primary : theme.secondary)};
+  color: ${({ active, theme }) => (active ? theme.text : theme.secondaryText)};
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 
-const Input = styled.input`
-    background-color: ${({ theme }) => theme.inputBackground};
-    color: ${({ theme }) => theme.text};
-    border: 1px solid ${({ theme }) => theme.border};
-    border-radius: 5px;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    width: 100%;
-
-    &::placeholder {
-        color: ${({ theme }) => theme.placeholder};
-    }
-`;
-
-const Button = styled.button`
-    background-color: ${({ theme }) => theme.primary};
-    color: ${({ theme }) => theme.text};
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-        background-color: ${({ theme }) => theme.secondary};
-    }
+  &:hover {
+    background: ${({ theme }) => theme.tertiary};
+  }
 `;
 
 const Metrics = () => {
-    const [metrics, setMetrics] = useState({
-        weight: '70 kg',
-        bodyFat: '15%',
-        muscle: '60 kg',
-    });
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [log, setLog] = useState([]);
+  const [activeTab, setActiveTab] = useState('viewCards');
+  const [cards, setCards] = useState([
+    { date: '2024-07-01', weight: '70 kg', bodyFat: '15%', muscle: '60 kg', period: 'lastMonth' },
+    { date: '2024-06-15', weight: '72 kg', bodyFat: '16%', muscle: '62 kg', period: 'lastMonth' },
+    { date: '2023-12-10', weight: '68 kg', bodyFat: '14%', muscle: '58 kg', period: 'lastYear' },
+  ]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setMetrics(prevMetrics => ({ ...prevMetrics, [name]: value }));
-    };
+  return (
+    <Container>
+      <TabContainer>
+        <TabButton
+          active={activeTab === 'viewCards'}
+          onClick={() => setActiveTab('viewCards')}
+        >
+          View Cards
+        </TabButton>
+        <TabButton
+          active={activeTab === 'addCard'}
+          onClick={() => setActiveTab('addCard')}
+        >
+          Add Card
+        </TabButton>
+      </TabContainer>
 
-    const handleSaveMetrics = () => {
-        const today = selectedDate.toISOString().split('T')[0];
-        setLog(prevLog => [
-            ...prevLog,
-            { date: today, ...metrics }
-        ]);
-    };
-
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
-
-    return (
-        <MetricsForm>
-            <InputGroup>
-                <Input
-                    type="text"
-                    name="weight"
-                    placeholder="Weight (e.g., 70 kg)"
-                    value={metrics.weight}
-                    onChange={handleChange}
-                />
-                <Input
-                    type="text"
-                    name="bodyFat"
-                    placeholder="Body Fat (e.g., 15%)"
-                    value={metrics.bodyFat}
-                    onChange={handleChange}
-                />
-                <Input
-                    type="text"
-                    name="muscle"
-                    placeholder="Muscle Mass (e.g., 60 kg)"
-                    value={metrics.muscle}
-                    onChange={handleChange}
-                />
-            </InputGroup>
-            <Button onClick={handleSaveMetrics}>Save Metrics</Button>
-            <CalendarWrapper>
-                <Calendar
-                    onChange={handleDateChange}
-                    value={selectedDate}
-                />
-            </CalendarWrapper>
-        </MetricsForm>
-    );
+      {activeTab === 'viewCards' ? (
+        <CardCarousel cards={cards} setCards={setCards} />
+      ) : (
+        <AddCardForm setCards={setCards} />
+      )}
+    </Container>
+  );
 };
 
 export default Metrics;

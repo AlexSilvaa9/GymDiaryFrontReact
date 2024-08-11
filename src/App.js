@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home/Home";
@@ -19,7 +19,7 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-bottom: 6rem; /* Ajusta este valor según la altura de tu footer */
+  padding-bottom: 4rem; /* Ajusta este valor según la altura de tu footer */
 `;
 
 const MainContent = styled.main`
@@ -29,11 +29,18 @@ const MainContent = styled.main`
 `;
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // Obtener el tema del almacenamiento local o usar un valor predeterminado
+  const savedTheme = localStorage.getItem("theme");
+  const [isDarkMode, setIsDarkMode] = useState(savedTheme === "dark");
+
+  // Definir el tema basado en el estado
   const theme = colors(isDarkMode ? "dark" : "light");
 
+  // Función para alternar el tema
   const toggleTheme = () => {
-    setIsDarkMode((prevMode) => !prevMode);
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light"); // Guardar la preferencia en el almacenamiento local
   };
 
   return (
@@ -46,7 +53,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/landingPage" replace />} />
               <Route path="/ReactApp" element={<Navigate to="/landingPage" replace />} />
-              <Route path="/landingPage" element={<LandingPage />} />
+              <Route path="/landingPage" element={<LandingPage isDarkMode={isDarkMode} />} />
               <Route path="/home" element={<Home />} />
               <Route path="/metrics" element={<Metrics />} />
               <Route path="/register" element={<Register />} />

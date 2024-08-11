@@ -84,7 +84,7 @@ const StartButton = styled.a`
   font-size: 1.25rem;
   font-weight: bold;
   color: ${({ theme }) => theme.text}; /* Color del texto del botón */
-  background-color: ${({ theme }) => theme.secondary}; /* Color del botón */
+  background: ${({ theme }) => theme.secondary}; /* Color del botón */
   border-radius: 25px;
   text-decoration: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);

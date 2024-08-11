@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import Cohete from './animations/Cohete'; // Asegúrate de que la ruta sea correcta
+import CoheteDark from './animations/CoheteDark'; // Asegúrate de que la ruta sea correcta
+import CoheteLight from './animations/CoheteLight'; // Asegúrate de que la ruta sea correcta
 import { Link } from 'react-router-dom'; // Importa Link para la navegación
 
 // Animación para que el cohete suba desde abajo
@@ -90,7 +91,7 @@ const BackgroundAnimation = styled.div`
 `;
 
 // Estilo para el componente de cohete
-const AnimatedCohete = styled(Cohete)`
+const AnimatedCohete = styled.div`
   animation: ${rocketAnimation} 2s ease-out; /* Aplica la animación */
   width: 100%;
   height: auto; /* Mantiene la proporción del cohete */
@@ -102,14 +103,17 @@ const Highlight = styled.span`
   filter: brightness(1.2); /* Brillo general sutil del texto */
 `;
 
-const LandingPage = () => {
+const LandingPage = ({ isDarkMode }) => {
+  // Determina el componente del cohete basado en el tema
+  const CoheteComponent = isDarkMode ? CoheteDark : CoheteLight;
+
   return (
     <LandingContainer>
       <BackgroundAnimation>
-        <AnimatedCohete />
+        <AnimatedCohete as={CoheteComponent} />
       </BackgroundAnimation>
       <Content>
-        <Title>Are You Ready to <Highlight>Challenge</Highlight> Your <Highlight>Limits</Highlight>?</Title>
+        <Title>Are You Ready to Challenge Your Limits?</Title>
         <Subtitle>Push Beyond Boundaries and Achieve More</Subtitle>
         <Button to="/login">Log In</Button>
       </Content>
