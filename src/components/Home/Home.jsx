@@ -12,9 +12,10 @@ const HomeContainer = styled.div`
   width: 100%;
   background: ${({ theme }) => theme.background}; /* Fondo según el tema */
   color: ${({ theme }) => theme.text}; /* Color del texto principal */
-  overflow: hidden;
+  overflow: hidden; /* Previene el desbordamiento */
   text-align: center;
   padding: 2rem;
+  box-sizing: border-box; /* Incluye el padding y border en el tamaño total */
 `;
 
 const Title = styled.h1`
@@ -74,70 +75,7 @@ const PandaImage = styled.img`
   max-width: 200px;
   height: auto;
   border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0,{
-  "id": 1,
-  "account": {
-    "email": "example@gmail.com",
-    "username": "example",
-    "password": "****"
-  },
-  "metrics": {
-    "body_fat": 15,
-    "body_mass": 22,
-    "weight": 80,
-    "date": "2024-01-20",
-    "height": 175,
-    "bmi": 22.5
-  },
-  "exercise_log": [
-    {
-      "date": "2024-01-20",
-      "exercises": [
-        {
-          "name": "Running",
-          "duration_minutes": 30,
-          "calories_burned": 300
-        }
-      ]
-    }
-  ],
-  "nutrition_log": [
-    {
-      "date": "2024-01-20",
-      "meals": [
-        {
-          "name": "Breakfast",
-          "calories": 350,
-          "macros": {
-            "protein": 20,
-            "carbs": 50,
-            "fats": 10
-          }
-        }
-      ]
-    }
-  ],
-  "sleep_log": {
-    "date": "2024-01-20",
-    "hours_slept": 8
-  },
-  "hydration_log": {
-    "date": "2024-01-20",
-    "liters": 2.5
-  },
-  "goals": {
-    "weight_goal": 75,
-    "body_fat_goal": 10,
-    "exercise_goal": "Run 5km in 30 minutes"
-  },
-  "reminders": [
-    {
-      "type": "exercise",
-      "message": "Time to workout!",
-      "time": "07:00"
-    }
-  ]
-}
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Corrige el valor de rgba */
 `;
 
 const StartButton = styled.a`
@@ -183,4 +121,3 @@ const Home = () => {
 };
 
 export default Home;
-

@@ -7,35 +7,39 @@ import LandingPage from "./components/LandingPage";
 import Metrics from "./components/Metrics/Metrics";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import styled, { ThemeProvider } from "styled-components";
-import "./App.css";
 import Profile from "./components/Profile/Profile";
 import Nutrition from "./components/Nutrition/Nutrition";
 import Exercise from "./components/Exercise/Exercise";
-import colors from "./styles/colors"; // Asegúrate de que la ruta sea correcta
+import styled, { ThemeProvider } from "styled-components";
+import colors from "./styles/colors";
+import GlobalStyle from "./styles/GlobalStyle";
 
 // Contenedor principal para el diseño
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la vista */
+  min-height: 100vh;
+  padding-bottom: 6rem; /* Ajusta este valor según la altura de tu footer */
 `;
 
-const MainContent = styled.div`
-  flex: 1; /* Asegura que el contenido principal ocupe el espacio disponible */
+const MainContent = styled.main`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false); // Estado para el modo de tema
-  const theme = colors(isDarkMode ? 'dark' : 'light'); // Determina los colores según el tema
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const theme = colors(isDarkMode ? "dark" : "light");
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode); // Alterna entre modo oscuro y claro
+    setIsDarkMode((prevMode) => !prevMode);
   };
 
   return (
     <Router>
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         <AppContainer>
           <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
           <MainContent>

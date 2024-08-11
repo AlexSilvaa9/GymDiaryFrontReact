@@ -1,55 +1,72 @@
-import React from "react";
-import styled  from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 import { FaGithub, FaTwitter, FaInstagram } from 'react-icons/fa';
 
-
+// Contenedor del Footer
 const FooterContainer = styled.footer`
-  background: ${({ theme }) => theme.primary}; /* Color de fondo del footer */
-  color: ${({ theme }) => theme.text}; /* Color del texto */
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
   padding: 1rem 2rem;
-  position: relative;
-  width: 100%;
+  position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 1000;
+  box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+  
   @media (max-width: 768px) {
     padding: 1rem;
-    text-align: center;
   }
 `;
 
+// Contenido del Footer
 const FooterContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center; /* Centra los bloques horizontalmente */
   align-items: center;
+  margin: 0 auto; /* Centra el contenido dentro del contenedor */
+  max-width: 1200px; /* Limita el ancho máximo del contenido */
+  width: 100%; /* Asegura que el contenido no exceda el ancho del contenedor */
+  box-sizing: border-box; /* Incluye el padding y border en el ancho total */
+  
   @media (max-width: 768px) {
-    flex-direction: column;
+    flex-direction: column; /* Apila los bloques verticalmente en pantallas pequeñas */
   }
 `;
 
+// Bloque del Footer
 const FooterBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 4rem; /* Espaciado horizontal entre bloques */
+  
+  @media (max-width: 768px) {
+    margin: 0.5rem 0; /* Ajusta el espaciado en pantallas más pequeñas */
+  }
 `;
 
+// Enlaces sociales
 const SocialLinks = styled.div`
   display: flex;
   gap: 1rem;
-  margin: 0;
 `;
 
+// Enlace social
 const SocialLink = styled.a`
   color: ${({ theme }) => theme.text};
   font-size: 1.5rem;
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.terciary};
+    color: ${({ theme }) => theme.tertiary}; /* Color al pasar el cursor */
   }
 `;
 
+// Texto del Footer
 const FooterText = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.text};
@@ -62,10 +79,11 @@ const FooterText = styled.p`
   }
 
   a:hover {
-    color: ${({ theme }) => theme.terciary};
+    color: ${({ theme }) => theme.tertiary}; /* Color al pasar el cursor */
   }
 `;
 
+// Componente Footer
 const Footer = () => {
   return (
     <FooterContainer>
