@@ -1,8 +1,8 @@
-// src/pages/Metrics.js
-import React, { useState } from 'react';
-import CardCarousel from './CardCarousel';
+import React, { useState, useEffect } from 'react';
+import CardCarousel from './CardCarousel'; // Asegúrate de que la ruta sea correcta
 import styled from 'styled-components';
-import AddCardForm from './AddCardForm';
+import AddCardForm from './AddCardForm'; // Asegúrate de que la ruta sea correcta
+import axios from 'axios';
 
 // Estilos para los componentes
 const Container = styled.div`
@@ -33,11 +33,28 @@ const TabButton = styled.button`
 
 const Metrics = () => {
   const [activeTab, setActiveTab] = useState('viewCards');
-  const [cards, setCards] = useState([
-    { date: '2024-07-01', weight: '70 kg', bodyFat: '15%', muscle: '60 kg', period: 'lastMonth' },
-    { date: '2024-06-15', weight: '72 kg', bodyFat: '16%', muscle: '62 kg', period: 'lastMonth' },
-    { date: '2023-12-10', weight: '68 kg', bodyFat: '14%', muscle: '58 kg', period: 'lastYear' },
-  ]);
+  const [metrics, setMetrics] = useState([]);
+
+  // Función para obtener métricas desde el backend
+  const fetchMetrics = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/users/me/metrics', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      setMetrics(response.data);
+    } catch (error) {
+      console.error('Error fetching metrics:', error.response?.data || error.message);
+    }
+  };
+  
+
+  useEffect(() => {
+    if (activeTab === 'viewCards') {
+      fetchMetrics();
+    }
+  }, [activeTab]);
 
   return (
     <Container>
@@ -46,20 +63,20 @@ const Metrics = () => {
           active={activeTab === 'viewCards'}
           onClick={() => setActiveTab('viewCards')}
         >
-          View Cards
+          View Metrics
         </TabButton>
         <TabButton
           active={activeTab === 'addCard'}
           onClick={() => setActiveTab('addCard')}
         >
-          Add Card
+          Add Metric
         </TabButton>
       </TabContainer>
 
       {activeTab === 'viewCards' ? (
-        <CardCarousel cards={cards} setCards={setCards} />
+        <CardCarousel cards={metrics} setCards={setMetrics} />
       ) : (
-        <AddCardForm setCards={setCards} />
+        <AddCardForm fetchMetrics={fetchMetrics} />
       )}
     </Container>
   );

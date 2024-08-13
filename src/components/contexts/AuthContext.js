@@ -14,12 +14,13 @@ const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         try {
-          const response = await fetch(`${API_URL}/users`, {
+          const response = await fetch(`${API_URL}/verify-token`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${storedToken}`
             }
           });
+          
 
           if (response.ok) {
             const data = await response.json();

@@ -11,7 +11,7 @@ const ProtectedRoute = ({ element }) => {
   }
 
   // Si el usuario está autenticado, renderiza el componente, si no, redirige a login
-  return user ? element : <Navigate to="/login" />;
+  return user ? element : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

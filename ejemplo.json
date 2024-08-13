@@ -5,14 +5,23 @@
       "username": "example",
       "password": "****"
     },
-    "metrics": {
+    "metrics": [
+      {
+        "body_fat": 15,
+        "body_mass": 22,
+        "weight": 80,
+        "date": "2024-01-20",
+        "height": 175,
+        "bmi": 22.5
+      },
+      {
       "body_fat": 15,
       "body_mass": 22,
       "weight": 80,
       "date": "2024-01-20",
       "height": 175,
       "bmi": 22.5
-    },
+    }],
     "exercise_log": [
       {
         "date": "2024-01-20",

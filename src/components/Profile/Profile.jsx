@@ -1,4 +1,3 @@
-// src/components/Profile/Profile.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -10,7 +9,7 @@ const ProfileContainer = styled.div`
   height: 100vh;
   background: ${({ theme }) => theme.background};
   padding: 20px;
-  
+
   @media (min-width: 768px) {
     flex-direction: row;
   }
@@ -22,7 +21,7 @@ const Sidebar = styled.nav`
   border-right: 1px solid ${({ theme }) => theme.border};
   padding-right: 20px;
   margin-bottom: 20px;
-  
+
   @media (min-width: 768px) {
     position: sticky;
     top: 0;
@@ -34,10 +33,10 @@ const SidebarItem = styled.div`
   padding: 10px;
   cursor: pointer;
   color: ${({ theme }) => theme.text};
-  background: ${({ active, theme }) => active ? theme.secondary : 'transparent'};
+  background: ${({ active, theme }) => (active ? theme.secondary : 'transparent')};
   border-radius: 4px;
   transition: background 0.3s ease;
-  
+
   &:hover {
     background: ${({ theme }) => theme.tertiary};
   }
@@ -47,7 +46,7 @@ const Content = styled.div`
   flex: 3;
   padding-left: 20px;
   margin-top: 20px;
-  
+
   @media (min-width: 768px) {
     margin-left: 20px;
     margin-top: 0;
@@ -58,9 +57,9 @@ const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  
+
   @media (min-width: 768px) {
-    width: 75%; /* Ajusta el ancho del formulario en pantallas más grandes */
+    width: 75%;
   }
 `;
 
@@ -75,19 +74,23 @@ const SectionHeader = styled.h2`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px; /* Incrementar el espacio entre campos */
-  
+  margin-bottom: 15px;
+
+  & > label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: ${({ theme }) => theme.text};
+  }
+
   & > input {
     width: 100%;
-    max-width: 300px; /* Limita el ancho máximo del campo de entrada */
     padding: 6px 10px;
-    margin-top: 10px;
     border: 1px solid ${({ theme }) => theme.border};
     border-radius: 4px;
     font-size: 0.875em;
     color: ${({ theme }) => theme.text};
     background: ${({ theme }) => theme.backgroundInput};
-    box-sizing: border-box; /* Asegura que padding y border se incluyan en el width */
+    box-sizing: border-box;
   }
 `;
 
@@ -100,7 +103,7 @@ const Button = styled.button`
   font-size: 0.875em;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
     background-color: ${({ theme }) => theme.tertiary};
   }
@@ -109,16 +112,24 @@ const Button = styled.button`
 const ErrorMessage = styled.p`
   color: red;
   font-size: 0.875em;
-`;
-
-const TextContent = styled.p`
-  color: ${({ theme }) => theme.secondaryText};
+  margin-top: 5px;
 `;
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userInfo, setUserInfo] = useState({ email: '', username: '' });
+  const [userInfo, setUserInfo] = useState({
+    email: '',
+    username: '',
+    first_name: '',
+    last_name: '',
+    phone: '',
+    date_of_birth: '',
+    address: ''
+  });
+  const [tempUserInfo, setTempUserInfo] = useState({}); // Estado temporal para los campos del formulario
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [activeSection, setActiveSection] = useState('profile');
   const navigate = useNavigate();
@@ -128,15 +139,36 @@ const Profile = () => {
       if (user) {
         setIsAuthenticated(true);
         try {
-          const response = await fetch('http://127.0.0.1:5000/users/me', { // Cambia esta URL según tu configuración
+          const response = await fetch('http://127.0.0.1:5000/users/me', {
             method: 'GET',
             headers: {
+              'Content-Type': 'application/json',
               'Authorization': `Bearer ${user.token}`,
             },
           });
+
           if (response.ok) {
             const data = await response.json();
-            setUserInfo({ email: data.email, username: data.username });
+            setUserInfo({
+              email: data.email || '',
+              username: data.username || '',
+              first_name: data.first_name || '',
+              last_name: data.last_name || '',
+              phone: data.phone || '',
+              date_of_birth: data.date_of_birth || '',
+              address: data.address || ''
+            });
+
+            // Inicializar tempUserInfo con los valores actuales del usuario
+            setTempUserInfo({
+              email: data.email || '',
+              username: data.username || '',
+              first_name: data.first_name || '',
+              last_name: data.last_name || '',
+              phone: data.phone || '',
+              date_of_birth: data.date_of_birth || '',
+              address: data.address || ''
+            });
           } else {
             console.error('Error fetching user info');
           }
@@ -145,34 +177,42 @@ const Profile = () => {
         }
       } else {
         setIsAuthenticated(false);
-        navigate('/login'); // Redirige a login si no está autenticado
+        navigate('/login');
       }
     };
 
     fetchUserInfo();
   }, [navigate, user]);
 
-  const handleChange = (e) => {
+  const handleUserInfoChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo({ ...userInfo, [name]: value });
+    setTempUserInfo({ ...tempUserInfo, [name]: value }); // Actualiza tempUserInfo en lugar de userInfo
   };
 
-  const handleSubmit = async (e) => {
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleNewPasswordChange = (e) => {
+    setNewPassword(e.target.value);
+  };
+
+  const handleUserInfoSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    if (!userInfo.email) newErrors.email = 'Email is required';
-    if (!userInfo.username) newErrors.username = 'Username is required';
+    if (!tempUserInfo.email) newErrors.email = 'Email is required';
+    if (!tempUserInfo.username) newErrors.username = 'Username is required';
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await fetch('http://127.0.0.1:5000/users/me', { // Cambia esta URL según tu configuración
+        const response = await fetch('http://127.0.0.1:5000/users/me', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${user.token}`,
           },
-          body: JSON.stringify(userInfo),
+          body: JSON.stringify(tempUserInfo), // Envía tempUserInfo para actualizar
         });
         if (response.ok) {
           console.log('Profile updated successfully');
@@ -186,12 +226,37 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login'); // Redirige al usuario a la página de inicio de sesión
-  };
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    const newErrors = {};
+    if (!password) newErrors.currentPassword = 'Current password is required';
+    if (!newPassword) newErrors.newPassword = 'New password is required';
+    setErrors(newErrors);
 
-  if (!isAuthenticated) return null;
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/users/password', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({ currentPassword: password, newPassword }),
+        });
+
+        if (response.ok) {
+          console.log('Password updated successfully');
+          setPassword(''); // Clear the current password field
+          setNewPassword(''); // Clear the new password field
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to update password');
+        }
+      } catch (error) {
+        console.error('Password update error:', error);
+      }
+    }
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -199,26 +264,87 @@ const Profile = () => {
         return (
           <FormContainer>
             <SectionHeader>Profile</SectionHeader>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleUserInfoSubmit}>
               <InputContainer>
+                <label>Username:</label>
                 <input
                   type="text"
                   name="username"
-                  value={userInfo.username}
-                  onChange={handleChange}
-                  placeholder="Username"
+                  value={tempUserInfo.username || ''}
+                  onChange={handleUserInfoChange}
+                  placeholder="Enter your username"
                 />
                 {errors.username && <ErrorMessage>{errors.username}</ErrorMessage>}
               </InputContainer>
               <InputContainer>
+                <label>Email:</label>
                 <input
                   type="email"
                   name="email"
-                  value={userInfo.email}
-                  onChange={handleChange}
-                  placeholder="Email"
+                  value={tempUserInfo.email || ''}
+                  onChange={handleUserInfoChange}
+                  placeholder="Enter your email"
                 />
                 {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+              </InputContainer>
+              <InputContainer>
+                <label>First Name:</label>
+         
+                <input
+                  type="text"
+                  name="first_name"
+                  value={tempUserInfo.first_name || ''}
+                  onChange={handleUserInfoChange}
+                  placeholder="Enter your first name"
+                />
+                {errors.first_name && <ErrorMessage>{errors.first_name}</ErrorMessage>}
+              </InputContainer>
+              <InputContainer>
+                <label>Last Name:</label>
+            
+                <input
+                  type="text"
+                  name="last_name"
+                  value={tempUserInfo.last_name || ''}
+                  onChange={handleUserInfoChange}
+                  placeholder="Enter your last name"
+                />
+                {errors.last_name && <ErrorMessage>{errors.last_name}</ErrorMessage>}
+              </InputContainer>
+              <InputContainer>
+                <label>Phone Number:</label>
+      
+                <input
+                  type="text"
+                  name="phone"
+                  value={tempUserInfo.phone || ''}
+                  onChange={handleUserInfoChange}
+                  placeholder="Enter your phone number"
+                />
+                {errors.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
+              </InputContainer>
+              <InputContainer>
+                <label>Date of Birth:</label>
+          
+                <input
+                  type="date"
+                  name="date_of_birth"
+                  value={tempUserInfo.date_of_birth || ''}
+                  onChange={handleUserInfoChange}
+                />
+                {errors.date_of_birth && <ErrorMessage>{errors.date_of_birth}</ErrorMessage>}
+              </InputContainer>
+              <InputContainer>
+                <label>Address:</label>
+            
+                <input
+                  type="text"
+                  name="address"
+                  value={tempUserInfo.address || ''}
+                  onChange={handleUserInfoChange}
+                  placeholder="Enter your address"
+                />
+                {errors.address && <ErrorMessage>{errors.address}</ErrorMessage>}
               </InputContainer>
               <Button type="submit">Update Profile</Button>
             </form>
@@ -226,25 +352,34 @@ const Profile = () => {
         );
       case 'security':
         return (
-          <div>
+          <FormContainer>
             <SectionHeader>Security</SectionHeader>
-            <TextContent>Change your password and adjust security settings here.</TextContent>
-          </div>
+            <form onSubmit={handlePasswordSubmit}>
+              <InputContainer>
+                <label>Current Password:</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  placeholder="Enter your current password"
+                />
+                {errors.currentPassword && <ErrorMessage>{errors.currentPassword}</ErrorMessage>}
+              </InputContainer>
+              <InputContainer>
+                <label>New Password:</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={handleNewPasswordChange}
+                  placeholder="Enter a new password"
+                />
+                {errors.newPassword && <ErrorMessage>{errors.newPassword}</ErrorMessage>}
+              </InputContainer>
+              <Button type="submit">Update Password</Button>
+            </form>
+          </FormContainer>
         );
-      case 'preferences':
-        return (
-          <div>
-            <SectionHeader>Preferences</SectionHeader>
-            <TextContent>Adjust your notification preferences and other settings here.</TextContent>
-          </div>
-        );
-      case 'account':
-        return (
-          <div>
-            <SectionHeader>Account</SectionHeader>
-            <TextContent>Configure additional details about your account here.</TextContent>
-          </div>
-        );
+      // Otros casos como 'preferences', 'account', etc.
       default:
         return <div>Select a section from the sidebar.</div>;
     }
@@ -271,19 +406,9 @@ const Profile = () => {
         >
           Preferences
         </SidebarItem>
-        <SidebarItem
-          active={activeSection === 'account'}
-          onClick={() => setActiveSection('account')}
-        >
-          Account
-        </SidebarItem>
-        <SidebarItem onClick={handleLogout}>
-          Logout
-        </SidebarItem>
+        <SidebarItem onClick={logout}>Logout</SidebarItem>
       </Sidebar>
-      <Content>
-        {renderContent()}
-      </Content>
+      <Content>{renderContent()}</Content>
     </ProfileContainer>
   );
 };
