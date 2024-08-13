@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ReactApp/static/css/main.a602c452.css",
-    "main.js": "/ReactApp/static/js/main.a7777a5d.js",
+    "main.css": "/ReactApp/static/css/main.e27e48ea.css",
+    "main.js": "/ReactApp/static/js/main.5c4e259e.js",
     "static/js/208.4f84d157.chunk.js": "/ReactApp/static/js/208.4f84d157.chunk.js",
     "static/js/293.6d49d81a.chunk.js": "/ReactApp/static/js/293.6d49d81a.chunk.js",
     "static/js/917.bdb8048a.chunk.js": "/ReactApp/static/js/917.bdb8048a.chunk.js",
@@ -14,9 +14,13 @@
     "static/media/panda.png": "/ReactApp/static/media/panda.278ccc7ab45e85c8a2a2.png",
     "static/media/coheteLight.splinecode": "/ReactApp/static/media/coheteLight.0e100ed7a42e9ce86691.splinecode",
     "static/media/coheteDark.splinecode": "/ReactApp/static/media/coheteDark.d97a0a42fce9de62682c.splinecode",
+    "static/media/slick.svg": "/ReactApp/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/ReactApp/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/ReactApp/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/ReactApp/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/ReactApp/index.html",
-    "main.a602c452.css.map": "/ReactApp/static/css/main.a602c452.css.map",
-    "main.a7777a5d.js.map": "/ReactApp/static/js/main.a7777a5d.js.map",
+    "main.e27e48ea.css.map": "/ReactApp/static/css/main.e27e48ea.css.map",
+    "main.5c4e259e.js.map": "/ReactApp/static/js/main.5c4e259e.js.map",
     "208.4f84d157.chunk.js.map": "/ReactApp/static/js/208.4f84d157.chunk.js.map",
     "293.6d49d81a.chunk.js.map": "/ReactApp/static/js/293.6d49d81a.chunk.js.map",
     "917.bdb8048a.chunk.js.map": "/ReactApp/static/js/917.bdb8048a.chunk.js.map",
@@ -28,7 +32,7 @@
     "453.64512fd7.chunk.js.map": "/ReactApp/static/js/453.64512fd7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a602c452.css",
-    "static/js/main.a7777a5d.js"
+    "static/css/main.e27e48ea.css",
+    "static/js/main.5c4e259e.js"
   ]
 }

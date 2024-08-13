@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { FaMoon, FaSun } from "react-icons/fa";
+// src/components/Navbar.js
+import React, { useContext, useState } from 'react';
+import styled from 'styled-components';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaMoon, FaSun } from 'react-icons/fa';
+import { AuthContext } from './contexts/AuthContext'; // Asegúrate de que la ruta sea correcta
 
 const Nav = styled.nav`
   background: ${({ theme }) => theme.primary};
@@ -23,7 +25,6 @@ const Logo = styled.div`
 `;
 
 const NavLinks = styled.div`
-  position: relative;
   display: flex;
   align-items: center;
   @media (max-width: 768px) {
@@ -106,29 +107,17 @@ const ThemeToggle = styled.div`
 `;
 
 const Navbar = ({ toggleTheme, isDarkMode }) => {
-  const [hoveredLink, setHoveredLink] = useState(null);
+  const { user, logout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
-  const linkRefs = useRef({});
-
-  useEffect(() => {
-    const handleResize = () => {
-      setHoveredLink((prev) => prev);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleMouseEnter = (name) => {
-    setHoveredLink(name);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredLink(null);
-  };
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/profile'); // Redirige al perfil en lugar de a la página de inicio
   };
 
   return (
@@ -140,57 +129,20 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
         <Bar />
       </Hamburger>
       <NavLinks isOpen={isOpen}>
-        <NavLink
-          to="/home"
-          onMouseEnter={() => handleMouseEnter('home')}
-          onMouseLeave={handleMouseLeave}
-          ref={(el) => linkRefs.current['home'] = el}
-        >
-          Home
-        </NavLink>
-        <NavLink
-          to="/nutrition"
-          onMouseEnter={() => handleMouseEnter('nutrition')}
-          onMouseLeave={handleMouseLeave}
-          ref={(el) => linkRefs.current['nutrition'] = el}
-        >
-          Nutrition
-        </NavLink>
-        <NavLink
-          to="/exercise"
-          onMouseEnter={() => handleMouseEnter('exercise')}
-          onMouseLeave={handleMouseLeave}
-          ref={(el) => linkRefs.current['exercise'] = el}
-        >
-          Exercise
-        </NavLink>
-        <NavLink
-          to="/metrics"
-          onMouseEnter={() => handleMouseEnter('metrics')}
-          onMouseLeave={handleMouseLeave}
-          ref={(el) => linkRefs.current['metrics'] = el}
-        >
-          Metrics
-        </NavLink>
-        <NavLink
-          to="/profile"
-          onMouseEnter={() => handleMouseEnter('profile')}
-          onMouseLeave={handleMouseLeave}
-          ref={(el) => linkRefs.current['profile'] = el}
-        >
-          Profile
-        </NavLink>
+        {user ? (
+          <>
+            <NavLink to="/home">Home</NavLink>
+            <NavLink to="/nutrition">Nutrition</NavLink>
+            <NavLink to="/exercise">Exercise</NavLink>
+            <NavLink to="/metrics">Metrics</NavLink>
+            <NavLink to="/profile">Profile</NavLink>
+          </>
+        ) : (
+          <NavLink to="/login">Account</NavLink>
+        )}
         <ProgressBar
-          width={
-            hoveredLink && linkRefs.current[hoveredLink]
-              ? `${linkRefs.current[hoveredLink].offsetWidth}px`
-              : '0px'
-          }
-          left={
-            hoveredLink && linkRefs.current[hoveredLink]
-              ? `${linkRefs.current[hoveredLink].offsetLeft}px`
-              : '0px'
-          }
+          width="0px"
+          left="0px"
         />
       </NavLinks>
       <ThemeToggle onClick={toggleTheme}>

@@ -1,8 +1,9 @@
+// src/components/Profile/Profile.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import useAuth from '../contexts/useAuth'; // Asegúrate de que la ruta sea correcta
 
-// Contenedor principal para el perfil
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -15,7 +16,6 @@ const ProfileContainer = styled.div`
   }
 `;
 
-// Estilo para la barra lateral
 const Sidebar = styled.nav`
   flex: 1;
   max-width: 200px;
@@ -30,7 +30,6 @@ const Sidebar = styled.nav`
   }
 `;
 
-// Estilo para los elementos de la barra lateral
 const SidebarItem = styled.div`
   padding: 10px;
   cursor: pointer;
@@ -44,7 +43,6 @@ const SidebarItem = styled.div`
   }
 `;
 
-// Contenido principal
 const Content = styled.div`
   flex: 3;
   padding-left: 20px;
@@ -56,7 +54,6 @@ const Content = styled.div`
   }
 `;
 
-// Contenedor de formulario
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -67,7 +64,6 @@ const FormContainer = styled.div`
   }
 `;
 
-// Encabezado de sección
 const SectionHeader = styled.h2`
   margin-top: 0;
   font-size: 1.5em;
@@ -76,7 +72,6 @@ const SectionHeader = styled.h2`
   color: ${({ theme }) => theme.text};
 `;
 
-// Campos de entrada
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -96,7 +91,6 @@ const InputContainer = styled.div`
   }
 `;
 
-// Botones
 const Button = styled.button`
   padding: 8px 16px;
   border: none;
@@ -112,54 +106,89 @@ const Button = styled.button`
   }
 `;
 
-// Mensajes de error
 const ErrorMessage = styled.p`
   color: red;
   font-size: 0.875em;
 `;
 
-// Contenidos de texto
 const TextContent = styled.p`
   color: ${({ theme }) => theme.secondaryText};
 `;
 
 const Profile = () => {
+  const { user, logout } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState({ email: '', username: '' });
+  const [userInfo, setUserInfo] = useState({ email: '', username: '' });
   const [errors, setErrors] = useState({});
   const [activeSection, setActiveSection] = useState('profile');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuthentication = () => {
-      const userData = { email: 'user@example.com', username: 'john_doe' };
-      if (userData) {
+    const fetchUserInfo = async () => {
+      if (user) {
         setIsAuthenticated(true);
-        setUser(userData);
+        try {
+          const response = await fetch('http://127.0.0.1:5000/users/me', { // Cambia esta URL según tu configuración
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${user.token}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setUserInfo({ email: data.email, username: data.username });
+          } else {
+            console.error('Error fetching user info');
+          }
+        } catch (error) {
+          console.error('Error fetching user info:', error);
+        }
       } else {
         setIsAuthenticated(false);
-        navigate('/login');
+        navigate('/login'); // Redirige a login si no está autenticado
       }
     };
 
-    checkAuthentication();
-  }, [navigate]);
+    fetchUserInfo();
+  }, [navigate, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUserInfo({ ...userInfo, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    if (!user.email) newErrors.email = 'Email is required';
-    if (!user.username) newErrors.username = 'Username is required';
+    if (!userInfo.email) newErrors.email = 'Email is required';
+    if (!userInfo.username) newErrors.username = 'Username is required';
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log('Profile updated:', user);
+      try {
+        const response = await fetch('http://127.0.0.1:5000/users/me', { // Cambia esta URL según tu configuración
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`,
+          },
+          body: JSON.stringify(userInfo),
+        });
+        if (response.ok) {
+          console.log('Profile updated successfully');
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to update profile');
+        }
+      } catch (error) {
+        console.error('Update error:', error);
+      }
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login'); // Redirige al usuario a la página de inicio de sesión
   };
 
   if (!isAuthenticated) return null;
@@ -175,7 +204,7 @@ const Profile = () => {
                 <input
                   type="text"
                   name="username"
-                  value={user.username}
+                  value={userInfo.username}
                   onChange={handleChange}
                   placeholder="Username"
                 />
@@ -185,7 +214,7 @@ const Profile = () => {
                 <input
                   type="email"
                   name="email"
-                  value={user.email}
+                  value={userInfo.email}
                   onChange={handleChange}
                   placeholder="Email"
                 />
@@ -247,6 +276,9 @@ const Profile = () => {
           onClick={() => setActiveSection('account')}
         >
           Account
+        </SidebarItem>
+        <SidebarItem onClick={handleLogout}>
+          Logout
         </SidebarItem>
       </Sidebar>
       <Content>

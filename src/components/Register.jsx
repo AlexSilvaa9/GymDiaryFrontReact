@@ -104,12 +104,18 @@ const GymDecor = styled.div`
   background-position: center;
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.9rem;
+`;
+
 const Register = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const validate = () => {
     const newErrors = {};
@@ -129,10 +135,38 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log('Registration successful');
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:5000/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            account: {
+              email,
+              username,
+              password
+            }
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert('Registration successful');
+        } else {
+          const errorData = await response.json();
+          setErrors(errorData.errors || { general: 'An error occurred during registration' });
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setErrors({ general: error.message });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -148,7 +182,7 @@ const Register = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {errors.email && <p>{errors.email}</p>}
+          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
           
           <Input
             type="text"
@@ -156,7 +190,7 @@ const Register = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          {errors.username && <p>{errors.username}</p>}
+          {errors.username && <ErrorMessage>{errors.username}</ErrorMessage>}
           
           <Input
             type="password"
@@ -164,7 +198,7 @@ const Register = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {errors.password && <p>{errors.password}</p>}
+          {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
           
           <Input
             type="password"
@@ -172,9 +206,13 @@ const Register = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+          {errors.confirmPassword && <ErrorMessage>{errors.confirmPassword}</ErrorMessage>}
           
-          <Button type="submit">Register</Button>
+          {errors.general && <ErrorMessage>{errors.general}</ErrorMessage>}
+          
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Registering...' : 'Register'}
+          </Button>
         </form>
         <LoginLink>
           <Link to="/login">Already have an account? Login here</Link>

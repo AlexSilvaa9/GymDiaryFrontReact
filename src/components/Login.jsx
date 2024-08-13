@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { AuthContext } from './contexts/AuthContext';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -98,14 +99,53 @@ const GymDecor = styled.div`
 `;
 
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate(); // Crear una instancia de useNavigate
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors({});
+    try {
+      await login(username, password);
+      navigate('/home'); // Redirigir a /home después de un inicio de sesión exitoso
+    } catch (error) {
+      setErrors({ general: error.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <LoginContainer>
       <LoginForm>
         <Title>Login</Title>
         <Subtitle>Enter your details to access your account</Subtitle>
-        <Input type="text" placeholder="Username" />
-        <Input type="password" placeholder="Password" />
-        <Button>Login</Button>
+        <form onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          
+          {errors.general && <p>{errors.general}</p>}
+          
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
         <RegisterLink>
           <Link to="/register" style={{ color: 'inherit' }}>Don't have an account? Register here</Link>
         </RegisterLink>
