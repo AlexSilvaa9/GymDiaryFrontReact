@@ -54,7 +54,7 @@ const Button = styled.button`
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-
+  margin-top: 1rem;
   &:hover {
     background-color: ${({ theme }) => theme.secondary};
     transform: scale(1.02);
@@ -78,9 +78,9 @@ const AddCardForm = ({ fetchMetrics }) => {
   const [newMetric, setNewMetric] = useState({
     weight: '',
     bodyFat: '',
-    height: '',
-    bmi: '',
-    date: ''
+    muscleMass: '',   // Nuevo campo
+    bodyWater: '',    // Nuevo campo
+    date: ''          // Campo de fecha
   });
 
   const handleChange = (e) => {
@@ -97,12 +97,12 @@ const AddCardForm = ({ fetchMetrics }) => {
         }
       });
       fetchMetrics(); // Refresca las métricas después de agregar una nueva
-      setNewMetric({ weight: '', bodyFat: '', height: '', bmi: '', date: '' });
+      setNewMetric({ weight: '', bodyFat: '', muscleMass: '', bodyWater: '', date: '' });
     } catch (error) {
       console.error('Error adding metric:', error.response?.data || error.message);
     }
   };
-  
+
   return (
     <FormContainer>
       <FormTitle>Add New Metric</FormTitle>
@@ -126,20 +126,21 @@ const AddCardForm = ({ fetchMetrics }) => {
           />
           <Input
             type="text"
-            name="height"
-            placeholder="Height (e.g., 175 cm)"
-            value={newMetric.height}
+            name="muscleMass"  // Nuevo input
+            placeholder="Muscle Mass (e.g., 40%)"
+            value={newMetric.muscleMass}
             onChange={handleChange}
             required
           />
           <Input
             type="text"
-            name="bmi"
-            placeholder="BMI (e.g., 22.5)"
-            value={newMetric.bmi}
+            name="bodyWater"  // Nuevo input
+            placeholder="Body Water (e.g., 60%)"
+            value={newMetric.bodyWater}
             onChange={handleChange}
             required
           />
+          
           <Input
             type="date"
             name="date"

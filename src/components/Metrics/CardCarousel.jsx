@@ -2,15 +2,16 @@
 import React, { useState } from 'react';
 import Slider from 'react-slick';
 import styled from 'styled-components';
-import Card from './Card'; // Asegúrate de tener un componente Card
+import Card from './Card'; // Importa el componente Card
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-// Estilos para los componentes
+// Estilos para el carrusel
 const CarouselContainer = styled.div`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0; /* Elimina el padding alrededor del carrusel */
 `;
 
 const Filters = styled.div`
@@ -34,99 +35,78 @@ const FilterButton = styled.button`
   }
 `;
 
-const FormContainer = styled.div`
-  width: 100%;
-  max-width: 600px;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: ${({ theme }) => theme.cardBackground};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 8px;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-bottom: 1rem;
-`;
-
-const Input = styled.input`
-  background-color: ${({ theme }) => theme.inputBackground};
-  color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 5px;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.placeholder};
+// Configuración del carrusel
+const SliderWrapper = styled.div`
+  .slick-slide {
+    display: flex;
+    justify-content: center;
+    margin: 0 0.5rem; /* Ajusta la separación entre las tarjetas */
   }
-`;
 
-const Button = styled.button`
-  background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.text};
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  .slick-track {
+    display: flex;
+    align-items: center;
+  }
 
-  &:hover {
-    background-color: ${({ theme }) => theme.secondary};
+  .slick-slide > div {
+    margin: 0; /* Elimina el margen adicional en los slides */
   }
 `;
 
 const CardCarousel = ({ cards, setCards }) => {
   const [filter, setFilter] = useState('all');
-  const [newCard, setNewCard] = useState({
-    date: '',
-    weight: '',
-    bodyFat: '',
-    muscle: '',
-    period: 'all',
-  });
 
-  const filteredCards = cards.filter(card =>
-    filter === 'all' || card.period === filter
-  );
+  const getFilteredCards = () => {
+    const today = new Date();
+
+    return cards.filter(card => {
+      const cardDate = new Date(card.date);
+
+      if (filter === 'lastMonth') {
+        const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+        return cardDate >= lastMonth && cardDate <= today;
+      }
+
+      if (filter === 'lastYear') {
+        const lastYear = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+        return cardDate >= lastYear && cardDate <= today;
+      }
+
+      return true; // 'all' or unrecognized filter
+    });
+  };
+
+  const filteredCards = getFilteredCards();
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: false, // Desactivar el carrusel infinito
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: filteredCards.length > 1 ? 3 : filteredCards.length, // Mostrar todas las tarjetas si hay una sola
     slidesToScroll: 1,
     responsive: [
       {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: filteredCards.length > 1 ? 3 : filteredCards.length,
+          slidesToScroll: 1,
+        },
+      },
+      {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: filteredCards.length > 1 ? 2 : filteredCards.length,
           slidesToScroll: 1,
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: filteredCards.length > 1 ? 1 : filteredCards.length,
           slidesToScroll: 1,
         },
       },
     ],
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewCard(prevCard => ({ ...prevCard, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setCards(prevCards => [...prevCards, { ...newCard, date: new Date().toISOString().split('T')[0] }]);
-    setNewCard({ date: '', weight: '', bodyFat: '', muscle: '', period: 'all' });
   };
 
   return (
@@ -153,17 +133,20 @@ const CardCarousel = ({ cards, setCards }) => {
       </Filters>
 
       <CarouselContainer>
-        <Slider {...settings}>
-          {filteredCards.map((card, index) => (
-            <Card
-              key={index}
-              date={card.date}
-              weight={card.weight}
-              bodyFat={card.bodyFat}
-              muscle={card.muscle}
-            />
-          ))}
-        </Slider>
+        <SliderWrapper>
+          <Slider {...settings}>
+            {filteredCards.map((card, index) => (
+              <Card
+                key={index}
+                date={card.date}
+                weight={card.weight}
+                bodyFat={card.bodyFat}
+                muscleMass={card.muscleMass}
+                bodyWater={card.bodyWater}
+              />
+            ))}
+          </Slider>
+        </SliderWrapper>
       </CarouselContainer>
     </div>
   );

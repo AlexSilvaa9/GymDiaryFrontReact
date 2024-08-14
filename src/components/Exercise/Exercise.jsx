@@ -1,13 +1,23 @@
-// src/components/Exercise.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const Container = styled.div`
-  padding: 2rem;
+// Styled Components
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
+`;
+
+const Container = styled.div`
+  flex: 1; /* Permite que el contenedor crezca para ocupar todo el espacio disponible */
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const TabContainer = styled.div`
@@ -185,67 +195,69 @@ const Exercise = () => {
   const exercisesForSelectedDate = exerciseLog[selectedDate] || [];
 
   return (
-    <Container>
-      <TabContainer>
-        <TabButton
-          active={activeTab === 'viewExercises'}
-          onClick={() => setActiveTab('viewExercises')}
-        >
-          View Exercises
-        </TabButton>
-        <TabButton
-          active={activeTab === 'addExercise'}
-          onClick={() => setActiveTab('addExercise')}
-        >
-          Add Exercise
-        </TabButton>
-      </TabContainer>
+    <AppWrapper>
+      <Container>
+        <TabContainer>
+          <TabButton
+            active={activeTab === 'viewExercises'}
+            onClick={() => setActiveTab('viewExercises')}
+          >
+            View Exercises
+          </TabButton>
+          <TabButton
+            active={activeTab === 'addExercise'}
+            onClick={() => setActiveTab('addExercise')}
+          >
+            Add Exercise
+          </TabButton>
+        </TabContainer>
 
-      {activeTab === 'viewExercises' ? (
-        <>
-          <CalendarWrapper>
-            <Calendar
-              onChange={handleDateChange}
-              value={new Date(selectedDate)}
-            />
-          </CalendarWrapper>
+        {activeTab === 'viewExercises' ? (
+          <>
+            <CalendarWrapper>
+              <Calendar
+                onChange={handleDateChange}
+                value={new Date(selectedDate)}
+              />
+            </CalendarWrapper>
 
-          <ExerciseList>
-            <h2>Exercises for {new Date(selectedDate).toDateString()}</h2>
-            {exercisesForSelectedDate.length === 0 ? (
-              <ExerciseItem>No exercises for this day.</ExerciseItem>
-            ) : (
-              exercisesForSelectedDate.map((exercise, index) => (
-                <ExerciseItem key={index}>
-                  {`${exercise.name}: ${exercise.duration} min`}
-                  <RemoveButton onClick={() => handleRemoveExercise(selectedDate, index)}>Remove</RemoveButton>
-                </ExerciseItem>
-              ))
-            )}
-          </ExerciseList>
-        </>
-      ) : (
-        <Form>
-          <InputGroup>
-            <Input
-              type="text"
-              placeholder="Exercise Name"
-              value={exerciseName}
-              onChange={(e) => setExerciseName(e.target.value)}
-              required
-            />
-            <Input
-              type="number"
-              placeholder="Duration (min)"
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              required
-            />
-          </InputGroup>
-          <Button onClick={handleAddExercise}>Add Exercise</Button>
-        </Form>
-      )}
-    </Container>
+            <ExerciseList>
+              <h2>Exercises for {new Date(selectedDate).toDateString()}</h2>
+              {exercisesForSelectedDate.length === 0 ? (
+                <ExerciseItem>No exercises for this day.</ExerciseItem>
+              ) : (
+                exercisesForSelectedDate.map((exercise, index) => (
+                  <ExerciseItem key={index}>
+                    {`${exercise.name}: ${exercise.duration} min`}
+                    <RemoveButton onClick={() => handleRemoveExercise(selectedDate, index)}>Remove</RemoveButton>
+                  </ExerciseItem>
+                ))
+              )}
+            </ExerciseList>
+          </>
+        ) : (
+          <Form>
+            <InputGroup>
+              <Input
+                type="text"
+                placeholder="Exercise Name"
+                value={exerciseName}
+                onChange={(e) => setExerciseName(e.target.value)}
+                required
+              />
+              <Input
+                type="number"
+                placeholder="Duration (min)"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                required
+              />
+            </InputGroup>
+            <Button onClick={handleAddExercise}>Add Exercise</Button>
+          </Form>
+        )}
+      </Container>
+    </AppWrapper>
   );
 };
 

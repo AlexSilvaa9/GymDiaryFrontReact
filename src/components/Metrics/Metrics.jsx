@@ -5,10 +5,17 @@ import AddCardForm from './AddCardForm'; // Asegúrate de que la ruta sea correc
 import axios from 'axios';
 
 // Estilos para los componentes
-const Container = styled.div`
-  padding: 2rem;
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
+`;
+
+const Container = styled.div`
+  flex: 1; /* Permite que el contenedor crezca para ocupar todo el espacio disponible */
+  padding: 2rem;
 `;
 
 const TabContainer = styled.div`
@@ -25,6 +32,7 @@ const TabButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s ease;
+  margin: 0 0.5rem;
 
   &:hover {
     background: ${({ theme }) => theme.tertiary};
@@ -48,7 +56,6 @@ const Metrics = () => {
       console.error('Error fetching metrics:', error.response?.data || error.message);
     }
   };
-  
 
   useEffect(() => {
     if (activeTab === 'viewCards') {
@@ -57,28 +64,30 @@ const Metrics = () => {
   }, [activeTab]);
 
   return (
-    <Container>
-      <TabContainer>
-        <TabButton
-          active={activeTab === 'viewCards'}
-          onClick={() => setActiveTab('viewCards')}
-        >
-          View Metrics
-        </TabButton>
-        <TabButton
-          active={activeTab === 'addCard'}
-          onClick={() => setActiveTab('addCard')}
-        >
-          Add Metric
-        </TabButton>
-      </TabContainer>
+    <AppWrapper>
+      <Container>
+        <TabContainer>
+          <TabButton
+            active={activeTab === 'viewCards'}
+            onClick={() => setActiveTab('viewCards')}
+          >
+            View Metrics
+          </TabButton>
+          <TabButton
+            active={activeTab === 'addCard'}
+            onClick={() => setActiveTab('addCard')}
+          >
+            Add Metric
+          </TabButton>
+        </TabContainer>
 
-      {activeTab === 'viewCards' ? (
-        <CardCarousel cards={metrics} setCards={setMetrics} />
-      ) : (
-        <AddCardForm fetchMetrics={fetchMetrics} />
-      )}
-    </Container>
+        {activeTab === 'viewCards' ? (
+          <CardCarousel cards={metrics} setCards={setMetrics} />
+        ) : (
+          <AddCardForm fetchMetrics={fetchMetrics} />
+        )}
+      </Container>
+    </AppWrapper>
   );
 };
 

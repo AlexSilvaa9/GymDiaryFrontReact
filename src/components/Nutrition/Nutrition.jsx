@@ -1,15 +1,20 @@
-// src/components/Nutrition.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 // Styled Components
-const Container = styled.div`
-  padding: 2rem;
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
-  height: 100%;
+`;
+
+const Container = styled.div`
+  flex: 1; /* Permite que el contenedor crezca para ocupar todo el espacio disponible */
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -183,92 +188,94 @@ const Nutrition = () => {
   };
 
   return (
-    <Container>
-      <Title>Nutrition Tracker</Title>
+    <AppWrapper>
+      <Container>
+        <Title>Nutrition Tracker</Title>
 
-      <CalendarWrapper>
-        <Calendar
-          onChange={(date) => setSelectedDate(date.toISOString().split('T')[0])}
-          value={new Date(selectedDate)}
-          tileClassName={({ date }) =>
-            meals.some((meal) => meal.date === date.toISOString().split('T')[0])
-              ? 'has-meal'
-              : null
-          }
-        />
-      </CalendarWrapper>
+        <CalendarWrapper>
+          <Calendar
+            onChange={(date) => setSelectedDate(date.toISOString().split('T')[0])}
+            value={new Date(selectedDate)}
+            tileClassName={({ date }) =>
+              meals.some((meal) => meal.date === date.toISOString().split('T')[0])
+                ? 'has-meal'
+                : null
+            }
+          />
+        </CalendarWrapper>
 
-      <Tabs>
-        <TabButton active={view === 'viewMeals'} onClick={() => setView('viewMeals')}>
-          View Meals
-        </TabButton>
-        <TabButton active={view === 'addMeal'} onClick={() => setView('addMeal')}>
-          Add Meal
-        </TabButton>
-      </Tabs>
+        <Tabs>
+          <TabButton active={view === 'viewMeals'} onClick={() => setView('viewMeals')}>
+            View Meals
+          </TabButton>
+          <TabButton active={view === 'addMeal'} onClick={() => setView('addMeal')}>
+            Add Meal
+          </TabButton>
+        </Tabs>
 
-      {view === 'addMeal' && (
-        <Form>
-          <InputGroup>
-            <Input
-              type="text"
-              placeholder="Meal Name"
-              value={mealName}
-              onChange={(e) => setMealName(e.target.value)}
-              required
-            />
-            <Input
-              type="number"
-              placeholder="Calories"
-              value={calories}
-              onChange={(e) => setCalories(e.target.value)}
-              required
-            />
-            <Input
-              type="number"
-              placeholder="Protein (g)"
-              value={protein}
-              onChange={(e) => setProtein(e.target.value)}
-              required
-            />
-            <Input
-              type="number"
-              placeholder="Carbs (g)"
-              value={carbs}
-              onChange={(e) => setCarbs(e.target.value)}
-              required
-            />
-            <Input
-              type="number"
-              placeholder="Fats (g)"
-              value={fats}
-              onChange={(e) => setFats(e.target.value)}
-              required
-            />
-          </InputGroup>
-          <Button onClick={handleAddMeal}>Add Meal</Button>
-        </Form>
-      )}
+        {view === 'addMeal' && (
+          <Form>
+            <InputGroup>
+              <Input
+                type="text"
+                placeholder="Meal Name"
+                value={mealName}
+                onChange={(e) => setMealName(e.target.value)}
+                required
+              />
+              <Input
+                type="number"
+                placeholder="Calories"
+                value={calories}
+                onChange={(e) => setCalories(e.target.value)}
+                required
+              />
+              <Input
+                type="number"
+                placeholder="Protein (g)"
+                value={protein}
+                onChange={(e) => setProtein(e.target.value)}
+                required
+              />
+              <Input
+                type="number"
+                placeholder="Carbs (g)"
+                value={carbs}
+                onChange={(e) => setCarbs(e.target.value)}
+                required
+              />
+              <Input
+                type="number"
+                placeholder="Fats (g)"
+                value={fats}
+                onChange={(e) => setFats(e.target.value)}
+                required
+              />
+            </InputGroup>
+            <Button onClick={handleAddMeal}>Add Meal</Button>
+          </Form>
+        )}
 
-      {view === 'viewMeals' && (
-        <MealsList>
-          <Title>Meals for {new Date(selectedDate).toDateString()}</Title>
-          {mealsByDate[selectedDate] && mealsByDate[selectedDate].length > 0 ? (
-            mealsByDate[selectedDate].map((meal, index) => (
-              <MealCard key={index}>
-                <h3>{meal.name}</h3>
-                <p>{meal.calories} Calories</p>
-                <p>Protein: {meal.macros.protein}g</p>
-                <p>Carbs: {meal.macros.carbs}g</p>
-                <p>Fats: {meal.macros.fats}g</p>
-              </MealCard>
-            ))
-          ) : (
-            <MealCard>No meals recorded for this day.</MealCard>
-          )}
-        </MealsList>
-      )}
-    </Container>
+        {view === 'viewMeals' && (
+          <MealsList>
+            <Title>Meals for {new Date(selectedDate).toDateString()}</Title>
+            {mealsByDate[selectedDate] && mealsByDate[selectedDate].length > 0 ? (
+              mealsByDate[selectedDate].map((meal, index) => (
+                <MealCard key={index}>
+                  <h3>{meal.name}</h3>
+                  <p>{meal.calories} Calories</p>
+                  <p>Protein: {meal.macros.protein}g</p>
+                  <p>Carbs: {meal.macros.carbs}g</p>
+                  <p>Fats: {meal.macros.fats}g</p>
+                </MealCard>
+              ))
+            ) : (
+              <MealCard>No meals recorded for this day.</MealCard>
+            )}
+          </MealsList>
+        )}
+      </Container>
+    </AppWrapper>
   );
 };
 
