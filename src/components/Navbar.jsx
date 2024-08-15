@@ -1,7 +1,6 @@
-// src/components/Navbar.js
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { AuthContext } from './contexts/AuthContext'; // Asegúrate de que la ruta sea correcta
 
@@ -27,6 +26,7 @@ const Logo = styled.div`
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
   @media (max-width: 768px) {
     flex-direction: column;
     position: absolute;
@@ -52,6 +52,10 @@ const NavLink = styled(Link)`
   transition: color 0.3s ease;
 
   &:hover {
+    color: ${({ theme }) => theme.tertiary};
+  }
+
+  &.active {
     color: ${({ theme }) => theme.tertiary};
   }
 
@@ -109,6 +113,8 @@ const ThemeToggle = styled.div`
 const Navbar = ({ toggleTheme, isDarkMode }) => {
   const { user, logout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [progressBarProps, setProgressBarProps] = useState({ width: '0px', left: '0px' });
+  const location = useLocation();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -117,12 +123,29 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/profile'); // Redirige al perfil en lugar de a la página de inicio
+    navigate('/profile');
   };
+
+  const handleMouseEnter = (e) => {
+    const { offsetLeft, offsetWidth } = e.target;
+    setProgressBarProps({ left: `${offsetLeft}px`, width: `${offsetWidth}px` });
+  };
+
+  const handleMouseLeave = () => {
+    setProgressBarProps({ width: '0px', left: '0px' });
+  };
+
+  useEffect(() => {
+    const activeLink = document.querySelector(`a[href='${location.pathname}']`);
+    if (activeLink) {
+      const { offsetLeft, offsetWidth } = activeLink;
+      setProgressBarProps({ left: `${offsetLeft}px`, width: `${offsetWidth}px` });
+    }
+  }, [location]);
 
   return (
     <Nav>
-      <Logo>FitTrack</Logo>
+      <Logo>GymDiary</Logo>
       <Hamburger onClick={toggleMenu}>
         <Bar />
         <Bar />
@@ -131,19 +154,16 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
       <NavLinks isOpen={isOpen}>
         {user ? (
           <>
-            <NavLink to="/home">Home</NavLink>
-            <NavLink to="/nutrition">Nutrition</NavLink>
-            <NavLink to="/exercise">Exercise</NavLink>
-            <NavLink to="/metrics">Metrics</NavLink>
-            <NavLink to="/profile">Profile</NavLink>
+            <NavLink to="/home" className={location.pathname === '/home' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Home</NavLink>
+            <NavLink to="/nutrition" className={location.pathname === '/nutrition' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Nutrition</NavLink>
+            <NavLink to="/exercise" className={location.pathname === '/exercise' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Exercise</NavLink>
+            <NavLink to="/metrics" className={location.pathname === '/metrics' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Metrics</NavLink>
+            <NavLink to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Profile</NavLink>
           </>
         ) : (
-          <NavLink to="/login">Account</NavLink>
+          <NavLink to="/login" className={location.pathname === '/login' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Account</NavLink>
         )}
-        <ProgressBar
-          width="0px"
-          left="0px"
-        />
+        <ProgressBar width={progressBarProps.width} left={progressBarProps.left} />
       </NavLinks>
       <ThemeToggle onClick={toggleTheme}>
         {isDarkMode ? <FaSun /> : <FaMoon />}

@@ -1,122 +1,144 @@
 import React from 'react';
 import styled from 'styled-components';
-import Panda from '../../Assets/panda.png'; // Imagen del panda
+import LightHome from '../../Assets/light_home.svg'; // Imagen para el tema claro
+import DarkHome from '../../Assets/dark_home.svg';   // Imagen para el tema oscuro
+import NutritionImg from '../../Assets/rhino.png'; // Imagen para la sección de nutrición
+import ExerciseImg from '../../Assets/koala.png';   // Imagen para la sección de ejercicio
+import MetricsImg from '../../Assets/coffee.png';     // Imagen para la sección de métricas
 
-// Estilos para la página de inicio
-const HomeContainer = styled.div`
+import LightHome2 from '../../Assets/light_home2.svg'; // Imagen para el tema claro
+import DarkHome2 from '../../Assets/dark_home2.svg';   // Imagen para el tema oscuro
+
+// Contenedor principal para la página de inicio
+const HomePage = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  background: ${({ theme }) => theme.background};
+`;
+
+// Estilos para cada sección
+const Section = styled.section`
+  display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100vh; /* Toma toda la altura de la ventana de visualización */
   width: 100%;
-  background: ${({ theme }) => theme.background}; /* Fondo según el tema */
-  color: ${({ theme }) => theme.text}; /* Color del texto principal */
-  overflow: hidden; /* Previene el desbordamiento */
+  color: ${({ theme }) => theme.text};
   text-align: center;
-  padding: 2rem;
-  box-sizing: border-box; /* Incluye el padding y border en el tamaño total */
+  padding: 0rem;
+  box-sizing: border-box;
+
+   &:nth-of-type(1) {
+    background-image: url(${({ isDarkMode }) => (isDarkMode ? DarkHome2 : LightHome2)});
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el fondo */
+    background-position: center; /* Centra la imagen en la sección */
+    background-repeat: no-repeat; /* Evita la repetición de la imagen */
+  }
+  &:nth-of-type(2) {
+    background-image: url(${({ isDarkMode }) => (isDarkMode ? DarkHome : LightHome)});
+    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el fondo */
+    background-position: center; /* Centra la imagen en la sección */
+    background-repeat: no-repeat; /* Evita la repetición de la imagen */
+  }
+
+  &:nth-of-type(3) {
+    background: ${({ theme }) => theme.primary}; /* Color primario de fondo */
+  }
 `;
 
-const Title = styled.h1`
-  font-size: 4rem;
-  margin: 1rem 0;
-  font-weight: bold;
-  color: ${({ theme }) => theme.text}; /* Color primario */
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-`;
-
-const Subtitle = styled.h2`
-  font-size: 1.75rem;
-  margin: 1rem 0;
-  font-weight: 300;
-  color: ${({ theme }) => theme.secondaryText}; /* Color secundario del texto */
-  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
-`;
-
-const BenefitsSection = styled.div`
+// Estilos para los contenidos de cada sección
+const ContentWrapper = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin: 2rem 0;
+  align-items: center;
+  justify-content: space-between;
   max-width: 1200px;
   width: 100%;
-  gap: 1.5rem;
-
+  margin: 0 auto;
   @media (max-width: 768px) {
     flex-direction: column;
-    align-items: center;
+    text-align: center;
   }
 `;
 
-const Benefit = styled.div`
-  background: ${({ theme }) => theme.terciary}; /* Fondo terciario para los bloques de beneficios */
-  border-radius: 15px;
-  padding: 1rem;
+const TextContent = styled.div`
   flex: 1;
-  max-width: 300px;
-  text-align: center;
-  color: ${({ theme }) => theme.text}; /* Color del texto */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-
-  h3 {
-    margin: 0.5rem 0;
-    font-size: 1.25rem;
-    color: ${({ theme }) => theme.text}; /* Color primario para los encabezados */
-  }
-
-  p {
-    font-size: 1rem;
-    line-height: 1.5;
+  margin-right: 2rem;
+  @media (max-width: 768px) {
+    margin-right: 0;
   }
 `;
 
-const PandaImage = styled.img`
-  max-width: 200px;
+const ImageContent = styled.img`
+  max-width: 400px;
   height: auto;
-  border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Corrige el valor de rgba */
 `;
 
-const StartButton = styled.a`
-  display: inline-block;
-  padding: 1rem 2rem;
-  font-size: 1.25rem;
+// Estilos para los textos
+const SectionTitle = styled.h1`
+  font-size: 2.5rem;
+  margin: 1rem 0;
   font-weight: bold;
-  color: ${({ theme }) => theme.text}; /* Color del texto del botón */
-  background: ${({ theme }) => theme.secondary}; /* Color del botón */
-  border-radius: 25px;
-  text-decoration: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.primary}; /* Color de hover del botón */
-  }
+  color: ${({ theme }) => theme.text};
 `;
 
-const Home = () => {
+const SectionSubtitle = styled.h2`
+  font-size: 1.5rem;
+  margin: 1rem 0;
+  font-weight: 300;
+  color: ${({ theme }) => theme.secondaryText};
+`;
+
+const SectionContent = styled.p`
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: ${({ theme }) => theme.text};
+  text-align: justify;
+`;
+
+// Componente Home
+const Home = ({ isDarkMode }) => {
   return (
-    <HomeContainer>
-      <Title>Welcome Back to FitTrack!</Title>
-      <Subtitle>Track your nutrition and exercise to achieve your health goals</Subtitle>
-      <PandaImage src={Panda} alt="Cute panda illustration" />
-      <BenefitsSection>
-        <Benefit>
-          <h3>Track Your Nutrition</h3>
-          <p>Monitor your daily food intake and make healthier choices with ease.</p>
-        </Benefit>
-        <Benefit>
-          <h3>Log Your Workouts</h3>
-          <p>Keep track of your exercise routines and progress over time.</p>
-        </Benefit>
-        <Benefit>
-          <h3>Set and Achieve Goals</h3>
-          <p>Set personal fitness goals and stay motivated to achieve them.</p>
-        </Benefit>
-      </BenefitsSection>
-      <StartButton href="/dashboard">Go to Dashboard</StartButton>
-    </HomeContainer>
+    <HomePage>
+      {/* Primera sección */}
+      <Section isDarkMode={isDarkMode}>
+        <ContentWrapper>
+          <ImageContent src={NutritionImg} alt="Nutrition" />
+          <TextContent>
+            <SectionTitle>Welcome Back to GymDiary!</SectionTitle>
+            <SectionSubtitle>Track your nutrition and exercise to achieve your health goals</SectionSubtitle>
+            <SectionContent>GymDiary offers comprehensive tools to monitor your nutrition, exercise routines, and overall performance. Easily set goals and stay motivated with our intuitive interface and advanced tracking features.</SectionContent>
+            <SectionContent>Whether you're looking to improve your diet, track your workouts, or monitor your body metrics, GymDiary is here to support you every step of the way. Start today and see the difference!</SectionContent>
+          </TextContent>
+          
+        </ContentWrapper>
+      </Section>
+
+      {/* Segunda sección con fondo SVG */}
+      <Section isDarkMode={isDarkMode}>
+        <ContentWrapper>
+          <TextContent>
+            <SectionTitle>Track Your Nutrition</SectionTitle>
+            <SectionContent>Our nutrition tracking tools help you monitor what you eat and how it affects your health. With detailed insights and personalized recommendations, you can make better food choices and stay on top of your dietary goals.</SectionContent>
+            <SectionContent>From tracking calories to understanding nutrient intake, our platform provides all the information you need to maintain a balanced diet and achieve your health objectives.</SectionContent>
+          </TextContent>
+          <ImageContent src={ExerciseImg} alt="Exercise" />
+        </ContentWrapper>
+      </Section>
+
+      {/* Tercera sección */}
+      <Section>
+        <ContentWrapper>
+          <ImageContent src={MetricsImg} alt="Metrics" />
+          <TextContent>
+            <SectionTitle>Our Mission</SectionTitle>
+            <SectionContent>At GymDiary, our mission is to empower individuals to lead healthier lives through data-driven insights and personalized tracking solutions. We believe that understanding your nutrition, exercise, and body metrics is key to achieving your wellness goals.</SectionContent>
+            <SectionContent>Our platform is designed to be intuitive and user-friendly, providing you with the tools and support you need to make informed decisions about your health. Join us in our mission to promote a healthier, more active lifestyle.</SectionContent>
+          </TextContent>
+          
+        </ContentWrapper>
+      </Section>
+    </HomePage>
   );
 };
 

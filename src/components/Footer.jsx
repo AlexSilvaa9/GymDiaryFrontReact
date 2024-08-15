@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaGithub, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { FaGithub, FaInstagram } from 'react-icons/fa';
 
 // Contenedor del Footer
 const FooterContainer = styled.footer`
@@ -89,17 +89,14 @@ const Footer = () => {
     <FooterContainer>
       <FooterContent>
         <FooterBlock>
-          <FooterText>© 2024 FitTrack. All rights reserved.</FooterText>
+          <FooterText>© 2024 GymDiary. All rights reserved.</FooterText>
         </FooterBlock>
         <FooterBlock>
           <SocialLinks>
-            <SocialLink href="https://github.com" target="_blank" aria-label="GitHub">
+            <SocialLink href="https://github.com/alexsilvaa9" target="_blank" aria-label="GitHub">
               <FaGithub />
             </SocialLink>
-            <SocialLink href="https://twitter.com" target="_blank" aria-label="Twitter">
-              <FaTwitter />
-            </SocialLink>
-            <SocialLink href="https://instagram.com" target="_blank" aria-label="Instagram">
+            <SocialLink href="https://instagram.com/alexsilvaa_9" target="_blank" aria-label="Instagram">
               <FaInstagram />
             </SocialLink>
           </SocialLinks>

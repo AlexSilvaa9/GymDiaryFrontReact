@@ -9,7 +9,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Profile from './components/Profile/Profile';
 import Nutrition from './components/Nutrition/Nutrition';
-import Exercise from './components/Exercise/Exercise';
+import Exercise from './components/Exercise/ExerciseManager';
 import styled, { ThemeProvider } from 'styled-components';
 import colors from './styles/colors';
 import GlobalStyle from './styles/GlobalStyle';
@@ -55,7 +55,7 @@ function App() {
                 <Route path="/landingPage" element={<LandingPage isDarkMode={isDarkMode} />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/home" element={<ProtectedRoute element={<Home />} />} />
+                <Route path="/home" element={<ProtectedRoute element={<Home isDarkMode={isDarkMode}/>} />} />
                 <Route path="/nutrition" element={<ProtectedRoute element={<Nutrition />} />} />
                 <Route path="/exercise" element={<ProtectedRoute element={<Exercise />} />} />
                 <Route path="/metrics" element={<ProtectedRoute element={<Metrics />} />} />

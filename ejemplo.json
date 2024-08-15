@@ -11,8 +11,8 @@
         "body_mass": 22,
         "weight": 80,
         "date": "2024-01-20",
-        "height": 175,
-        "bmi": 22.5
+        "body_water": 60
+
       },
       {
       "body_fat": 15,
@@ -22,16 +22,27 @@
       "height": 175,
       "bmi": 22.5
     }],
-    "exercise_log": [
+    "exercises": [
       {
-        "date": "2024-01-20",
-        "exercises": [
-          {
-            "name": "Running",
-            "duration_minutes": 30,
-            "calories_burned": 300
-          }
-        ]
+        "name": "Squats",
+        "sets": 3,
+        "reps": 10,
+        "weight": 50,
+        "version": 1
+      },
+      {
+        "name": "Leg Press",
+        "sets": 3,
+        "reps": 10,
+        "weight": 50,
+        "version":2
+      }
+    ],
+    "routines":[
+      {
+        "name":"Legs",
+        "exercises":["Scuats","Leg Press"],
+        "dates_of_execution":["2024-01-20","2024-01-21","2024-01-22"]
       }
     ],
     "nutrition_log": [

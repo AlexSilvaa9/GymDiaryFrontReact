@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -7,13 +7,13 @@ import 'react-calendar/dist/Calendar.css';
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
+  min-height: 100vh;
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
 `;
 
 const Container = styled.div`
-  flex: 1; /* Permite que el contenedor crezca para ocupar todo el espacio disponible */
+  flex: 1;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -51,7 +51,7 @@ const Input = styled.input`
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   width: 100%;
-  
+
   &::placeholder {
     color: ${({ theme }) => theme.placeholder};
   }
@@ -151,53 +151,129 @@ const TabButton = styled.button`
   }
 `;
 
+const StatsSection = styled.div`
+  width: 100%;
+  max-width: 800px;
+  margin-top: 2rem;
+  background: ${({ theme }) => theme.cardBackground};
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: ${({ theme }) => theme.text};
+`;
+
 const Nutrition = () => {
-  const [meals, setMeals] = useState([
-    { date: '2024-01-20', name: 'Breakfast', calories: 350, macros: { protein: 20, carbs: 50, fats: 10 } },
-    { date: '2024-01-20', name: 'Lunch', calories: 600, macros: { protein: 30, carbs: 80, fats: 20 } },
-    { date: '2024-01-21', name: 'Dinner', calories: 500, macros: { protein: 25, carbs: 60, fats: 15 } }
-  ]);
+  const [meals, setMeals] = useState([]);
   const [mealName, setMealName] = useState('');
   const [calories, setCalories] = useState('');
   const [protein, setProtein] = useState('');
   const [carbs, setCarbs] = useState('');
   const [fats, setFats] = useState('');
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState('viewMeals');
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
-  // Filter meals by date
-  const mealsByDate = meals.reduce((acc, meal) => {
-    const { date } = meal;
-    if (!acc[date]) acc[date] = [];
-    acc[date].push(meal);
-    return acc;
-  }, {});
+  useEffect(() => {
+    const fetchMeals = async () => {
+      try {
+        // Ajusta la fecha para sumar un día
+        const adjustedDate = new Date(selectedDate);
+        adjustedDate.setDate(adjustedDate.getDate() + 1);
 
-  const handleAddMeal = () => {
+        const response = await fetch(`http://localhost:5000/users/me/meals?date=${adjustedDate.toISOString().split('T')[0]}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setMeals(data);
+        } else {
+          console.error('Failed to fetch meals');
+        }
+      } catch (error) {
+        console.error('Error fetching meals:', error);
+      }
+    };
+
+    if (token) {
+      fetchMeals();
+    }
+  }, [selectedDate, token]);
+
+  const handleAddMeal = async () => {
     if (mealName && calories && protein && carbs && fats) {
-      setMeals((prevMeals) => [
-        ...prevMeals,
-        { date: selectedDate, name: mealName, calories: parseInt(calories), macros: { protein: parseInt(protein), carbs: parseInt(carbs), fats: parseInt(fats) } },
-      ]);
-      setMealName('');
-      setCalories('');
-      setProtein('');
-      setCarbs('');
-      setFats('');
+      // Ajusta la fecha para sumar un día
+      const adjustedDate = new Date(selectedDate);
+      adjustedDate.setDate(adjustedDate.getDate() + 1);
+
+      const newMeal = {
+        date: adjustedDate.toISOString().split('T')[0],
+        name: mealName,
+        calories: parseInt(calories),
+        macros: {
+          protein: parseInt(protein),
+          carbs: parseInt(carbs),
+          fats: parseInt(fats)
+        }
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/users/me/meals', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(newMeal)
+        });
+
+        if (response.ok) {
+          // Reset form fields
+          setMealName('');
+          setCalories('');
+          setProtein('');
+          setCarbs('');
+          setFats('');
+
+          // Update meals list to include the newly added meal
+          setMeals((prevMeals) => [...prevMeals, newMeal]);
+        } else {
+          console.error('Failed to add meal');
+        }
+      } catch (error) {
+        console.error('Error adding meal:', error);
+      }
     }
   };
+
+  // Calculate statistics
+  const calculateStats = () => {
+    return meals.reduce(
+      (acc, meal) => {
+        acc.totalCalories += meal.calories;
+        acc.totalProtein += meal.macros.protein;
+        acc.totalCarbs += meal.macros.carbs;
+        acc.totalFats += meal.macros.fats;
+        return acc;
+      },
+      { totalCalories: 0, totalProtein: 0, totalCarbs: 0, totalFats: 0 }
+    );
+  };
+
+  const stats = calculateStats();
 
   return (
     <AppWrapper>
       <Container>
-        <Title>Nutrition Tracker</Title>
+        <Title>Meal Tracker</Title>
 
         <CalendarWrapper>
           <Calendar
-            onChange={(date) => setSelectedDate(date.toISOString().split('T')[0])}
-            value={new Date(selectedDate)}
+            onChange={(date) => setSelectedDate(date)}
+            value={selectedDate}
             tileClassName={({ date }) =>
-              meals.some((meal) => meal.date === date.toISOString().split('T')[0])
+              meals.some((meal) => meal.date === new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0])
                 ? 'has-meal'
                 : null
             }
@@ -257,22 +333,31 @@ const Nutrition = () => {
         )}
 
         {view === 'viewMeals' && (
-          <MealsList>
-            <Title>Meals for {new Date(selectedDate).toDateString()}</Title>
-            {mealsByDate[selectedDate] && mealsByDate[selectedDate].length > 0 ? (
-              mealsByDate[selectedDate].map((meal, index) => (
-                <MealCard key={index}>
-                  <h3>{meal.name}</h3>
-                  <p>{meal.calories} Calories</p>
-                  <p>Protein: {meal.macros.protein}g</p>
-                  <p>Carbs: {meal.macros.carbs}g</p>
-                  <p>Fats: {meal.macros.fats}g</p>
-                </MealCard>
-              ))
-            ) : (
-              <MealCard>No meals recorded for this day.</MealCard>
-            )}
-          </MealsList>
+          <>
+            <StatsSection>
+              <h2>Statistics for {new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}</h2>
+              <p>Total Calories: {stats.totalCalories} kcal</p>
+              <p>Total Protein: {stats.totalProtein} g</p>
+              <p>Total Carbs: {stats.totalCarbs} g</p>
+              <p>Total Fats: {stats.totalFats} g</p>
+            </StatsSection>
+
+            <MealsList>
+              {meals.length > 0 ? (
+                meals.map((meal, index) => (
+                  <MealCard key={index}>
+                    <h3>{meal.name}</h3>
+                    <p>Calories: {meal.calories}</p>
+                    <p>Protein: {meal.macros.protein}g</p>
+                    <p>Carbs: {meal.macros.carbs}g</p>
+                    <p>Fats: {meal.macros.fats}g</p>
+                  </MealCard>
+                ))
+              ) : (
+                <MealCard>No meals recorded for this day.</MealCard>
+              )}
+            </MealsList>
+          </>
         )}
       </Container>
     </AppWrapper>
