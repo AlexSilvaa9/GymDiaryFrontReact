@@ -1,7 +1,6 @@
+# GymDiary
 
-# FitTrack
-
-FitTrack is a web application designed to help users track their nutrition and exercise routines. The application allows users to log their daily meals, track calorie intake, and manage their workout routines. It provides features for adding and removing meals and exercises, and viewing the history of activities.
+GymDiary is a web application designed to help users track their nutrition and exercise routines. The application allows users to log their daily meals, track calorie intake, and manage their workout routines. It provides features for adding and removing meals and exercises, and viewing the history of activities.
 
 ## Features
 
@@ -14,7 +13,7 @@ You can view the live version of the project at [https://alexsilvaa9.github.io/R
 
 ## Getting Started
 
-To get started with FitTrack on your local machine, follow these steps:
+To get started with GymDiary on your local machine, follow these steps:
 
 ### Prerequisites
 
@@ -72,7 +71,7 @@ The application uses `styled-components` for styling and a `colors.js` file for 
 
 ## Contributing
 
-If you'd like to contribute to FitTrack, please fork the repository and create a pull request with your proposed changes. Make sure to follow the coding standards and include tests for any new features.
+If you'd like to contribute to GymDiary, please fork the repository and create a pull request with your proposed changes. Make sure to follow the coding standards and include tests for any new features.
 
 ## License
 
@@ -85,4 +84,4 @@ For any questions or feedback, please contact:
 - [Alex Silva](mailto:your-email@example.com)
 - GitHub: [https://github.com/alexsilvaa9](https://github.com/alexsilvaa9)
 
-```
+---
