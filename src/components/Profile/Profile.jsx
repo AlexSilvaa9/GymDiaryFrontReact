@@ -114,6 +114,7 @@ const ErrorMessage = styled.p`
   font-size: 0.875em;
   margin-top: 5px;
 `;
+const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const Profile = () => {
   const { user, logout } = useAuth();
@@ -139,7 +140,7 @@ const Profile = () => {
       if (user) {
         setIsAuthenticated(true);
         try {
-          const response = await fetch('http://127.0.0.1:5000/users/me', {
+          const response = await fetch(`${API_URL}/users/me`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -206,7 +207,7 @@ const Profile = () => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await fetch('http://127.0.0.1:5000/users/me', {
+        const response = await fetch(`${API_URL}/users/me`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -235,7 +236,7 @@ const Profile = () => {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await fetch('http://127.0.0.1:5000/users/password', {
+        const response = await fetch(`${API_URL}/users/password`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

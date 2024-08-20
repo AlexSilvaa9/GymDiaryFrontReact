@@ -73,6 +73,7 @@ const FormTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: bold;
 `;
+const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const AddCardForm = ({ fetchMetrics }) => {
   const [newMetric, setNewMetric] = useState({
@@ -91,7 +92,7 @@ const AddCardForm = ({ fetchMetrics }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/users/me/metrics', newMetric, {
+      await axios.post(`${API_URL}/users/me/metrics`, newMetric, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

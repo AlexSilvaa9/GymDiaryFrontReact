@@ -108,6 +108,7 @@ const ErrorMessage = styled.p`
   color: red;
   font-size: 0.9rem;
 `;
+const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -140,7 +141,7 @@ const Register = () => {
     if (validate()) {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/users', {
+        const response = await fetch(`${API_URL}/users`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -22,29 +22,50 @@
       "height": 175,
       "bmi": 22.5
     }],
-    "exercises": [
-      {
-        "name": "Squats",
-        "sets": 3,
-        "reps": 10,
-        "weight": 50,
-        "version": 1
-      },
-      {
-        "name": "Leg Press",
-        "sets": 3,
-        "reps": 10,
-        "weight": 50,
-        "version":2
-      }
-    ],
     "routines":[
+
       {
         "name":"Legs",
-        "exercises":["Scuats","Leg Press"],
-        "dates_of_execution":["2024-01-20","2024-01-21","2024-01-22"]
+        "exercises": [
+        {
+          "name": "Squats",
+          "sets": 3,
+          "reps": 10,
+          "weight": 50,
+          "done": true
+        },
+        {
+          "name": "Leg Press",
+          "sets": 3,
+          "reps": 10,
+          "weight": 50,
+          "done": true
+        }
+    ],
+        "date":"2024-01-20"
+      }
+      {
+        "name":"Chest",
+        "exercises": [
+        {
+          "name": "Bench Press",
+          "sets": 3,
+          "reps": 10,
+          "weight": 50,
+          "done": true
+        },
+        {
+          "name": "Incline Bench Press",
+          "sets": 3,
+          "reps": 10,
+          "weight": 50,
+          "done": true
+        }
+      ],
+        "date":"2024-01-20"
       }
     ],
+
     "nutrition_log": [
       {
         "date": "2024-01-20",

@@ -51,7 +51,7 @@ function App() {
             <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
             <MainContent>
               <Routes>
-                <Route path="/" element={<Navigate to="/landingPage" replace />} />
+                <Route path="/GymDiaryFrontReact" element={<Navigate to="/landingPage" replace />} />
                 <Route path="/landingPage" element={<LandingPage isDarkMode={isDarkMode} />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

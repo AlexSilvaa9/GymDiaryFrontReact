@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 // Crear el contexto de autenticación
 const AuthContext = createContext();
 
-const API_URL = 'http://127.0.0.1:5000'; // Cambia esta URL según tu configuración
+const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

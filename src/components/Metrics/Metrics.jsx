@@ -38,6 +38,8 @@ const TabButton = styled.button`
     background: ${({ theme }) => theme.tertiary};
   }
 `;
+const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
+
 
 const Metrics = () => {
   const [activeTab, setActiveTab] = useState('viewCards');
@@ -46,7 +48,7 @@ const Metrics = () => {
   // Función para obtener métricas desde el backend
   const fetchMetrics = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/users/me/metrics', {
+      const response = await axios.get(`${API_URL}/users/me/metrics`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

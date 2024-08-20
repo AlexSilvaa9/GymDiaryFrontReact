@@ -161,6 +161,7 @@ const StatsSection = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text};
 `;
+const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const Nutrition = () => {
   const [meals, setMeals] = useState([]);
@@ -180,7 +181,7 @@ const Nutrition = () => {
         const adjustedDate = new Date(selectedDate);
         adjustedDate.setDate(adjustedDate.getDate() + 1);
 
-        const response = await fetch(`http://localhost:5000/users/me/meals?date=${adjustedDate.toISOString().split('T')[0]}`, {
+        const response = await fetch(`${API_URL}/users/me/meals?date=${adjustedDate.toISOString().split('T')[0]}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -219,7 +220,7 @@ const Nutrition = () => {
       };
 
       try {
-        const response = await fetch('http://localhost:5000/users/me/meals', {
+        const response = await fetch(`${API_URL}/users/me/meals`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

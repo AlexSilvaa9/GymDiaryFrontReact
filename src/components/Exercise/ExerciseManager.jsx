@@ -1,30 +1,37 @@
-// src/components/ExerciseManager.jsx
 import React, { useState } from 'react';
 import History from './History';
 import RoutineManager from './RoutineManager';
-import Exercises from './Exercises'; // Cambiado de ExerciseList a Exercises
+import Exercises from './Today';
 import styled from 'styled-components';
 
 const AppWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Asegura que el contenedor principal use columna */
   min-height: 100vh;
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
 `;
 
 const Container = styled.div`
-  flex: 1;
+  flex: 1; /* Ocupa el espacio restante del AppWrapper */
   padding: 2rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; /* Permite que el contenido se apile verticalmente */
+  align-items: stretch; /* Asegura que el contenido ocupe todo el ancho disponible */
+  overflow: auto; /* Permite el desplazamiento si el contenido es mayor */
+`;
+
+const Title = styled.h1`
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 1rem;
+  text-align: center; /* Centra el título */
 `;
 
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
+  width: 100%; /* Ocupa el ancho completo disponible */
 `;
 
 const TabButton = styled.button`
@@ -35,6 +42,7 @@ const TabButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s ease;
+  margin: 0 0.5rem;
 
   &:hover {
     background: ${({ theme }) => theme.tertiary};
@@ -43,19 +51,11 @@ const TabButton = styled.button`
 
 const ExerciseManager = () => {
   const [activeTab, setActiveTab] = useState('history');
-  const [exerciseLog, setExerciseLog] = useState({});
-  const [selectedRoutine, setSelectedRoutine] = useState('');
-  const [routineList, setRoutineList] = useState([]);
-  const [exerciseList, setExerciseList] = useState([]);
-
-  const handleSaveRoutine = (routine) => {
-    // Guardar rutina en el estado o en el backend
-    setRoutineList([...routineList, routine]);
-  };
 
   return (
     <AppWrapper>
       <Container>
+        <Title>Exercise Manager</Title>
         <TabContainer>
           <TabButton
             active={activeTab === 'history'}
@@ -75,29 +75,16 @@ const ExerciseManager = () => {
             active={activeTab === 'exerciseManager'}
             onClick={() => setActiveTab('exerciseManager')}
           >
-            Exercise Manager
+            Today
           </TabButton>
         </TabContainer>
 
-        {activeTab === 'history' && (
-          <History
-            exerciseLog={exerciseLog}
-          />
-        )}
-
-        {activeTab === 'routineManager' && (
-          <RoutineManager
-            handleSaveRoutine={handleSaveRoutine}
-            exerciseList={exerciseList}
-          />
-        )}
-
-        {activeTab === 'exerciseManager' && (
-          <Exercises
-            exerciseList={exerciseList}
-            setExerciseList={setExerciseList}
-          />
-        )}
+        {/* Usamos `flex: 1` para que el contenido de la pestaña ocupe el espacio restante */}
+        <div style={{ flex: 1, width: '100%' }}>
+          {activeTab === 'history' && <History />}
+          {activeTab === 'routineManager' && <RoutineManager />}
+          {activeTab === 'exerciseManager' && <Exercises />}
+        </div>
       </Container>
     </AppWrapper>
   );
