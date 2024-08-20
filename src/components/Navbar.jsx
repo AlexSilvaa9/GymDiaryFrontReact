@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/fa';
-import { AuthContext } from './contexts/AuthContext'; // Asegúrate de que la ruta sea correcta
+import { AuthContext } from './contexts/AuthContext';
 
 const Nav = styled.nav`
   background: ${({ theme }) => theme.primary};
@@ -26,7 +26,6 @@ const Logo = styled.div`
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
-  position: relative;
   @media (max-width: 768px) {
     flex-direction: column;
     position: absolute;
@@ -35,9 +34,10 @@ const NavLinks = styled.div`
     right: 0;
     background: ${({ theme }) => theme.primary};
     overflow: hidden;
-    max-height: ${({ isOpen }) => (isOpen ? "300px" : "0")};
+    max-height: ${({ isOpen }) => (isOpen ? '500px' : '0')}; /* Ajusta el max-height según el contenido */
     transition: max-height 0.3s ease-in-out;
     z-index: 9;
+    width: 100%;
   }
 `;
 
@@ -46,7 +46,6 @@ const NavLink = styled(Link)`
   margin: 0 1rem;
   text-decoration: none;
   font-size: 1rem;
-  position: relative;
   padding: 0.5rem;
   display: inline-block;
   transition: color 0.3s ease;
@@ -111,19 +110,14 @@ const ThemeToggle = styled.div`
 `;
 
 const Navbar = ({ toggleTheme, isDarkMode }) => {
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [progressBarProps, setProgressBarProps] = useState({ width: '0px', left: '0px' });
   const location = useLocation();
-  const navigate = useNavigate();
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/profile');
+    setIsOpen(prevState => !prevState);
+    console.log('Menu isOpen:', !isOpen);
   };
 
   const handleMouseEnter = (e) => {
@@ -154,14 +148,56 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
       <NavLinks isOpen={isOpen}>
         {user ? (
           <>
-            <NavLink to="/home" className={location.pathname === '/home' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Home</NavLink>
-            <NavLink to="/nutrition" className={location.pathname === '/nutrition' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Nutrition</NavLink>
-            <NavLink to="/exercise" className={location.pathname === '/exercise' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Exercise</NavLink>
-            <NavLink to="/metrics" className={location.pathname === '/metrics' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Metrics</NavLink>
-            <NavLink to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Profile</NavLink>
+            <NavLink 
+              to="/home" 
+              className={location.pathname === '/home' ? 'active' : ''} 
+              onMouseEnter={handleMouseEnter} 
+              onMouseLeave={handleMouseLeave}
+            >
+              Home
+            </NavLink>
+            <NavLink 
+              to="/nutrition" 
+              className={location.pathname === '/nutrition' ? 'active' : ''} 
+              onMouseEnter={handleMouseEnter} 
+              onMouseLeave={handleMouseLeave}
+            >
+              Nutrition
+            </NavLink>
+            <NavLink 
+              to="/exercise" 
+              className={location.pathname === '/exercise' ? 'active' : ''} 
+              onMouseEnter={handleMouseEnter} 
+              onMouseLeave={handleMouseLeave}
+            >
+              Exercise
+            </NavLink>
+            <NavLink 
+              to="/metrics" 
+              className={location.pathname === '/metrics' ? 'active' : ''} 
+              onMouseEnter={handleMouseEnter} 
+              onMouseLeave={handleMouseLeave}
+            >
+              Metrics
+            </NavLink>
+            <NavLink 
+              to="/profile" 
+              className={location.pathname === '/profile' ? 'active' : ''} 
+              onMouseEnter={handleMouseEnter} 
+              onMouseLeave={handleMouseLeave}
+            >
+              Profile
+            </NavLink>
           </>
         ) : (
-          <NavLink to="/login" className={location.pathname === '/login' ? 'active' : ''} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Account</NavLink>
+          <NavLink 
+            to="/login" 
+            className={location.pathname === '/login' ? 'active' : ''} 
+            onMouseEnter={handleMouseEnter} 
+            onMouseLeave={handleMouseLeave}
+          >
+            Account
+          </NavLink>
         )}
         <ProgressBar width={progressBarProps.width} left={progressBarProps.left} />
       </NavLinks>

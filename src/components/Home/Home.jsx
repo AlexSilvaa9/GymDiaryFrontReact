@@ -19,7 +19,7 @@ const HomePage = styled.div`
 `;
 
 // Estilos para cada sección
-const Section = styled.section`
+const HomeSection = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -173,7 +173,7 @@ const Home = ({ isDarkMode }) => {
   return (
     <HomePage>
       {/* Primera sección */}
-      <Section isDarkMode={isDarkMode}>
+      <HomeSection isDarkMode={isDarkMode}>
         <ContentWrapper>
           <ImageContent src={NutritionImg} alt="Nutrition" />
           <TextContent>
@@ -184,10 +184,10 @@ const Home = ({ isDarkMode }) => {
             <Button onClick={() => window.location.href = '/exercise'}>Get Started</Button>
           </TextContent>
         </ContentWrapper>
-      </Section>
+      </HomeSection>
 
       {/* Segunda sección con fondo SVG */}
-      <Section isDarkMode={isDarkMode}>
+      <HomeSection isDarkMode={isDarkMode}>
         <ContentWrapper>
           <TextContent>
             <SectionTitle>Track Your Nutrition</SectionTitle>
@@ -197,10 +197,10 @@ const Home = ({ isDarkMode }) => {
           </TextContent>
           <ImageContent src={ExerciseImg} alt="Exercise" />
         </ContentWrapper>
-      </Section>
+      </HomeSection>
 
       {/* Tercera sección */}
-      <Section>
+      <HomeSection>
         <ContentWrapper>
           <ImageContent src={MetricsImg} alt="Metrics" />
           <TextContent>
@@ -210,7 +210,7 @@ const Home = ({ isDarkMode }) => {
             <Button onClick={() => window.location.href = '/about'}>About us</Button>
           </TextContent>
         </ContentWrapper>
-      </Section>
+      </HomeSection>
     </HomePage>
   );
 };
