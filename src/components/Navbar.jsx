@@ -82,6 +82,7 @@ const Hamburger = styled.div`
   cursor: pointer;
   @media (max-width: 768px) {
     display: flex;
+    order: 2;
   }
 `;
 
@@ -98,6 +99,7 @@ const ThemeToggle = styled.div`
   align-items: center;
   cursor: pointer;
   margin-left: auto;
+  order: 1;
   svg {
     fill: ${({ theme }) => theme.text};
     width: 24px;
@@ -106,6 +108,7 @@ const ThemeToggle = styled.div`
   }
   @media (max-width: 768px) {
     margin-left: 0;
+    order: 1; /* Asegúrate de que esté a la izquierda del botón de hamburguesa en pantallas pequeñas */
   }
 `;
 
@@ -140,6 +143,9 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
   return (
     <Nav>
       <Logo>GymDiary</Logo>
+      <ThemeToggle onClick={toggleTheme}>
+        {isDarkMode ? <FaSun /> : <FaMoon />}
+      </ThemeToggle>
       <Hamburger onClick={toggleMenu}>
         <Bar />
         <Bar />
@@ -201,9 +207,6 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
         )}
         <ProgressBar width={progressBarProps.width} left={progressBarProps.left} />
       </NavLinks>
-      <ThemeToggle onClick={toggleTheme}>
-        {isDarkMode ? <FaSun /> : <FaMoon />}
-      </ThemeToggle>
     </Nav>
   );
 };

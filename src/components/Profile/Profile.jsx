@@ -6,9 +6,11 @@ import useAuth from '../contexts/useAuth'; // Asegúrate de que la ruta sea corr
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background: ${({ theme }) => theme.background};
   padding: 20px;
+  box-sizing: border-box;
+  position: relative;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -21,6 +23,10 @@ const Sidebar = styled.nav`
   border-right: 1px solid ${({ theme }) => theme.border};
   padding-right: 20px;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 
   @media (min-width: 768px) {
     position: sticky;
@@ -37,6 +43,12 @@ const SidebarItem = styled.div`
   border-radius: 4px;
   transition: background 0.3s ease;
 
+  @media (max-width: 768px) {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   &:hover {
     background: ${({ theme }) => theme.tertiary};
   }
@@ -46,9 +58,15 @@ const Content = styled.div`
   flex: 3;
   padding-left: 20px;
   margin-top: 20px;
+  overflow: auto;
 
   @media (min-width: 768px) {
     margin-left: 20px;
+    margin-top: 0;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 0;
     margin-top: 0;
   }
 `;
@@ -56,10 +74,12 @@ const Content = styled.div`
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
   width: 100%;
 
   @media (min-width: 768px) {
-    width: 75%;
+    width: 100%;
   }
 `;
 
@@ -84,6 +104,7 @@ const InputContainer = styled.div`
 
   & > input {
     width: 100%;
+    max-width: 400px;
     padding: 6px 10px;
     border: 1px solid ${({ theme }) => theme.border};
     border-radius: 4px;
@@ -91,6 +112,10 @@ const InputContainer = styled.div`
     color: ${({ theme }) => theme.text};
     background: ${({ theme }) => theme.backgroundInput};
     box-sizing: border-box;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
   }
 `;
 
@@ -114,11 +139,58 @@ const ErrorMessage = styled.p`
   font-size: 0.875em;
   margin-top: 5px;
 `;
-const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
+
+const MobileMenuButton = styled.button`
+  display: none;
+  background: ${({ theme }) => theme.secondary};
+  color: ${({ theme }) => theme.text};
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1.25em;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+const MobileMenu = styled.div`
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: ${({ theme }) => theme.background};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  width: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  z-index: 1000;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const MobileMenuItem = styled(SidebarItem)`
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 1em;
+  text-align: center;
+  box-sizing: border-box;
+`;
+
+const API_URL = process.env.REACT_APP_SERVER_NAME;
 
 const Profile = () => {
   const { user, logout } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userInfo, setUserInfo] = useState({
     email: '',
     username: '',
@@ -128,17 +200,17 @@ const Profile = () => {
     date_of_birth: '',
     address: ''
   });
-  const [tempUserInfo, setTempUserInfo] = useState({}); // Estado temporal para los campos del formulario
+  const [tempUserInfo, setTempUserInfo] = useState({});
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [activeSection, setActiveSection] = useState('profile');
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (user) {
-        setIsAuthenticated(true);
         try {
           const response = await fetch(`${API_URL}/users/me`, {
             method: 'GET',
@@ -150,26 +222,8 @@ const Profile = () => {
 
           if (response.ok) {
             const data = await response.json();
-            setUserInfo({
-              email: data.email || '',
-              username: data.username || '',
-              first_name: data.first_name || '',
-              last_name: data.last_name || '',
-              phone: data.phone || '',
-              date_of_birth: data.date_of_birth || '',
-              address: data.address || ''
-            });
-
-            // Inicializar tempUserInfo con los valores actuales del usuario
-            setTempUserInfo({
-              email: data.email || '',
-              username: data.username || '',
-              first_name: data.first_name || '',
-              last_name: data.last_name || '',
-              phone: data.phone || '',
-              date_of_birth: data.date_of_birth || '',
-              address: data.address || ''
-            });
+            setUserInfo(data);
+            setTempUserInfo(data);
           } else {
             console.error('Error fetching user info');
           }
@@ -177,7 +231,6 @@ const Profile = () => {
           console.error('Error fetching user info:', error);
         }
       } else {
-        setIsAuthenticated(false);
         navigate('/login');
       }
     };
@@ -187,7 +240,7 @@ const Profile = () => {
 
   const handleUserInfoChange = (e) => {
     const { name, value } = e.target;
-    setTempUserInfo({ ...tempUserInfo, [name]: value }); // Actualiza tempUserInfo en lugar de userInfo
+    setTempUserInfo({ ...tempUserInfo, [name]: value });
   };
 
   const handlePasswordChange = (e) => {
@@ -203,9 +256,12 @@ const Profile = () => {
     const newErrors = {};
     if (!tempUserInfo.email) newErrors.email = 'Email is required';
     if (!tempUserInfo.username) newErrors.username = 'Username is required';
+    // Agregar validaciones adicionales aquí
+
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
+      
       try {
         const response = await fetch(`${API_URL}/users/me`, {
           method: 'PUT',
@@ -213,9 +269,13 @@ const Profile = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${user.token}`,
           },
-          body: JSON.stringify(tempUserInfo), // Envía tempUserInfo para actualizar
+          body: JSON.stringify(tempUserInfo),
         });
+
         if (response.ok) {
+          const updatedUser = await response.json();
+          setUserInfo(updatedUser);
+          setTempUserInfo(updatedUser);
           console.log('Profile updated successfully');
         } else {
           const errorData = await response.json();
@@ -223,18 +283,21 @@ const Profile = () => {
         }
       } catch (error) {
         console.error('Update error:', error);
-      }
+        setErrors({ ...errors, form: error.message });
+      } 
     }
   };
-
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!password) newErrors.currentPassword = 'Current password is required';
     if (!newPassword) newErrors.newPassword = 'New password is required';
+    // Agregar validaciones adicionales aquí
+
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
+      
       try {
         const response = await fetch(`${API_URL}/users/password`, {
           method: 'PUT',
@@ -247,18 +310,18 @@ const Profile = () => {
 
         if (response.ok) {
           console.log('Password updated successfully');
-          setPassword(''); // Clear the current password field
-          setNewPassword(''); // Clear the new password field
+          setPassword('');
+          setNewPassword('');
         } else {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to update password');
         }
       } catch (error) {
         console.error('Password update error:', error);
-      }
+        setErrors({ ...errors, password: error.message });
+      } 
     }
   };
-
   const renderContent = () => {
     switch (activeSection) {
       case 'profile':
@@ -290,7 +353,6 @@ const Profile = () => {
               </InputContainer>
               <InputContainer>
                 <label>First Name:</label>
-         
                 <input
                   type="text"
                   name="first_name"
@@ -302,7 +364,6 @@ const Profile = () => {
               </InputContainer>
               <InputContainer>
                 <label>Last Name:</label>
-            
                 <input
                   type="text"
                   name="last_name"
@@ -314,7 +375,6 @@ const Profile = () => {
               </InputContainer>
               <InputContainer>
                 <label>Phone Number:</label>
-      
                 <input
                   type="text"
                   name="phone"
@@ -326,7 +386,6 @@ const Profile = () => {
               </InputContainer>
               <InputContainer>
                 <label>Date of Birth:</label>
-          
                 <input
                   type="date"
                   name="date_of_birth"
@@ -337,7 +396,6 @@ const Profile = () => {
               </InputContainer>
               <InputContainer>
                 <label>Address:</label>
-            
                 <input
                   type="text"
                   name="address"
@@ -380,7 +438,6 @@ const Profile = () => {
             </form>
           </FormContainer>
         );
-      // Otros casos como 'preferences', 'account', etc.
       default:
         return <div>Select a section from the sidebar.</div>;
     }
@@ -388,6 +445,9 @@ const Profile = () => {
 
   return (
     <ProfileContainer>
+      <MobileMenuButton onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}>
+        ☰
+      </MobileMenuButton>
       <Sidebar>
         <SidebarItem
           active={activeSection === 'profile'}
@@ -409,6 +469,41 @@ const Profile = () => {
         </SidebarItem>
         <SidebarItem onClick={logout}>Logout</SidebarItem>
       </Sidebar>
+      <MobileMenu isOpen={isMobileMenuOpen}>
+        <MobileMenuItem
+          active={activeSection === 'profile'}
+          onClick={() => {
+            setActiveSection('profile');
+            setMobileMenuOpen(false);
+          }}
+        >
+          Profile
+        </MobileMenuItem>
+        <MobileMenuItem
+          active={activeSection === 'security'}
+          onClick={() => {
+            setActiveSection('security');
+            setMobileMenuOpen(false);
+          }}
+        >
+          Security
+        </MobileMenuItem>
+        <MobileMenuItem
+          active={activeSection === 'preferences'}
+          onClick={() => {
+            setActiveSection('preferences');
+            setMobileMenuOpen(false);
+          }}
+        >
+          Preferences
+        </MobileMenuItem>
+        <MobileMenuItem onClick={() => {
+          logout();
+          setMobileMenuOpen(false);
+        }}>
+          Logout
+        </MobileMenuItem>
+      </MobileMenu>
       <Content>{renderContent()}</Content>
     </ProfileContainer>
   );

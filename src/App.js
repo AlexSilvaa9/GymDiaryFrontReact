@@ -22,6 +22,9 @@ const AppContainer = styled.div`
   flex-direction: column;
   min-height: 100vh;
   padding-bottom: 4rem; /* Ajusta este valor según la altura de tu footer */
+   @media (max-width: 768px) {
+    padding-bottom: 10rem;
+  }
 `;
 
 const MainContent = styled.main`

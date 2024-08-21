@@ -5,7 +5,7 @@ import axios from 'axios';
 // Estilos para el contenedor del formulario
 const FormContainer = styled.div`
   width: 100%;
-  max-width: 600px;
+  max-width: 600px; /* Establece un ancho máximo fijo para el formulario */
   margin: 0 auto;
   padding: 2rem;
   background: ${({ theme }) => theme.cardBackground};
@@ -13,6 +13,11 @@ const FormContainer = styled.div`
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+
+  /* Ajustes para pantallas más pequeñas */
+  @media (max-width: 768px) {
+    max-width: 90%; /* Ajusta el ancho máximo en pantallas más pequeñas */
+  }
 `;
 
 // Estilos para los grupos de inputs
@@ -21,6 +26,7 @@ const InputGroup = styled.div`
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+  padding: 1rem 0;
 `;
 
 // Estilos para los inputs
@@ -30,7 +36,8 @@ const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
   padding: 0.75rem;
-  width: 100%;
+  width: 100%; /* Asegura que los inputs ocupen el 100% del ancho disponible */
+  box-sizing: border-box; /* Incluye padding y borde en el ancho total */
   font-size: 1rem;
   transition: border-color 0.3s ease;
 
@@ -49,12 +56,15 @@ const Button = styled.button`
   background-color: ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.text};
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem;
   font-size: 1.1rem;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   margin-top: 1rem;
+  width: 100%; /* Asegura que el botón ocupe el 100% del ancho disponible */
+  box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+
   &:hover {
     background-color: ${({ theme }) => theme.secondary};
     transform: scale(1.02);
@@ -72,7 +82,13 @@ const FormTitle = styled.h2`
   color: ${({ theme }) => theme.text};
   font-size: 1.5rem;
   font-weight: bold;
+
+  /* Ajusta el tamaño del texto en pantallas más pequeñas */
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
 `;
+
 const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const AddCardForm = ({ fetchMetrics }) => {
@@ -141,7 +157,6 @@ const AddCardForm = ({ fetchMetrics }) => {
             onChange={handleChange}
             required
           />
-          
           <Input
             type="date"
             name="date"
