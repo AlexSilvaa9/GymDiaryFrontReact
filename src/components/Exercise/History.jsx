@@ -4,6 +4,7 @@ import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 import Routine from './Routine';
 import styled from 'styled-components';
+import Loading from '../Loading'; // Asegúrate de importar el componente de carga
 
 const HistoryWrapper = styled.div`
   align-items: center;
@@ -37,11 +38,22 @@ const CalendarWrapper = styled.div`
   }
 `;
 
+const NoRoutinesMessage = styled.p`
+  text-align: center;
+  color: ${({ theme }) => theme.text};
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  
+  background-color: ${({ theme }) => theme.secondaryBackground};
+
+`;
+
 const API_URL = process.env.REACT_APP_SERVER_NAME;
 
 const History = () => {
   const [date, setDate] = useState(new Date());
   const [routines, setRoutines] = useState([]);
+  const [loading, setLoading] = useState(true); // Estado de carga
 
   useEffect(() => {
     const formatDate = (date) => {
@@ -53,17 +65,23 @@ const History = () => {
 
     const formattedDate = formatDate(date);
 
-    axios.get(`${API_URL}/users/me/routines?date=${formattedDate}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
-    .then(response => {
-      const data = response.data || [];
-      setRoutines(data);
-    })
-    .catch(error => {
-      console.error("Error al cargar el historial:", error);
-      setRoutines([]);
-    });
+    const fetchRoutines = async () => {
+      try {
+        setLoading(true); // Mostrar el loading al comenzar la carga
+        const response = await axios.get(`${API_URL}/users/me/routines?date=${formattedDate}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        const data = response.data || [];
+        setRoutines(data);
+      } catch (error) {
+        console.error("Error al cargar el historial:", error);
+        setRoutines([]);
+      } finally {
+        setLoading(false); // Ocultar el loading después de la carga
+      }
+    };
+
+    fetchRoutines();
   }, [date]);
 
   const handleDeleteRoutine = (routineId) => {
@@ -77,16 +95,20 @@ const History = () => {
       </CalendarWrapper>
       <div>
         <h2 style={{ textAlign: 'center' }}>Routines on {date.toDateString()}</h2>
-        {routines.length > 0 ? (
-          routines.map(routine => (
-            <Routine 
-              key={routine._id} 
-              routine={routine}  // Corregido: pasa `routine` directamente
-              onDelete={handleDeleteRoutine} 
-            />
-          ))
+        {loading ? (
+          <Loading /> // Mostrar el loading mientras se cargan las rutinas
         ) : (
-          <p>No routines found on this date.</p>
+          routines.length > 0 ? (
+            routines.map(routine => (
+              <Routine 
+                key={routine._id} 
+                routine={routine} 
+                onDelete={handleDeleteRoutine} 
+              />
+            ))
+          ) : (
+            <NoRoutinesMessage>No routines found on this date.</NoRoutinesMessage>
+          )
         )}
       </div>
     </HistoryWrapper>

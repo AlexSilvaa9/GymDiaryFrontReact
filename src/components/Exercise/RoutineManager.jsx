@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import RoutineTemplate from './RoutineTemplate';
+import Loading from '../Loading';
 
+// Styled components for tab container and buttons
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -29,19 +31,26 @@ const RoutineManager = () => {
   const [selectedRoutine, setSelectedRoutine] = useState(null);
   const [newRoutine, setNewRoutine] = useState({ name: '', exercises: [] });
   const [activeTab, setActiveTab] = useState('list');
-
+  const [loading, setLoading] = useState(true); // Estado de carga
   const API_URL = `${process.env.REACT_APP_SERVER_NAME}/users/me/routine-templates`;
 
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
+        setLoading(true); // Mostrar carga al inicio
         const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
         const response = await axios.get(API_URL, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setRoutines(response.data);
       } catch (error) {
         console.error('Error fetching routines:', error);
+      } finally {
+        setLoading(false); // Ocultar símbolo de carga al finalizar la solicitud
       }
     };
 
@@ -71,22 +80,15 @@ const RoutineManager = () => {
     }
   };
 
-  const handleEditRoutine = (routine) => {
-    setSelectedRoutine(routine);
-    setActiveTab('edit');
-  };
-
   const handleDeleteRoutine = async (routineId) => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`${API_URL}/${routineId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
-      // Eliminar la rutina del estado local
       setRoutines(prevRoutines => prevRoutines.filter(routine => routine._id !== routineId));
       setSelectedRoutine(null);
-      setActiveTab('list'); // Vuelve a la lista después de eliminar
+      setActiveTab('list');
     } catch (error) {
       console.error('Error deleting routine:', error);
     }
@@ -109,41 +111,47 @@ const RoutineManager = () => {
         </TabButton>
       </TabContainer>
 
-      {activeTab === 'list' && (
-        <div>
-          {routines.map(routine => (
-            <RoutineTemplate
-              key={routine._id}
-              routine={routine}
-              token={localStorage.getItem('token')}
-              onSave={(updatedRoutine) => {
-                setRoutines(prevRoutines =>
-                  prevRoutines.map(r =>
-                    r._id === updatedRoutine._id ? updatedRoutine : r
-                  )
-                );
-                setActiveTab('list');
-              }}
-              onChange={handleRoutineChange}
-              onDelete={handleDeleteRoutine}
-            />
-          ))}
-        </div>
-      )}
+      {loading ? (
+        <Loading /> // Mostrar loading si está cargando
+      ) : (
+        <>
+          {activeTab === 'list' && (
+            <div>
+              {routines.map(routine => (
+                <RoutineTemplate
+                  key={routine._id}
+                  routine={routine}
+                  token={localStorage.getItem('token')}
+                  onSave={(updatedRoutine) => {
+                    setRoutines(prevRoutines =>
+                      prevRoutines.map(r =>
+                        r._id === updatedRoutine._id ? updatedRoutine : r
+                      )
+                    );
+                    setActiveTab('list');
+                  }}
+                  onChange={handleRoutineChange}
+                  onDelete={handleDeleteRoutine}
+                />
+              ))}
+            </div>
+          )}
 
-      {activeTab === 'add' && (
-        <div>
-          <RoutineTemplate
-            routine={newRoutine}
-            token={localStorage.getItem('token')}
-            onSave={(newRoutine) => {
-              setRoutines(prevRoutines => [...prevRoutines, newRoutine]);
-              setNewRoutine({ name: '', exercises: [] });
-              setActiveTab('list');
-            }}
-            onChange={handleRoutineChange}
-          />
-        </div>
+          {activeTab === 'add' && (
+            <div>
+              <RoutineTemplate
+                routine={newRoutine}
+                token={localStorage.getItem('token')}
+                onSave={(newRoutine) => {
+                  setRoutines(prevRoutines => [...prevRoutines, newRoutine]);
+                  setNewRoutine({ name: '', exercises: [] });
+                  setActiveTab('list');
+                }}
+                onChange={handleRoutineChange}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

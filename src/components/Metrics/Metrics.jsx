@@ -3,6 +3,7 @@ import CardCarousel from './CardCarousel'; // Asegúrate de que la ruta sea corr
 import styled from 'styled-components';
 import AddCardForm from './AddCardForm'; // Asegúrate de que la ruta sea correcta
 import axios from 'axios';
+import Loading from '../Loading'; // Asegúrate de que la ruta del componente Loading es correcta
 
 // Estilos para los componentes
 const AppWrapper = styled.div`
@@ -38,15 +39,17 @@ const TabButton = styled.button`
     background: ${({ theme }) => theme.tertiary};
   }
 `;
-const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
+const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const Metrics = () => {
   const [activeTab, setActiveTab] = useState('viewCards');
   const [metrics, setMetrics] = useState([]);
+  const [loading, setLoading] = useState(false); // Estado de carga
 
   // Función para obtener métricas desde el backend
   const fetchMetrics = async () => {
+    setLoading(true); // Mostrar el loading al iniciar la carga
     try {
       const response = await axios.get(`${API_URL}/users/me/metrics`, {
         headers: {
@@ -56,6 +59,8 @@ const Metrics = () => {
       setMetrics(response.data);
     } catch (error) {
       console.error('Error fetching metrics:', error.response?.data || error.message);
+    } finally {
+      setLoading(false); // Ocultar el loading después de la carga
     }
   };
 
@@ -83,7 +88,9 @@ const Metrics = () => {
           </TabButton>
         </TabContainer>
 
-        {activeTab === 'viewCards' ? (
+        {loading ? ( // Mostrar loading mientras se cargan los datos
+          <Loading />
+        ) : activeTab === 'viewCards' ? (
           <CardCarousel cards={metrics} setCards={setMetrics} />
         ) : (
           <AddCardForm fetchMetrics={fetchMetrics} />

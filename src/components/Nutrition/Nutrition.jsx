@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import Loading from '../Loading'; // Importa el componente Loading
 
 // Styled Components
 const AppWrapper = styled.div`
@@ -161,7 +162,8 @@ const StatsSection = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text};
 `;
-const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
+
+const API_URL = process.env.REACT_APP_SERVER_NAME;
 
 const Nutrition = () => {
   const [meals, setMeals] = useState([]);
@@ -173,18 +175,19 @@ const Nutrition = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState('viewMeals');
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [loading, setLoading] = useState(false); // Estado de carga
 
   useEffect(() => {
     const fetchMeals = async () => {
+      setLoading(true); // Mostrar el loading al iniciar la carga
       try {
-        // Ajusta la fecha para sumar un día
         const adjustedDate = new Date(selectedDate);
         adjustedDate.setDate(adjustedDate.getDate() + 1);
 
         const response = await fetch(`${API_URL}/users/me/meals?date=${adjustedDate.toISOString().split('T')[0]}`, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         if (response.ok) {
           const data = await response.json();
@@ -194,6 +197,8 @@ const Nutrition = () => {
         }
       } catch (error) {
         console.error('Error fetching meals:', error);
+      } finally {
+        setLoading(false); // Ocultar el loading después de la carga
       }
     };
 
@@ -204,7 +209,6 @@ const Nutrition = () => {
 
   const handleAddMeal = async () => {
     if (mealName && calories && protein && carbs && fats) {
-      // Ajusta la fecha para sumar un día
       const adjustedDate = new Date(selectedDate);
       adjustedDate.setDate(adjustedDate.getDate() + 1);
 
@@ -215,8 +219,8 @@ const Nutrition = () => {
         macros: {
           protein: parseInt(protein),
           carbs: parseInt(carbs),
-          fats: parseInt(fats)
-        }
+          fats: parseInt(fats),
+        },
       };
 
       try {
@@ -224,9 +228,9 @@ const Nutrition = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(newMeal)
+          body: JSON.stringify(newMeal),
         });
 
         if (response.ok) {
@@ -290,74 +294,80 @@ const Nutrition = () => {
           </TabButton>
         </Tabs>
 
-        {view === 'addMeal' && (
-          <Form>
-            <InputGroup>
-              <Input
-                type="text"
-                placeholder="Meal Name"
-                value={mealName}
-                onChange={(e) => setMealName(e.target.value)}
-                required
-              />
-              <Input
-                type="number"
-                placeholder="Calories"
-                value={calories}
-                onChange={(e) => setCalories(e.target.value)}
-                required
-              />
-              <Input
-                type="number"
-                placeholder="Protein (g)"
-                value={protein}
-                onChange={(e) => setProtein(e.target.value)}
-                required
-              />
-              <Input
-                type="number"
-                placeholder="Carbs (g)"
-                value={carbs}
-                onChange={(e) => setCarbs(e.target.value)}
-                required
-              />
-              <Input
-                type="number"
-                placeholder="Fats (g)"
-                value={fats}
-                onChange={(e) => setFats(e.target.value)}
-                required
-              />
-            </InputGroup>
-            <Button onClick={handleAddMeal}>Add Meal</Button>
-          </Form>
-        )}
-
-        {view === 'viewMeals' && (
+        {loading ? ( // Mostrar loading mientras se cargan los datos
+          <Loading />
+        ) : (
           <>
-            <StatsSection>
-              <h2>Statistics for {new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}</h2>
-              <p>Total Calories: {stats.totalCalories} kcal</p>
-              <p>Total Protein: {stats.totalProtein} g</p>
-              <p>Total Carbs: {stats.totalCarbs} g</p>
-              <p>Total Fats: {stats.totalFats} g</p>
-            </StatsSection>
+            {view === 'addMeal' && (
+              <Form>
+                <InputGroup>
+                  <Input
+                    type="text"
+                    placeholder="Meal Name"
+                    value={mealName}
+                    onChange={(e) => setMealName(e.target.value)}
+                    required
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Calories"
+                    value={calories}
+                    onChange={(e) => setCalories(e.target.value)}
+                    required
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Protein (g)"
+                    value={protein}
+                    onChange={(e) => setProtein(e.target.value)}
+                    required
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Carbs (g)"
+                    value={carbs}
+                    onChange={(e) => setCarbs(e.target.value)}
+                    required
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Fats (g)"
+                    value={fats}
+                    onChange={(e) => setFats(e.target.value)}
+                    required
+                  />
+                </InputGroup>
+                <Button onClick={handleAddMeal}>Add Meal</Button>
+              </Form>
+            )}
 
-            <MealsList>
-              {meals.length > 0 ? (
-                meals.map((meal, index) => (
-                  <MealCard key={index}>
-                    <h3>{meal.name}</h3>
-                    <p>Calories: {meal.calories}</p>
-                    <p>Protein: {meal.macros.protein}g</p>
-                    <p>Carbs: {meal.macros.carbs}g</p>
-                    <p>Fats: {meal.macros.fats}g</p>
-                  </MealCard>
-                ))
-              ) : (
-                <MealCard>No meals recorded for this day.</MealCard>
-              )}
-            </MealsList>
+            {view === 'viewMeals' && (
+              <>
+                <StatsSection>
+                  <h2>Statistics for {new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}</h2>
+                  <p>Total Calories: {stats.totalCalories} kcal</p>
+                  <p>Total Protein: {stats.totalProtein} g</p>
+                  <p>Total Carbs: {stats.totalCarbs} g</p>
+                  <p>Total Fats: {stats.totalFats} g</p>
+                </StatsSection>
+
+                <MealsList>
+                  {meals.length > 0 ? (
+                    meals.map((meal, index) => (
+                      <MealCard key={index}>
+                        <h3>{meal.name}</h3>
+                        <p>Calories: {meal.calories}</p>
+                        <p>Protein: {meal.macros.protein}g</p>
+                        <p>Carbs: {meal.macros.carbs}g</p>
+                        <p>Fats: {meal.macros.fats}g</p>
+                      </MealCard>
+                    ))
+                  ) : (
+                    <MealCard>No meals recorded for this day.</MealCard>
+                  )}
+                </MealsList>
+              </>
+            )}
           </>
         )}
       </Container>
