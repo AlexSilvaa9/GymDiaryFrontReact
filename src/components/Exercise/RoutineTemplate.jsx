@@ -71,8 +71,7 @@ const RoutineTitle = styled.input`
   }
 `;
 
-
-const RoutineTemplate = ({ routine, token, onSave, onDelete, onChange }) => {
+const RoutineTemplate = ({ routine, token, onSelect, onSave }) => {
   const [updatedRoutine, setUpdatedRoutine] = useState(routine);
 
   useEffect(() => {
@@ -86,7 +85,6 @@ const RoutineTemplate = ({ routine, token, onSave, onDelete, onChange }) => {
       ...prevState,
       exercises: newExercises,
     }));
-    if (onChange) onChange({ ...updatedRoutine, exercises: newExercises });
   };
 
   const handleAddExercise = () => {
@@ -102,7 +100,6 @@ const RoutineTemplate = ({ routine, token, onSave, onDelete, onChange }) => {
       ...prevState,
       exercises: newExercises,
     }));
-    if (onChange) onChange({ ...updatedRoutine, exercises: newExercises });
   };
 
   const handleDeleteExercise = (index) => {
@@ -111,7 +108,18 @@ const RoutineTemplate = ({ routine, token, onSave, onDelete, onChange }) => {
       ...prevState,
       exercises: newExercises,
     }));
-    if (onChange) onChange({ ...updatedRoutine, exercises: newExercises });
+  };
+
+  const handleNameChange = (event) => {
+    const newName = event.target.value;
+    setUpdatedRoutine(prevState => ({
+      ...prevState,
+      name: newName,
+    }));
+  };
+
+  const handleSelect = () => {
+    if (onSelect) onSelect(updatedRoutine);
   };
 
   const handleSaveRoutine = async () => {
@@ -139,43 +147,6 @@ const RoutineTemplate = ({ routine, token, onSave, onDelete, onChange }) => {
     }
   };
 
-  const handleDeleteRoutine = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this routine?");
-    if (!confirmDelete) return;
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_SERVER_NAME}/users/me/routine-templates`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name: updatedRoutine.name }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        alert(data.message || 'Routine deleted successfully');
-        if (onDelete) onDelete(updatedRoutine._id);
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Error deleting routine');
-      }
-    } catch (error) {
-      console.error('Error submitting request:', error);
-      alert('Error submitting request');
-    }
-  };
-
-  const handleNameChange = (event) => {
-    const newName = event.target.value;
-    setUpdatedRoutine(prevState => ({
-      ...prevState,
-      name: newName,
-    }));
-    if (onChange) onChange({ ...updatedRoutine, name: newName });
-  };
-
   return (
     <RoutineContainer>
       <RoutineTitle
@@ -201,13 +172,11 @@ const RoutineTemplate = ({ routine, token, onSave, onDelete, onChange }) => {
       </ExerciseListContainer>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
         <Button onClick={handleAddExercise}>Add Exercise</Button>
+        <Button onClick={handleSelect}>Let's do this routine today!</Button>
         <Button onClick={handleSaveRoutine}>Save Routine</Button>
-        <Button variant="delete" onClick={handleDeleteRoutine}>Delete Routine</Button>
       </div>
     </RoutineContainer>
   );
 };
 
 export default RoutineTemplate;
-
-
