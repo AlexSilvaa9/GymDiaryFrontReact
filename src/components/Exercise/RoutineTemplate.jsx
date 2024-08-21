@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Exercise from './Exercise';
+import Exercise from './Exercise'; // Asegúrate de que el nombre del archivo y la importación coincidan
 
 const RoutineContainer = styled.div`
   display: flex;
@@ -26,20 +26,18 @@ const ExerciseListContainer = styled.div`
 `;
 
 const Button = styled.button`
-  background: ${({ theme, variant }) => 
-    variant === 'delete' ? theme.danger : theme.primary};
+  background: ${({ theme, variant }) => variant === 'delete' ? theme.danger : theme.primary};
   color: ${({ theme }) => theme.text};
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.875rem;
   transition: background 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background: ${({ theme, variant }) => 
-      variant === 'delete' ? theme.dangerDark : theme.tertiary};
+    background: ${({ theme, variant }) => variant === 'delete' ? theme.dangerDark : theme.tertiary};
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
   }
@@ -54,27 +52,41 @@ const Button = styled.button`
   }
 `;
 
-const RoutineTitle = styled.h1`
-  text-align: center;
-  font-size: 2rem;
+const RoutineTitle = styled.input`
+  font-size: 1.25rem;
   font-weight: bold;
   color: ${({ theme }) => theme.primary};
+  border: 1px solid ${({ theme }) => theme.border};
+  background: ${({ theme }) => theme.backgroundLight};
+  border-radius: 8px;
   margin-bottom: 1rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.primary};
+  }
 `;
 
-const API_URL = process.env.REACT_APP_SERVER_NAME;
 
-const Routine = ({ routine, onDelete }) => {
+const RoutineTemplate = ({ routine, token, onSave, onDelete, onChange }) => {
   const [updatedRoutine, setUpdatedRoutine] = useState(routine);
+
+  useEffect(() => {
+    setUpdatedRoutine(routine);
+  }, [routine]);
 
   const handleExerciseChange = (updatedExercise, index) => {
     const newExercises = [...updatedRoutine.exercises];
     newExercises[index] = updatedExercise;
-    setUpdatedRoutine({
-      ...updatedRoutine,
+    setUpdatedRoutine(prevState => ({
+      ...prevState,
       exercises: newExercises,
-    });
+    }));
+    if (onChange) onChange({ ...updatedRoutine, exercises: newExercises });
   };
 
   const handleAddExercise = () => {
@@ -85,75 +97,91 @@ const Routine = ({ routine, onDelete }) => {
       reps: '',
       weight: '',
     };
+    const newExercises = [...updatedRoutine.exercises, newExercise];
     setUpdatedRoutine(prevState => ({
       ...prevState,
-      exercises: [...prevState.exercises, newExercise],
+      exercises: newExercises,
     }));
+    if (onChange) onChange({ ...updatedRoutine, exercises: newExercises });
   };
 
   const handleDeleteExercise = (index) => {
     const newExercises = updatedRoutine.exercises.filter((_, i) => i !== index);
-    setUpdatedRoutine({
-      ...updatedRoutine,
+    setUpdatedRoutine(prevState => ({
+      ...prevState,
       exercises: newExercises,
-    });
+    }));
+    if (onChange) onChange({ ...updatedRoutine, exercises: newExercises });
   };
 
-  const handleUpdateRoutine = async () => {
+  const handleSaveRoutine = async () => {
     try {
-      const response = await fetch(`${API_URL}/users/me/routines`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_NAME}/users/me/routine-templates`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(updatedRoutine),
       });
 
       if (response.ok) {
         const data = await response.json();
-        alert(data.message || 'Rutina actualizada correctamente');
+        alert(data.message || 'Routine saved successfully');
+        if (onSave) onSave(data); // Pasa la rutina guardada al componente padre
       } else {
         const errorData = await response.json();
-        alert(errorData.message || 'Error al actualizar la rutina');
+        alert(errorData.message || 'Error saving routine');
       }
     } catch (error) {
-      console.error('Error al enviar la solicitud:', error);
-      alert('Error al enviar la solicitud');
+      console.error('Error submitting request:', error);
+      alert('Error submitting request');
     }
   };
 
   const handleDeleteRoutine = async () => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar esta rutina?");
+    const confirmDelete = window.confirm("Are you sure you want to delete this routine?");
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`${API_URL}/users/me/routines`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_NAME}/users/me/routine-templates`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ name: routine.name, date: routine.date }),
+        body: JSON.stringify({ name: updatedRoutine.name }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        alert(data.message || 'Rutina eliminada correctamente');
-        onDelete(routine._id);  // Llama a la función de eliminación pasada como prop
+        alert(data.message || 'Routine deleted successfully');
+        if (onDelete) onDelete(updatedRoutine._id);
       } else {
         const errorData = await response.json();
-        alert(errorData.message || 'Error al eliminar la rutina');
+        alert(errorData.message || 'Error deleting routine');
       }
     } catch (error) {
-      console.error('Error al enviar la solicitud:', error);
-      alert('Error al enviar la solicitud');
+      console.error('Error submitting request:', error);
+      alert('Error submitting request');
     }
+  };
+
+  const handleNameChange = (event) => {
+    const newName = event.target.value;
+    setUpdatedRoutine(prevState => ({
+      ...prevState,
+      name: newName,
+    }));
+    if (onChange) onChange({ ...updatedRoutine, name: newName });
   };
 
   return (
     <RoutineContainer>
-      <RoutineTitle>{updatedRoutine.name}</RoutineTitle>
+      <RoutineTitle
+        value={updatedRoutine.name}
+        onChange={handleNameChange}
+      />
       <ExerciseListContainer>
         {updatedRoutine.exercises && updatedRoutine.exercises.length > 0 ? (
           updatedRoutine.exercises.map((exercise, index) => (
@@ -173,11 +201,13 @@ const Routine = ({ routine, onDelete }) => {
       </ExerciseListContainer>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
         <Button onClick={handleAddExercise}>Add Exercise</Button>
-        <Button onClick={handleUpdateRoutine}>Save Routine</Button>
+        <Button onClick={handleSaveRoutine}>Save Routine</Button>
         <Button variant="delete" onClick={handleDeleteRoutine}>Delete Routine</Button>
       </div>
     </RoutineContainer>
   );
 };
 
-export default Routine;
+export default RoutineTemplate;
+
+

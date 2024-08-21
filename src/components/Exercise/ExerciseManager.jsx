@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import History from './History';
 import RoutineManager from './RoutineManager';
-import Exercises from './Today';
+import Today from './Today';
 import styled from 'styled-components';
 
 const AppWrapper = styled.div`
@@ -55,7 +55,7 @@ const ExerciseManager = () => {
   return (
     <AppWrapper>
       <Container>
-        <Title>Exercise Manager</Title>
+        
         <TabContainer>
           <TabButton
             active={activeTab === 'history'}
@@ -72,8 +72,8 @@ const ExerciseManager = () => {
           </TabButton>
 
           <TabButton
-            active={activeTab === 'exerciseManager'}
-            onClick={() => setActiveTab('exerciseManager')}
+            active={activeTab === 'today'}
+            onClick={() => setActiveTab('today')}
           >
             Today
           </TabButton>
@@ -83,7 +83,7 @@ const ExerciseManager = () => {
         <div style={{ flex: 1, width: '100%' }}>
           {activeTab === 'history' && <History />}
           {activeTab === 'routineManager' && <RoutineManager />}
-          {activeTab === 'exerciseManager' && <Exercises />}
+          {activeTab === 'today' && <Today />}
         </div>
       </Container>
     </AppWrapper>
