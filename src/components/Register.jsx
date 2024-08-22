@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import Loading from './Loading'; // Importa el componente Loading
+import Loading from './Loading'; // Import Loading component
+import PasswordStrengthBar from 'react-password-strength-bar';
+import zxcvbn from 'zxcvbn'; // Library for password strength evaluation
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -13,7 +15,7 @@ const RegisterContainer = styled.div`
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.text};
   margin: 0;
-  padding: 0;
+  padding: 1rem;
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
@@ -21,23 +23,52 @@ const RegisterContainer = styled.div`
 
 const RegisterForm = styled.div`
   padding: 2rem;
-  width: 90%;
-  max-width: 400px;
+  width: 100%;
+  max-width: 450px;
   text-align: center;
   position: relative;
   z-index: 2;
+  background: ${({ theme }) => theme.formBackground};
+  border-radius: 8px;
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: 1.75rem;
+  }
+
+  @media (max-width: 400px) {
+    padding: 1.5rem;
+  }
 `;
 
 const Title = styled.h1`
   font-size: 2rem;
   margin-bottom: 1rem;
   color: ${({ theme }) => theme.text};
+
+  @media (max-width: 600px) {
+    font-size: 1.75rem;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const Subtitle = styled.h2`
   font-size: 1.2rem;
   margin-bottom: 2rem;
   color: ${({ theme }) => theme.secondaryText};
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const Input = styled.input`
@@ -49,12 +80,20 @@ const Input = styled.input`
   font-size: 1rem;
   margin-bottom: 1rem;
   width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.3s ease;
-  
+  box-sizing: border-box;
+
   &:focus {
     outline: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 400px) {
+    padding: 0.45rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -62,18 +101,26 @@ const Button = styled.button`
   background: ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.text};
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem;
   font-size: 1rem;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0.9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 
   &:hover {
     background: ${({ theme }) => theme.secondary};
-    opacity: 1;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 400px) {
+    padding: 0.45rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -90,6 +137,14 @@ const LoginLink = styled.p`
       text-decoration: underline;
     }
   }
+
+  @media (max-width: 600px) {
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const GymDecor = styled.div`
@@ -103,6 +158,14 @@ const GymDecor = styled.div`
   background-image: url('/gym-decor.png');
   background-size: cover;
   background-position: center;
+
+  @media (max-width: 600px) {
+    height: 80px;
+  }
+
+  @media (max-width: 400px) {
+    height: 60px;
+  }
 `;
 
 const ErrorMessage = styled.p`
@@ -119,11 +182,15 @@ const LoadingContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.8); /* Fondo blanco translúcido */
+  background: rgba(255, 255, 255, 0.8);
   z-index: 3;
 `;
 
-const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
+const API_URL = process.env.REACT_APP_SERVER_NAME;
+
+// Regular expressions for validation
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -132,24 +199,34 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Hook para navegación
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const navigate = useNavigate();
 
   const validate = () => {
     const newErrors = {};
-    if (!email.includes('@')) {
+
+    if (!emailRegex.test(email)) {
       newErrors.email = 'Please enter a valid email address';
     }
     if (username.length < 3) {
       newErrors.username = 'Username must be at least 3 characters long';
     }
-    if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
+    if (!passwordRegex.test(password)) {
+      newErrors.password = 'Password must be at least 6 characters long, contain an uppercase letter, a lowercase letter, and a number';
     }
     if (password !== confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    // Use zxcvbn to evaluate password strength
+    const result = zxcvbn(newPassword);
+    setPasswordStrength(result.score);
   };
 
   const handleSubmit = async (e) => {
@@ -174,10 +251,9 @@ const Register = () => {
         if (response.ok) {
           const data = await response.json();
           alert('Registration successful');
-          navigate('/login'); // Redirigir a /login después de un registro exitoso
+          navigate('/login');
         } else {
           const errorData = await response.json();
-          // Asignar los errores específicos al estado
           setErrors({ general: errorData.message || 'An error occurred during registration' });
         }
       } catch (error) {
@@ -215,9 +291,11 @@ const Register = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
           />
           {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
+          
+          <PasswordStrengthBar password={password} style={{ width: '100%', boxSizing: 'border-box' }} />
           
           <Input
             type="password"
@@ -230,7 +308,7 @@ const Register = () => {
           {errors.general && <ErrorMessage>{errors.general}</ErrorMessage>}
           
           <Button type="submit" disabled={loading}>
-            Register
+            {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
         <LoginLink>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home/Home';
 import Footer from './components/Footer';
@@ -13,16 +13,15 @@ import Exercise from './components/Exercise/ExerciseManager';
 import styled, { ThemeProvider } from 'styled-components';
 import colors from './styles/colors';
 import GlobalStyle from './styles/GlobalStyle';
-import { AuthProvider } from './components/contexts/AuthContext'; // Ajusta la ruta según tu estructura
-import ProtectedRoute from './components/ProtectedRoute'; // Ajusta la ruta según tu estructura
+import { AuthProvider } from './components/contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
-// Contenedor principal para el diseño
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-bottom: 4rem; /* Ajusta este valor según la altura de tu footer */
-   @media (max-width: 768px) {
+  padding-bottom: 4rem;
+  @media (max-width: 768px) {
     padding-bottom: 10rem;
   }
 `;
@@ -54,7 +53,7 @@ function App() {
             <Navbar toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
             <MainContent>
               <Routes>
-                <Route path="/GymDiaryFrontReact" element={<Navigate to="/landingPage" replace />} />
+                <Route path="/" element={<Navigate to="/landingPage" replace />} />
                 <Route path="/landingPage" element={<LandingPage isDarkMode={isDarkMode} />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

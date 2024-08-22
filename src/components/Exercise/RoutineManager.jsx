@@ -36,7 +36,7 @@ const NoRoutinesMessage = styled.p`
 const RoutineManager = () => {
   const [routines, setRoutines] = useState([]);
   const [selectedRoutine, setSelectedRoutine] = useState(null);
-  const [newRoutine, setNewRoutine] = useState({ name: '', exercises: [] });
+  const [newRoutine, setNewRoutine] = useState({ name: 'Change the name here...', exercises: [] });
   const [activeTab, setActiveTab] = useState('list');
   const [loading, setLoading] = useState(true); // Estado de carga
   const API_URL = `${process.env.REACT_APP_SERVER_NAME}/users/me/routine-templates`;

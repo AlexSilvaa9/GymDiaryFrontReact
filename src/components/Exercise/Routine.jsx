@@ -6,13 +6,19 @@ const RoutineContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 300px;
+  max-width: 80%;
+  padding: 1rem;
+  margin: 1rem auto;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
   background-color: ${({ theme }) => theme.routineBackground};
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 80%;
-  padding: 1rem;
-  margin: 1rem auto;
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    max-width: 100%;
+    padding: 0.5rem;
+  }
 `;
 
 const ExerciseListContainer = styled.div`
@@ -23,6 +29,16 @@ const ExerciseListContainer = styled.div`
   flex-wrap: wrap;
   gap: 0.5rem;
   justify-content: space-between;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  box-sizing: border-box;
+  width: 100%;
 `;
 
 const Button = styled.button`
@@ -36,6 +52,13 @@ const Button = styled.button`
   font-size: 1rem;
   transition: background 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
 
   &:hover {
     background: ${({ theme, variant }) => 
@@ -48,10 +71,6 @@ const Button = styled.button`
     transform: translateY(1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-
-  &:not(:last-child) {
-    margin-right: 1rem;
-  }
 `;
 
 const RoutineTitle = styled.h1`
@@ -59,8 +78,12 @@ const RoutineTitle = styled.h1`
   font-size: 2rem;
   font-weight: bold;
   color: ${({ theme }) => theme.cardText};
-  margin-bottom: 1rem;
+  margin-top: 1rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 600px) {
+    font-size: 1.8rem;
+  }
 `;
 
 const API_URL = process.env.REACT_APP_SERVER_NAME;
@@ -163,7 +186,7 @@ const Routine = ({ routine, onDelete }) => {
                 onChange={(updatedExercise) => handleExerciseChange(updatedExercise, index)} 
               />
               <Button variant="delete" onClick={() => handleDeleteExercise(index)}>
-                Delete
+                Delete Exercise
               </Button>
             </div>
           ))
@@ -171,11 +194,11 @@ const Routine = ({ routine, onDelete }) => {
           <p>No exercises available</p>
         )}
       </ExerciseListContainer>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+      <ButtonContainer>
         <Button onClick={handleAddExercise}>Add Exercise</Button>
         <Button onClick={handleUpdateRoutine}>Save Routine</Button>
         <Button variant="delete" onClick={handleDeleteRoutine}>Delete Routine</Button>
-      </div>
+      </ButtonContainer>
     </RoutineContainer>
   );
 };
