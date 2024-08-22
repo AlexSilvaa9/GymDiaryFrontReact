@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Loading from './Loading'; // Importa el componente Loading
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -108,6 +109,20 @@ const ErrorMessage = styled.p`
   color: red;
   font-size: 0.9rem;
 `;
+
+const LoadingContainer = styled.div`
+  display: ${({ loading }) => (loading ? 'flex' : 'none')};
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8); /* Fondo blanco translúcido */
+  z-index: 3;
+`;
+
 const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const Register = () => {
@@ -117,6 +132,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Hook para navegación
 
   const validate = () => {
     const newErrors = {};
@@ -158,9 +174,11 @@ const Register = () => {
         if (response.ok) {
           const data = await response.json();
           alert('Registration successful');
+          navigate('/login'); // Redirigir a /login después de un registro exitoso
         } else {
           const errorData = await response.json();
-          setErrors(errorData.errors || { general: 'An error occurred during registration' });
+          // Asignar los errores específicos al estado
+          setErrors({ general: errorData.message || 'An error occurred during registration' });
         }
       } catch (error) {
         console.error('Error:', error);
@@ -212,13 +230,16 @@ const Register = () => {
           {errors.general && <ErrorMessage>{errors.general}</ErrorMessage>}
           
           <Button type="submit" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+            Register
           </Button>
         </form>
         <LoginLink>
           <Link to="/login">Already have an account? Login here</Link>
         </LoginLink>
       </RegisterForm>
+      <LoadingContainer loading={loading}>
+        <Loading />
+      </LoadingContainer>
       <GymDecor />
     </RegisterContainer>
   );

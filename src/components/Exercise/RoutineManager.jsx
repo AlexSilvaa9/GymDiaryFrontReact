@@ -26,6 +26,13 @@ const TabButton = styled.button`
   }
 `;
 
+const NoRoutinesMessage = styled.p`
+  text-align: center;
+  color: ${({ theme }) => theme.secondaryText};
+  font-size: 1.2rem;
+  margin-top: 2rem;
+`;
+
 const RoutineManager = () => {
   const [routines, setRoutines] = useState([]);
   const [selectedRoutine, setSelectedRoutine] = useState(null);
@@ -115,29 +122,31 @@ const RoutineManager = () => {
         <Loading /> // Mostrar loading si está cargando
       ) : (
         <>
-          {activeTab === 'list' && (
-            <div>
-              {routines.map(routine => (
-                <RoutineTemplate
-                  key={routine._id}
-                  routine={routine}
-                  token={localStorage.getItem('token')}
-                  onSave={(updatedRoutine) => {
-                    setRoutines(prevRoutines =>
-                      prevRoutines.map(r =>
-                        r._id === updatedRoutine._id ? updatedRoutine : r
-                      )
-                    );
-                    setActiveTab('list');
-                  }}
-                  onChange={handleRoutineChange}
-                  onDelete={handleDeleteRoutine}
-                />
-              ))}
-            </div>
-          )}
-
-          {activeTab === 'add' && (
+          {activeTab === 'list' ? (
+            routines.length === 0 ? (
+              <NoRoutinesMessage>You don't have any routines yet.</NoRoutinesMessage>
+            ) : (
+              <div>
+                {routines.map(routine => (
+                  <RoutineTemplate
+                    key={routine._id}
+                    routine={routine}
+                    token={localStorage.getItem('token')}
+                    onSave={(updatedRoutine) => {
+                      setRoutines(prevRoutines =>
+                        prevRoutines.map(r =>
+                          r._id === updatedRoutine._id ? updatedRoutine : r
+                        )
+                      );
+                      setActiveTab('list');
+                    }}
+                    onChange={handleRoutineChange}
+                    onDelete={handleDeleteRoutine}
+                  />
+                ))}
+              </div>
+            )
+          ) : (
             <div>
               <RoutineTemplate
                 routine={newRoutine}

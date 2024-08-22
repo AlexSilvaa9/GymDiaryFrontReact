@@ -8,7 +8,7 @@ const RoutineContainer = styled.div`
   min-width: 300px;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.backgroundLight};
+  background-color: ${({ theme }) => theme.routineBackground};
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 80%;
   padding: 1rem;
@@ -58,7 +58,7 @@ const RoutineTitle = styled.h1`
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.cardText};
   margin-bottom: 1rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;

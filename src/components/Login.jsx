@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from './contexts/AuthContext';
+import Loading from './Loading'; // Importa el componente Loading
 
 const LoginContainer = styled.div`
   display: flex;
@@ -98,6 +99,19 @@ const GymDecor = styled.div`
   background-position: center;
 `;
 
+const LoadingContainer = styled.div`
+  display: ${({ loading }) => (loading ? 'flex' : 'none')};
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8); /* Fondo blanco translúcido */
+  z-index: 3;
+`;
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -150,6 +164,9 @@ const Login = () => {
           <Link to="/register" style={{ color: 'inherit' }}>Don't have an account? Register here</Link>
         </RegisterLink>
       </LoginForm>
+      <LoadingContainer loading={loading}>
+        <Loading />
+      </LoadingContainer>
       <GymDecor />
     </LoginContainer>
   );

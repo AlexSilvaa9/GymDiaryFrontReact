@@ -23,13 +23,13 @@ const CardContainer = styled.div`
 
 const CardContent = styled.div`
   font-size: 1rem;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.cardText};
   margin-bottom: 0.5rem; /* Reduce el margen entre líneas */
 `;
 
 const CardDate = styled.div`
-  font-size: 0.9rem;
-  color: ${({ theme }) => theme.secondaryText};
+  font-size: 1.3rem;
+  color: ${({ theme }) => theme.cardTitle};
   margin-bottom: 0.5rem; /* Reduce el margen entre líneas */
 `;
 

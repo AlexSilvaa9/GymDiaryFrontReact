@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const scale = 6;
 
 const ExerciseCard = styled.div`
-  background-color: ${({ theme }) => theme.background};
+  background: ${({ theme }) => theme.cardBackground};
   padding: ${0.225 * scale}rem;
   border-radius: ${0.15 * scale}rem;
   box-shadow: 0 ${0.8 * scale}rem ${1.6 * scale}rem rgba(0, 0, 0, 0.15);
@@ -17,7 +17,7 @@ const ExerciseCard = styled.div`
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    transform: translateY(-${0.5 * scale}rem);
+    transform: translateY(-${0.1 * scale}rem);
     box-shadow: 0 ${1 * scale}rem ${2 * scale}rem rgba(0, 0, 0, 0.2);
   }
 `;
@@ -26,7 +26,7 @@ const ExerciseCard = styled.div`
 const ExerciseTitle = styled.h3`
   margin: 0;
   font-size: ${0.1875 * scale}rem;
-  color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.cardTitle};
 `;
 
 const TextInput = styled.input`
@@ -36,6 +36,8 @@ const TextInput = styled.input`
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.3s ease;
+  background: ${({ theme }) => theme.cardInput};
+
 
 `;
 
@@ -44,11 +46,12 @@ const CheckboxInput = styled.input`
   height: ${0.25 * scale}rem;
   cursor: pointer;
   margin-right: ${0.15 * scale}rem;
+  background: ${({ theme }) => theme.cardInput};
 `;
 
 const FieldLabel = styled.label`
   font-size: ${0.13125 * scale}rem;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.cardText};
   margin-bottom: ${0.0375 * scale}rem;
 `;
 
@@ -62,7 +65,7 @@ const CheckboxContainer = styled.label`
   display: flex;
   align-items: center;
   font-size: ${0.125 * scale}rem;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.cardText};
 `;
 
 const Exercise = ({ exercise, onChange }) => {

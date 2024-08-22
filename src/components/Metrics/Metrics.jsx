@@ -40,6 +40,13 @@ const TabButton = styled.button`
   }
 `;
 
+const NoMetricsMessage = styled.p`
+  text-align: center;
+  color: ${({ theme }) => theme.secondaryText};
+  font-size: 1.2rem;
+  margin-top: 2rem;
+`;
+
 const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
 
 const Metrics = () => {
@@ -91,7 +98,11 @@ const Metrics = () => {
         {loading ? ( // Mostrar loading mientras se cargan los datos
           <Loading />
         ) : activeTab === 'viewCards' ? (
-          <CardCarousel cards={metrics} setCards={setMetrics} />
+          metrics.length === 0 ? (
+            <NoMetricsMessage>You don't have any metrics yet.</NoMetricsMessage>
+          ) : (
+            <CardCarousel cards={metrics} setCards={setMetrics} />
+          )
         ) : (
           <AddCardForm fetchMetrics={fetchMetrics} />
         )}

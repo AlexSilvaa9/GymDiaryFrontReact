@@ -8,8 +8,8 @@ const RoutineContainer = styled.div`
   min-width: 300px;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.backgroundLight};
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => theme.routineBackground};
+  
   max-width: 80%;
   padding: 1rem;
   margin: 1rem auto;
@@ -56,8 +56,9 @@ const RoutineTitle = styled.input`
   font-size: 1.25rem;
   font-weight: bold;
   color: ${({ theme }) => theme.primary};
-  border: 1px solid ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.backgroundLight};
+  border: 1px solid ;
+  border-color: ${({ theme }) => theme.border};
+  background: ${({ theme }) => theme.background};
   border-radius: 8px;
   margin-bottom: 1rem;
   padding: 0.5rem;

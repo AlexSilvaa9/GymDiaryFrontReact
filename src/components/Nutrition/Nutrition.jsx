@@ -36,27 +36,31 @@ const Form = styled.div`
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; /* Asegura que el padding se incluye en el ancho total */
 `;
 
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
+  width: 100%; /* Asegura que el grupo de inputs usa el 100% del contenedor */
 `;
 
 const Input = styled.input`
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: ${({ theme }) => theme.cardInput};
   color: ${({ theme }) => theme.text};
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 5px;
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   width: 100%;
+  box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho total */
 
   &::placeholder {
     color: ${({ theme }) => theme.placeholder};
   }
 `;
+
 
 const Button = styled.button`
   background-color: ${({ theme }) => theme.primary};
@@ -112,7 +116,7 @@ const MealsList = styled.div`
 `;
 
 const MealCard = styled.div`
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: ${({ theme }) => theme.cardBackground};
   color: ${({ theme }) => theme.text};
   border-radius: 8px;
   padding: 1rem;
@@ -121,10 +125,12 @@ const MealCard = styled.div`
 
   & > h3 {
     margin: 0;
+    color: ${({ theme }) => theme.cardTitle};
   }
 
   & > p {
     margin: 0.25rem 0;
+    color: ${({ theme }) => theme.cardText};
   }
 `;
 
@@ -160,7 +166,11 @@ const StatsSection = styled.div`
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.cardText};
+`;
+const CardTitle = styled.h2`  
+  color: ${({ theme }) => theme.cardTitle};
+  
 `;
 
 const API_URL = process.env.REACT_APP_SERVER_NAME;
@@ -344,7 +354,7 @@ const Nutrition = () => {
             {view === 'viewMeals' && (
               <>
                 <StatsSection>
-                  <h2>Statistics for {new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}</h2>
+                  <CardTitle>Resume for {new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}</CardTitle>
                   <p>Total Calories: {stats.totalCalories} kcal</p>
                   <p>Total Protein: {stats.totalProtein} g</p>
                   <p>Total Carbs: {stats.totalCarbs} g</p>
