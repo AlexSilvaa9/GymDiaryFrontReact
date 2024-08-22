@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Exercise from './Exercise'; // Asegúrate de que el nombre del archivo y la importación coincidan
+import { FaEdit } from 'react-icons/fa'; // Icono de edición
 
 const RoutineContainer = styled.div`
   display: flex;
@@ -9,7 +10,6 @@ const RoutineContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
   background: ${({ theme }) => theme.routineBackground};
-  
   max-width: 80%;
   padding: 1rem;
   margin: 1rem auto;
@@ -52,24 +52,42 @@ const Button = styled.button`
   }
 `;
 
+const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 1rem; /* Espacio debajo del campo de entrada */
+`;
+
 const RoutineTitle = styled.input`
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: ${({ theme }) => theme.primary};
-  border: 1px solid ;
-  border-color: ${({ theme }) => theme.border};
-  background: ${({ theme }) => theme.background};
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
+  font-size: 1.8rem; /* Tamaño de fuente visible */
+  font-weight: normal; /* Fuente normal */
+  color: ${({ theme }) => theme.text}; /* Color del texto */
+  border: none; /* Sin borde */
+  background: transparent; /* Fondo transparente */
+  border-radius: 0; /* Sin bordes redondeados */
+  padding: 0 2rem 0 0.5rem; /* Espacio para el icono */
+  width: 100%; /* Ancho completo del contenedor */
+  box-sizing: border-box; /* Incluye padding en el ancho total */
+  text-align: center; /* Alineación del texto al centro */
 
   &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.primary};
+    outline: none; /* Sin resaltado visible al enfocarse */
+    border: none; /* Sin borde al enfocarse */
+    background: transparent; /* Fondo sigue siendo transparente */
   }
+
+  &::placeholder {
+    color: transparent; /* Placeholder invisible */
+  }
+`;
+
+const EditIcon = styled(FaEdit)`
+  position: absolute;
+  right: 0.5rem; /* Posición del icono */
+  color: ${({ theme }) => theme.text}; /* Color del icono */
+  cursor: pointer; /* Indicador de interactividad */
+  font-size: 1.25rem; /* Tamaño del icono */
 `;
 
 const RoutineTemplate = ({ routine, token, onSelect, onSave }) => {
@@ -150,10 +168,14 @@ const RoutineTemplate = ({ routine, token, onSelect, onSave }) => {
 
   return (
     <RoutineContainer>
-      <RoutineTitle
-        value={updatedRoutine.name}
-        onChange={handleNameChange}
-      />
+      <InputContainer>
+        <RoutineTitle
+          value={updatedRoutine.name}
+          onChange={handleNameChange}
+          placeholder="Título de la rutina"
+        />
+        <EditIcon />
+      </InputContainer>
       <ExerciseListContainer>
         {updatedRoutine.exercises && updatedRoutine.exercises.length > 0 ? (
           updatedRoutine.exercises.map((exercise, index) => (

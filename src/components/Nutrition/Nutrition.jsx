@@ -36,31 +36,30 @@ const Form = styled.div`
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box; /* Asegura que el padding se incluye en el ancho total */
+  box-sizing: border-box;
 `;
 
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
-  width: 100%; /* Asegura que el grupo de inputs usa el 100% del contenedor */
+  width: 100%;
 `;
 
 const Input = styled.input`
   background-color: ${({ theme }) => theme.cardInput};
   color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme }) => theme.primary};
   border-radius: 5px;
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   width: 100%;
-  box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho total */
+  box-sizing: border-box;
 
   &::placeholder {
-    color: ${({ theme }) => theme.placeholder};
+    color: ${({ theme }) => theme.secondaryText};
   }
 `;
-
 
 const Button = styled.button`
   background-color: ${({ theme }) => theme.primary};
@@ -83,29 +82,53 @@ const CalendarWrapper = styled.div`
 
   .react-calendar {
     border: none;
-    background: transparent;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: ${({ theme }) => theme.calendarBackground}; /* Fondo del calendario */
+    color: ${({ theme }) => theme.calendarText}; /* Texto del calendario */
     border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .react-calendar__tile {
     border-radius: 4px;
     padding: 0.5rem;
     font-size: 0.9rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .react-calendar__tile--active {
-    background: ${({ theme }) => theme.primary};
-    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa */
+    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa */
+  }
+
+  .react-calendar__tile--active:hover {
+    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa al hacer hover */
+    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa al hacer hover */
   }
 
   .react-calendar__tile--hasActive {
-    background: ${({ theme }) => theme.secondary};
+    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos */
+  }
+
+  .react-calendar__tile--hasActive:hover {
+    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos al hacer hover */
+    color: ${({ theme }) => theme.text}; /* Texto para las fechas con eventos al hacer hover */
+  }
+
+  .react-calendar__tile:hover {
+    background: ${({ theme }) => theme.tertiary}; /* Fondo para los días al hacer hover */
+    color: ${({ theme }) => theme.secondaryText}; /* Texto para los días al hacer hover */
   }
 
   .react-calendar__month-view__days__day {
-    color: ${({ theme }) => theme.text};
+    color: ${({ theme }) => theme.calendarText}; /* Texto de los días del mes */
+  }
+
+  .react-calendar__navigation__label {
+    color: ${({ theme }) => theme.calendarText}; /* Texto de los encabezados de mes/año */
+  }
+
+  .react-calendar__navigation__arrow {
+    fill: ${({ theme }) => theme.calendarText}; /* Flechas de navegación */
   }
 `;
 
@@ -145,7 +168,7 @@ const Tabs = styled.div`
 const TabButton = styled.button`
   background: ${({ active, theme }) => (active ? theme.primary : 'transparent')};
   color: ${({ active, theme }) => (active ? theme.text : theme.primary)};
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme }) => theme.primary};
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -168,9 +191,9 @@ const StatsSection = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.cardText};
 `;
+
 const CardTitle = styled.h2`  
   color: ${({ theme }) => theme.cardTitle};
-  
 `;
 
 const API_URL = process.env.REACT_APP_SERVER_NAME;
@@ -225,11 +248,11 @@ const Nutrition = () => {
       const newMeal = {
         date: adjustedDate.toISOString().split('T')[0],
         name: mealName,
-        calories: parseInt(calories),
+        calories: parseInt(calories, 10),
         macros: {
-          protein: parseInt(protein),
-          carbs: parseInt(carbs),
-          fats: parseInt(fats),
+          protein: parseFloat(protein),
+          carbs: parseFloat(carbs),
+          fats: parseFloat(fats),
         },
       };
 
@@ -244,14 +267,11 @@ const Nutrition = () => {
         });
 
         if (response.ok) {
-          // Reset form fields
           setMealName('');
           setCalories('');
           setProtein('');
           setCarbs('');
           setFats('');
-
-          // Update meals list to include the newly added meal
           setMeals((prevMeals) => [...prevMeals, newMeal]);
         } else {
           console.error('Failed to add meal');
@@ -262,7 +282,6 @@ const Nutrition = () => {
     }
   };
 
-  // Calculate statistics
   const calculateStats = () => {
     return meals.reduce(
       (acc, meal) => {
@@ -304,7 +323,7 @@ const Nutrition = () => {
           </TabButton>
         </Tabs>
 
-        {loading ? ( // Mostrar loading mientras se cargan los datos
+        {loading ? (
           <Loading />
         ) : (
           <>

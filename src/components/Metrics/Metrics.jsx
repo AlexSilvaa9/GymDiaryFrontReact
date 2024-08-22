@@ -26,7 +26,7 @@ const TabContainer = styled.div`
 `;
 
 const TabButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.primary : theme.secondary)};
+  background: ${({ active, theme }) => (active ?  theme.secondary: theme.primary )};
   color: ${({ active, theme }) => (active ? theme.text : theme.secondaryText)};
   border: none;
   padding: 0.75rem 1.5rem;

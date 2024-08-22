@@ -11,7 +11,9 @@ const lightColors = {
   cardTitle:"#FFDA76",
   cardText:"#F5EDED",
   cardInput:"#E7D4B5",
-  routineBackground:"#B6C7AA"
+  routineBackground:"#B6C7AA",
+  calendarBackground:"#A0937D",
+  calendarText:"#F5EDED"
 };
 
 const darkColors = {
@@ -21,11 +23,14 @@ const darkColors = {
   primary: "#2C2C2C", /* Fondo de elementos activos más claro que el original */
   secondary: "radial-gradient(at left top, rgb(192, 38, 211), rgb(6, 182, 212), rgb(103, 232, 249))", /* Color vibrante para acentos (similar a morado claro) */
   tertiary: "#3FA2F6", /* Color de acento adicional (teal claro) */
-  cardBackground:"#8B5E3C",
-  cardText:"#FFDA76",
-  cardTitle:"#F5EDED",  
-  cardInput:"#F6E6CB",
-  routineBackground:"#F5EDED"
+  cardBackground:"#2C2C2C",
+  cardText:"#E0E0E0",
+  cardTitle:"#3FA2F6",  
+  cardInput:"#3C3D37",
+  routineBackground:"#3C3D37",
+  calendarBackground:"#2C2C2C",
+  calendarText:"#E0E0E0"
+
 
 };
 

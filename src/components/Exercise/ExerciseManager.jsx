@@ -21,11 +21,6 @@ const Container = styled.div`
   overflow: auto; /* Permite el desplazamiento si el contenido es mayor */
 `;
 
-const Title = styled.h1`
-  color: ${({ theme }) => theme.text};
-  margin-bottom: 1rem;
-  text-align: center; /* Centra el título */
-`;
 
 const TabContainer = styled.div`
   display: flex;
@@ -35,7 +30,7 @@ const TabContainer = styled.div`
 `;
 
 const TabButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.primary : theme.secondary)};
+  background: ${({ active, theme }) => (active ? theme.secondary: theme.primary )};
   color: ${({ active, theme }) => (active ? theme.text : theme.secondaryText)};
   border: none;
   padding: 0.75rem 1.5rem;
