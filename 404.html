@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Redirection</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; URL=/GymDiaryFrontReact/index.html">
     <script type="text/javascript">
-        // Redirige a index.html
-        window.location.href = "/GymDiaryFrontReact" + window.location.pathname + window.location.search + window.location.hash;
+        // Redirige a la página principal y deja que React Router maneje el resto
+        var pathname = window.location.pathname;
+        window.location.href = "/GymDiaryFrontReact" + pathname + window.location.search + window.location.hash;
     </script>
+    <title>Redirecting...</title>
 </head>
 <body>
 </body>
