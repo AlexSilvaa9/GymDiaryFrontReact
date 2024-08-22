@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { AuthContext } from './contexts/AuthContext';
@@ -91,7 +91,21 @@ const Bar = styled.div`
   height: 3px;
   background-color: ${({ theme }) => theme.text};
   margin: 4px 0;
-  transition: 0.4s;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  
+  ${({ isOpen }) =>
+    isOpen &&
+    css`
+      &:nth-child(1) {
+        transform: translateY(10px) rotate(45deg);
+      }
+      &:nth-child(2) {
+        opacity: 0;
+      }
+      &:nth-child(3) {
+        transform: translateY(-12px) rotate(-45deg);
+      }
+    `}
 `;
 
 const ThemeToggle = styled.div`
@@ -108,7 +122,7 @@ const ThemeToggle = styled.div`
   }
   @media (max-width: 768px) {
     margin-left: 0;
-    order: 1; /* Asegúrate de que esté a la izquierda del botón de hamburguesa en pantallas pequeñas */
+    order: 1;
   }
 `;
 
@@ -120,7 +134,10 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
 
   const toggleMenu = () => {
     setIsOpen(prevState => !prevState);
-    console.log('Menu isOpen:', !isOpen);
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
   };
 
   const handleMouseEnter = (e) => {
@@ -147,9 +164,9 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
         {isDarkMode ? <FaSun /> : <FaMoon />}
       </ThemeToggle>
       <Hamburger onClick={toggleMenu}>
-        <Bar />
-        <Bar />
-        <Bar />
+        <Bar isOpen={isOpen} />
+        <Bar isOpen={isOpen} />
+        <Bar isOpen={isOpen} />
       </Hamburger>
       <NavLinks isOpen={isOpen}>
         {user ? (
@@ -157,6 +174,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             <NavLink 
               to="/home" 
               className={location.pathname === '/home' ? 'active' : ''} 
+              onClick={closeMenu} 
               onMouseEnter={handleMouseEnter} 
               onMouseLeave={handleMouseLeave}
             >
@@ -165,6 +183,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             <NavLink 
               to="/nutrition" 
               className={location.pathname === '/nutrition' ? 'active' : ''} 
+              onClick={closeMenu} 
               onMouseEnter={handleMouseEnter} 
               onMouseLeave={handleMouseLeave}
             >
@@ -173,6 +192,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             <NavLink 
               to="/exercise" 
               className={location.pathname === '/exercise' ? 'active' : ''} 
+              onClick={closeMenu} 
               onMouseEnter={handleMouseEnter} 
               onMouseLeave={handleMouseLeave}
             >
@@ -181,6 +201,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             <NavLink 
               to="/metrics" 
               className={location.pathname === '/metrics' ? 'active' : ''} 
+              onClick={closeMenu} 
               onMouseEnter={handleMouseEnter} 
               onMouseLeave={handleMouseLeave}
             >
@@ -189,6 +210,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             <NavLink 
               to="/profile" 
               className={location.pathname === '/profile' ? 'active' : ''} 
+              onClick={closeMenu} 
               onMouseEnter={handleMouseEnter} 
               onMouseLeave={handleMouseLeave}
             >
@@ -199,6 +221,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
           <NavLink 
             to="/login" 
             className={location.pathname === '/login' ? 'active' : ''} 
+            onClick={closeMenu} 
             onMouseEnter={handleMouseEnter} 
             onMouseLeave={handleMouseLeave}
           >

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Card from './Card';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
 
 // Estilos para el carrusel
 const CarouselContainer = styled.div`
@@ -13,7 +13,6 @@ const CarouselContainer = styled.div`
   margin: 0 auto;
   padding: 2rem;
   box-sizing: border-box;
-  
 `;
 
 const Filters = styled.div`
@@ -57,9 +56,9 @@ const SliderWrapper = styled.div`
 // Estilos para las gráficas
 const ChartContainer = styled.div`
   margin-top: 2rem;
+  width: 100%; /* Ajuste al 100% del contenedor */
   max-width: 1200px;
   margin: 0 auto;
- 
 `;
 
 // Aplica los colores del tema a las líneas del gráfico
@@ -78,7 +77,6 @@ const LineChartStyled = styled(LineChart)`
 const CardCarousel = ({ cards }) => {
   const [filter, setFilter] = useState('all');
 
-  // Función para obtener las tarjetas filtradas
   const getFilteredCards = () => {
     const today = new Date();
 
@@ -101,7 +99,6 @@ const CardCarousel = ({ cards }) => {
 
   const filteredCards = getFilteredCards();
 
-  // Configuración del carrusel
   const settings = {
     dots: true,
     infinite: false,
@@ -133,7 +130,6 @@ const CardCarousel = ({ cards }) => {
     ],
   };
 
-  // Prepara los datos para las gráficas
   const chartData = filteredCards.map(card => ({
     date: new Date(card.date).toLocaleDateString(),
     weight: card.weight,
@@ -174,17 +170,19 @@ const CardCarousel = ({ cards }) => {
       </CarouselContainer>
 
       <ChartContainer>
-        <LineChartStyled width={1200} height={400} data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="weight" stroke="#A8D5BA" /> {/* Verde pastel */}
-          <Line type="monotone" dataKey="bodyFat" stroke="#B9E3C6" /> {/* Verde más claro */}
-          <Line type="monotone" dataKey="muscleMass" stroke="#D9EAD3" /> {/* Verde pastel suave */}
-          <Line type="monotone" dataKey="bodyWater" stroke="#FFDA76" /> {/* Amarillo pálido */}
-        </LineChartStyled>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChartStyled data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="weight" stroke="#A8D5BA" /> {/* Verde pastel */}
+            <Line type="monotone" dataKey="bodyFat" stroke="#B9E3C6" /> {/* Verde más claro */}
+            <Line type="monotone" dataKey="muscleMass" stroke="#D9EAD3" /> {/* Verde pastel suave */}
+            <Line type="monotone" dataKey="bodyWater" stroke="#FFDA76" /> {/* Amarillo pálido */}
+          </LineChartStyled>
+        </ResponsiveContainer>
       </ChartContainer>
     </div>
   );
