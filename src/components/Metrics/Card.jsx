@@ -10,7 +10,7 @@ const CardContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   margin: 0 auto; /* Centra la tarjeta en su contenedor */
-  max-width: 300px;
+  max-width: 220px;
   width: 100%;
   transition: box-shadow 0.3s ease, background 0.3s ease;
   text-align: center;

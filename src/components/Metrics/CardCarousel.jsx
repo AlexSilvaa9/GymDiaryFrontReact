@@ -41,7 +41,7 @@ const SliderWrapper = styled.div`
   .slick-slide {
     display: flex;
     justify-content: center;
-    margin: 0 0.5rem;
+    margin: 0 0.5rem; /* Ajusta el margen entre las cartas */
   }
 
   .slick-track {
@@ -51,6 +51,43 @@ const SliderWrapper = styled.div`
 
   .slick-slide > div {
     margin: 0;
+    width: 100%; /* Asegúrate de que las cartas ocupen todo el espacio disponible */
+  }
+
+  .slick-list {
+    margin: 0 -0.5rem; /* Ajusta el margen para evitar el recorte */
+  }
+`;
+
+const CardsList = styled.div`
+  display: none; /* Oculta por defecto el listado de tarjetas */
+
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+`;
+
+const LoadMoreButton = styled.button`
+  display: none; /* Oculta el botón por defecto */
+
+  @media (max-width: 600px) {
+    display: block; /* Muestra el botón solo en pantallas pequeñas */
+    margin: 1rem auto;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background: ${({ theme }) => theme.primary};
+    color: ${({ theme }) => theme.text};
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: ${({ theme }) => theme.secondary};
+    }
   }
 `;
 
@@ -74,10 +111,12 @@ const LineChartStyled = styled(LineChart)`
     stroke: ${({ theme }) => theme.secondaryText}; // Línea del eje Y
   }
 `;
+
 const API_URL = process.env.REACT_APP_SERVER_NAME;
 
 const CardCarousel = ({ cards, setCards }) => {
   const [filter, setFilter] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(4); // Número inicial de tarjetas visibles
 
   const getFilteredCards = () => {
     const today = new Date();
@@ -162,6 +201,10 @@ const CardCarousel = ({ cards, setCards }) => {
     bodyWater: card.bodyWater,
   }));
 
+  const handleLoadMore = () => {
+    setVisibleCount(prevCount => prevCount + 4);
+  };
+
   return (
     <div>
       <Filters>
@@ -177,8 +220,23 @@ const CardCarousel = ({ cards, setCards }) => {
       </Filters>
 
       <CarouselContainer>
-        <Slider {...settings}>
-          {filteredCards.map((card, index) => (
+        <SliderWrapper>
+          <Slider {...settings}>
+            {filteredCards.slice(0, visibleCount).map((card, index) => (
+              <Card
+                key={index}
+                date={card.date}
+                weight={card.weight}
+                bodyFat={card.bodyFat}
+                muscleMass={card.muscleMass}
+                bodyWater={card.bodyWater}
+                onDelete={handleDelete}
+              />
+            ))}
+          </Slider>
+        </SliderWrapper>
+        <CardsList>
+          {filteredCards.slice(0, visibleCount).map((card, index) => (
             <Card
               key={index}
               date={card.date}
@@ -189,7 +247,10 @@ const CardCarousel = ({ cards, setCards }) => {
               onDelete={handleDelete}
             />
           ))}
-        </Slider>
+        </CardsList>
+        <LoadMoreButton show={filteredCards.length > visibleCount} onClick={handleLoadMore}>
+          Load More
+        </LoadMoreButton>
       </CarouselContainer>
 
       <ChartContainer>
