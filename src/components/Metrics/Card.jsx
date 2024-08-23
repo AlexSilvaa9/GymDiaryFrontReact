@@ -1,6 +1,6 @@
-// src/components/Card.js
 import React from 'react';
 import styled from 'styled-components';
+import { FaTimes } from 'react-icons/fa'; // Asegúrate de tener react-icons instalado
 
 // Estilos para la tarjeta
 const CardContainer = styled.div`
@@ -15,11 +15,7 @@ const CardContainer = styled.div`
   transition: box-shadow 0.3s ease, background 0.3s ease;
   text-align: center;
   overflow: hidden;
-
-  &:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    background: ${({ theme }) => theme.cardHoverBackground};
-  }
+  position: relative; /* Necesario para posicionar el botón de eliminar */
 `;
 
 const CardContent = styled.div`
@@ -34,8 +30,27 @@ const CardDate = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const Card = ({ weight, bodyFat, muscleMass, bodyWater, date }) => (
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: ${({ theme }) => theme.text};
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.secondary};
+  }
+`;
+
+const Card = ({ weight, bodyFat, muscleMass, bodyWater, date, onDelete }) => (
   <CardContainer>
+    <DeleteButton onClick={() => onDelete(date)}>
+      x
+    </DeleteButton>
     <CardDate>{date}</CardDate>
     <CardContent>Weight: {weight} kg</CardContent>
     <CardContent>Body Fat: {bodyFat} %</CardContent>

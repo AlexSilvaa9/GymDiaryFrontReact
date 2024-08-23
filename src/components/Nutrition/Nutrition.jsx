@@ -82,8 +82,8 @@ const CalendarWrapper = styled.div`
 
   .react-calendar {
     border: none;
-    background: ${({ theme }) => theme.calendarBackground}; /* Fondo del calendario */
-    color: ${({ theme }) => theme.calendarText}; /* Texto del calendario */
+    background: ${({ theme }) => theme.calendarBackground};
+    color: ${({ theme }) => theme.calendarText};
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
@@ -96,39 +96,39 @@ const CalendarWrapper = styled.div`
   }
 
   .react-calendar__tile--active {
-    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa */
-    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa */
+    background: ${({ theme }) => theme.primary};
+    color: ${({ theme }) => theme.text};
   }
 
   .react-calendar__tile--active:hover {
-    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa al hacer hover */
-    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa al hacer hover */
+    background: ${({ theme }) => theme.primary};
+    color: ${({ theme }) => theme.text};
   }
 
   .react-calendar__tile--hasActive {
-    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos */
+    background: ${({ theme }) => theme.secondary};
   }
 
   .react-calendar__tile--hasActive:hover {
-    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos al hacer hover */
-    color: ${({ theme }) => theme.text}; /* Texto para las fechas con eventos al hacer hover */
+    background: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.text};
   }
 
   .react-calendar__tile:hover {
-    background: ${({ theme }) => theme.tertiary}; /* Fondo para los días al hacer hover */
-    color: ${({ theme }) => theme.secondaryText}; /* Texto para los días al hacer hover */
+    background: ${({ theme }) => theme.tertiary};
+    color: ${({ theme }) => theme.secondaryText};
   }
 
   .react-calendar__month-view__days__day {
-    color: ${({ theme }) => theme.calendarText}; /* Texto de los días del mes */
+    color: ${({ theme }) => theme.calendarText};
   }
 
   .react-calendar__navigation__label {
-    color: ${({ theme }) => theme.calendarText}; /* Texto de los encabezados de mes/año */
+    color: ${({ theme }) => theme.calendarText};
   }
 
   .react-calendar__navigation__arrow {
-    fill: ${({ theme }) => theme.calendarText}; /* Flechas de navegación */
+    fill: ${({ theme }) => theme.calendarText};
   }
 `;
 
@@ -139,6 +139,7 @@ const MealsList = styled.div`
 `;
 
 const MealCard = styled.div`
+  position: relative;
   background-color: ${({ theme }) => theme.cardBackground};
   color: ${({ theme }) => theme.text};
   border-radius: 8px;
@@ -154,6 +155,22 @@ const MealCard = styled.div`
   & > p {
     margin: 0.25rem 0;
     color: ${({ theme }) => theme.cardText};
+  }
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: ${({ theme }) => theme.text};
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.secondary};
   }
 `;
 
@@ -192,7 +209,7 @@ const StatsSection = styled.div`
   color: ${({ theme }) => theme.cardText};
 `;
 
-const CardTitle = styled.h2`  
+const CardTitle = styled.h2`
   color: ${({ theme }) => theme.cardTitle};
 `;
 
@@ -208,11 +225,11 @@ const Nutrition = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState('viewMeals');
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [loading, setLoading] = useState(false); // Estado de carga
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchMeals = async () => {
-      setLoading(true); // Mostrar el loading al iniciar la carga
+      setLoading(true);
       try {
         const adjustedDate = new Date(selectedDate);
         adjustedDate.setDate(adjustedDate.getDate() + 1);
@@ -231,7 +248,7 @@ const Nutrition = () => {
       } catch (error) {
         console.error('Error fetching meals:', error);
       } finally {
-        setLoading(false); // Ocultar el loading después de la carga
+        setLoading(false);
       }
     };
 
@@ -279,6 +296,33 @@ const Nutrition = () => {
       } catch (error) {
         console.error('Error adding meal:', error);
       }
+    }
+  };
+
+  const handleDeleteMeal = async (mealToDelete) => {
+    const adjustedDate = new Date(selectedDate);
+    adjustedDate.setDate(adjustedDate.getDate() + 1);
+
+    try {
+      const response = await fetch(`${API_URL}/users/me/meals`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          date: adjustedDate.toISOString().split('T')[0],
+          name: mealToDelete.name,
+        }),
+      });
+
+      if (response.ok) {
+        setMeals((prevMeals) => prevMeals.filter(meal => meal.name !== mealToDelete.name));
+      } else {
+        console.error('Failed to delete meal');
+      }
+    } catch (error) {
+      console.error('Error deleting meal:', error);
     }
   };
 
@@ -384,6 +428,7 @@ const Nutrition = () => {
                   {meals.length > 0 ? (
                     meals.map((meal, index) => (
                       <MealCard key={index}>
+                        <DeleteButton onClick={() => handleDeleteMeal(meal)}>×</DeleteButton>
                         <h3>{meal.name}</h3>
                         <p>Calories: {meal.calories}</p>
                         <p>Protein: {meal.macros.protein}g</p>

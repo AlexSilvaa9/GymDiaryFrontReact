@@ -5,6 +5,7 @@ import Card from './Card';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
+import axios from 'axios'; // Asegúrate de tener axios instalado
 
 // Estilos para el carrusel
 const CarouselContainer = styled.div`
@@ -73,8 +74,9 @@ const LineChartStyled = styled(LineChart)`
     stroke: ${({ theme }) => theme.secondaryText}; // Línea del eje Y
   }
 `;
+const API_URL = process.env.REACT_APP_SERVER_NAME;
 
-const CardCarousel = ({ cards }) => {
+const CardCarousel = ({ cards, setCards }) => {
   const [filter, setFilter] = useState('all');
 
   const getFilteredCards = () => {
@@ -95,6 +97,28 @@ const CardCarousel = ({ cards }) => {
 
       return true; // 'all' or unrecognized filter
     });
+  };
+
+  const handleDelete = async (date) => {
+    try {
+      const response = await fetch(`${API_URL}/users/me/metrics`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ date }),
+      });
+
+      if (response.ok) {
+        // Actualiza el estado para eliminar la métrica localmente si la eliminación en el servidor fue exitosa
+        setCards(prevCards => prevCards.filter(card => card.date !== date));
+      } else {
+        console.error('Error deleting metric:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error deleting metric:', error);
+    }
   };
 
   const filteredCards = getFilteredCards();
@@ -153,20 +177,19 @@ const CardCarousel = ({ cards }) => {
       </Filters>
 
       <CarouselContainer>
-        <SliderWrapper>
-          <Slider {...settings}>
-            {filteredCards.map((card, index) => (
-              <Card
-                key={index}
-                date={card.date}
-                weight={card.weight}
-                bodyFat={card.bodyFat}
-                muscleMass={card.muscleMass}
-                bodyWater={card.bodyWater}
-              />
-            ))}
-          </Slider>
-        </SliderWrapper>
+        <Slider {...settings}>
+          {filteredCards.map((card, index) => (
+            <Card
+              key={index}
+              date={card.date}
+              weight={card.weight}
+              bodyFat={card.bodyFat}
+              muscleMass={card.muscleMass}
+              bodyWater={card.bodyWater}
+              onDelete={handleDelete}
+            />
+          ))}
+        </Slider>
       </CarouselContainer>
 
       <ChartContainer>
