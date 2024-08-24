@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/GymDiaryFrontReact/static/css/main.7b22ca27.css",
-    "main.js": "/GymDiaryFrontReact/static/js/main.d7b73add.js",
+    "main.js": "/GymDiaryFrontReact/static/js/main.d6c7720b.js",
     "static/js/208.a7cbd529.chunk.js": "/GymDiaryFrontReact/static/js/208.a7cbd529.chunk.js",
     "static/js/293.b2c40488.chunk.js": "/GymDiaryFrontReact/static/js/293.b2c40488.chunk.js",
     "static/js/917.bdb8048a.chunk.js": "/GymDiaryFrontReact/static/js/917.bdb8048a.chunk.js",
@@ -26,7 +26,7 @@
     "index.html": "/GymDiaryFrontReact/index.html",
     "static/media/dark_home.svg": "/GymDiaryFrontReact/static/media/dark_home.4f716bc5136126cbde9737db0ee3a93c.svg",
     "main.7b22ca27.css.map": "/GymDiaryFrontReact/static/css/main.7b22ca27.css.map",
-    "main.d7b73add.js.map": "/GymDiaryFrontReact/static/js/main.d7b73add.js.map",
+    "main.d6c7720b.js.map": "/GymDiaryFrontReact/static/js/main.d6c7720b.js.map",
     "208.a7cbd529.chunk.js.map": "/GymDiaryFrontReact/static/js/208.a7cbd529.chunk.js.map",
     "293.b2c40488.chunk.js.map": "/GymDiaryFrontReact/static/js/293.b2c40488.chunk.js.map",
     "917.bdb8048a.chunk.js.map": "/GymDiaryFrontReact/static/js/917.bdb8048a.chunk.js.map",
@@ -39,6 +39,6 @@
   },
   "entrypoints": [
     "static/css/main.7b22ca27.css",
-    "static/js/main.d7b73add.js"
+    "static/js/main.d6c7720b.js"
   ]
 }
