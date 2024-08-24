@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Slider from 'react-slick';
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import Card from './Card';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -32,12 +32,20 @@ const FilterButton = styled.button`
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1.15rem;
-  margin: 0 0.5rem;
+  margin: 0 0.5rem; /* Agrega un margen general */
+
   &:hover {
     background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
     color: ${({ active, theme }) => (active ? theme.text : theme.text)};
+    border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.tertiary)};
   }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin: 0 0.25rem; /* Reduce el margen en pantallas más pequeñas */
+  }
+
 `;
 
 const SliderWrapper = styled.div`
@@ -126,6 +134,7 @@ const API_URL = process.env.REACT_APP_SERVER_NAME;
 const CardCarousel = ({ cards, setCards }) => {
   const [filter, setFilter] = useState('all');
   const [visibleCount, setVisibleCount] = useState(4); // Número inicial de tarjetas visibles
+  const theme = useContext(ThemeContext); // Accede al tema
 
   const getFilteredCards = () => {
     const today = new Date();
@@ -280,10 +289,10 @@ const CardCarousel = ({ cards, setCards }) => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="weight" stroke="#A8D5BA" /> {/* Verde pastel */}
-            <Line type="monotone" dataKey="bodyFat" stroke="#B9E3C6" /> {/* Verde más claro */}
-            <Line type="monotone" dataKey="muscleMass" stroke="#D9EAD3" /> {/* Verde pastel suave */}
-            <Line type="monotone" dataKey="bodyWater" stroke="#FFDA76" /> {/* Amarillo pálido */}
+            <Line type="monotone" dataKey="weight" stroke={theme.text} /> {/* Color de peso */}
+            <Line type="monotone" dataKey="bodyFat" stroke='#FFDA76' /> {/* Color de grasa corporal */}
+            <Line type="monotone" dataKey="muscleMass" stroke="#C7253E" /> {/* Color de masa muscular */}
+            <Line type="monotone" dataKey="bodyWater" stroke="#3FA2F6" /> {/* Color de agua corporal */}
           </LineChartStyled>
         </ResponsiveContainer>
       </ChartContainer>

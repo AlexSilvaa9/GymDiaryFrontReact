@@ -38,13 +38,22 @@ const TabButton = styled.button`
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1.15rem;
-  margin: 0 0.5rem; /* Ajusta el margen entre los botones */
+  margin: 0 0.5rem; /* Agrega un margen general */
+
   &:hover {
     background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
     color: ${({ active, theme }) => (active ? theme.text : theme.text)};
+    border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.tertiary)};
   }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin: 0 0.25rem; /* Reduce el margen en pantallas más pequeñas */
+  }
+
 `;
+
 const ExerciseManager = () => {
   const [activeTab, setActiveTab] = useState('history');
 

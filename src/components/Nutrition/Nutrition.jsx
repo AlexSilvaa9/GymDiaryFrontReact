@@ -76,16 +76,21 @@ const Button = styled.button`
     background-color: ${({ theme }) => theme.secondary};
   }
 `;
-
 const CalendarWrapper = styled.div`
+  display: flex;
+  justify-content: center;
   margin: 1rem 0;
+  width: 100%;
+  max-width: 100%; // Asegúrate de que el calendario no se expanda más allá del contenedor
+  overflow: hidden; // Oculta cualquier contenido desbordado
 
   .react-calendar {
     border: none;
-    background: ${({ theme }) => theme.calendarBackground};
-    color: ${({ theme }) => theme.calendarText};
-    border-radius: 12px;
+    background: ${({ theme }) => theme.calendarBackground}; /* Fondo del calendario */
+    color: ${({ theme }) => theme.calendarText}; /* Texto del calendario */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    max-width: 100%; // Ajusta el ancho máximo del calendario
   }
 
   .react-calendar__tile {
@@ -96,39 +101,39 @@ const CalendarWrapper = styled.div`
   }
 
   .react-calendar__tile--active {
-    background: ${({ theme }) => theme.primary};
-    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa */
+    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa */
   }
 
   .react-calendar__tile--active:hover {
-    background: ${({ theme }) => theme.primary};
-    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa al hacer hover */
+    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa al hacer hover */
   }
 
   .react-calendar__tile--hasActive {
-    background: ${({ theme }) => theme.secondary};
+    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos */
   }
 
   .react-calendar__tile--hasActive:hover {
-    background: ${({ theme }) => theme.secondary};
-    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos al hacer hover */
+    color: ${({ theme }) => theme.text}; /* Texto para las fechas con eventos al hacer hover */
   }
 
   .react-calendar__tile:hover {
-    background: ${({ theme }) => theme.tertiary};
-    color: ${({ theme }) => theme.secondaryText};
+    background: ${({ theme }) => theme.hoverBackground}; /* Fondo para los días al hacer hover */
+    color: ${({ theme }) => theme.hoverText}; /* Texto para los días al hacer hover */
   }
 
   .react-calendar__month-view__days__day {
-    color: ${({ theme }) => theme.calendarText};
+    color: ${({ theme }) => theme.calendarText}; /* Texto de los días del mes */
   }
 
   .react-calendar__navigation__label {
-    color: ${({ theme }) => theme.calendarText};
+    color: ${({ theme }) => theme.calendarText}; /* Texto de los encabezados de mes/año */
   }
 
   .react-calendar__navigation__arrow {
-    fill: ${({ theme }) => theme.calendarText};
+    fill: ${({ theme }) => theme.calendarText}; /* Flechas de navegación */
   }
 `;
 
@@ -141,7 +146,7 @@ const MealsList = styled.div`
 const MealCard = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.cardBackground};
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.cardText};
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 0.5rem;
@@ -181,7 +186,6 @@ const Tabs = styled.div`
   margin-bottom: 2rem;
   justify-content: space-between;
 `;
-
 const TabButton = styled.button`
   background: ${({ active, theme }) => (active ? 'transparent' : theme.primary)};
   color: ${({ active, theme }) => (active ? theme.tertiary : theme.text)};
@@ -191,14 +195,21 @@ const TabButton = styled.button`
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1.15rem;
+  margin: 0.5rem; /* Agrega un margen general */
 
   &:hover {
     background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
     color: ${({ active, theme }) => (active ? theme.text : theme.text)};
+    border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.tertiary)};
   }
-`;
 
+  @media (max-width: 480px) {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin: 0.25rem; /* Reduce el margen en pantallas más pequeñas */
+  }
+
+`;
 
 const StatsSection = styled.div`
   width: 100%;
