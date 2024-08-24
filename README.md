@@ -1,37 +1,48 @@
 # GymDiary
 
-GymDiary is a web application designed to help users track their nutrition and exercise routines. The application allows users to log their daily meals, track calorie intake, and manage their workout routines. It provides features for adding and removing meals and exercises, and viewing the history of activities.
+GymDiary is a web application designed to help users track their exercise routines and nutrition. It offers a user-friendly interface to log daily meals, track calorie intake, manage workout routines, and monitor fitness metrics over time.
 
 ## Features
 
 - **Nutrition Tracking**: Log daily meals, track calorie intake, and view a list of added meals.
 - **Exercise Tracking**: Log exercises, track duration, and manage workout routines by adding or removing exercises.
+- **Metrics Tracking**: Log weight, muscle mass, and body fat to monitor your progress over time.
+- **Responsive Design**: Optimized for both desktop and mobile devices for on-the-go tracking.
 
 ## Live Demo
 
-You can view the live version of the project at [https://alexsilvaa9.github.io/ReactApp](https://alexsilvaa9.github.io/ReactApp).
+You can view the live version of the project at [GymDiary Frontend](https://alexsilvaa9.github.io/GymDiaryFrontReact).
+
+## Technologies
+
+- **Frontend**: React.js, styled-components, Bootstrap
+- **Backend**: Node.js, Express.js (see the backend documentation [here](https://alexsilvaa9.github.io/GymDiaryBackNode))
+- **Deployment**: Vercel for the backend, GitHub Pages for the frontend
 
 ## Getting Started
 
-To get started with GymDiary on your local machine, follow these steps:
+To run GymDiary locally, follow these steps:
 
 ### Prerequisites
 
-Ensure you have the following installed:
-
-- Node.js (LTS version recommended)
-- npm (Node Package Manager)
+- **Node.js** (LTS version recommended)
+- **npm** (Node Package Manager)
 
 ### Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/your-repository.git
-   cd your-repository
+   git clone https://github.com/alexsilvaa9/GymDiaryFrontReact.git
    ```
 
-2. Install the dependencies:
+2. Navigate into the project directory:
+
+   ```bash
+   cd GymDiaryFrontReact
+   ```
+
+3. Install the dependencies:
 
    ```bash
    npm install
@@ -55,33 +66,19 @@ To create a production build of the application:
 npm run build
 ```
 
-The build files will be available in the `build` directory.
-
-### Running Tests
-
-To run tests for the application:
-
-```bash
-npm test
-```
+The build files will be located in the `build` directory.
 
 ## Configuration
 
-The application uses `styled-components` for styling and a `colors.js` file for defining color variables. Ensure that the `colors.js` file is properly configured to match your design preferences.
+The application uses `styled-components` for styling. Make sure to configure any necessary environment variables in a `.env` file if required.
 
 ## Contributing
 
-If you'd like to contribute to GymDiary, please fork the repository and create a pull request with your proposed changes. Make sure to follow the coding standards and include tests for any new features.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
+If you'd like to contribute to GymDiary, please fork the repository and create a pull request with your proposed changes. Ensure to follow coding standards and include tests for any new features.
 
 For any questions or feedback, please contact:
 
-- [Alex Silva](mailto:your-email@example.com)
+- [Alex Silva](mailto:alexsilvaebg9@gmail.com)
 - GitHub: [https://github.com/alexsilvaa9](https://github.com/alexsilvaa9)
 
 ---
