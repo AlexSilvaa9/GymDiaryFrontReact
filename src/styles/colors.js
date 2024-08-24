@@ -13,7 +13,8 @@ const lightColors = {
   cardInput:"#E7D4B5",
   routineBackground:"#B6C7AA",
   calendarBackground:"#A0937D",
-  calendarText:"#F5EDED"
+  calendarText:"#F5EDED",
+  danger:"#FF8A8A"
 };
 
 const darkColors = {
@@ -29,7 +30,8 @@ const darkColors = {
   cardInput:"#3C3D37",
   routineBackground:"#3C3D37",
   calendarBackground:"#2C2C2C",
-  calendarText:"#E0E0E0"
+  calendarText:"#E0E0E0",
+  danger:"#C7253E"
 
 
 };

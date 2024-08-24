@@ -110,7 +110,7 @@ const InputContainer = styled.div`
     border-radius: 4px;
     font-size: 0.875em;
     color: ${({ theme }) => theme.text};
-    background: ${({ theme }) => theme.backgroundInput};
+    background: ${({ theme }) => theme.cardInput};
     box-sizing: border-box;
 
     @media (max-width: 768px) {
