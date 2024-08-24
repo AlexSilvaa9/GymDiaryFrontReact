@@ -4,7 +4,7 @@ const lightColors = {
   primary: "#A8D5BA", // Verde pastel
   secondary: "#B9E3C6", // Verde más claro
   background: "#F3F9F4", // Fondo blanco con matiz verde claro
-  tertiary: "#D9EAD3", // Verde pastel suave
+  tertiary: "#B6C7AA", // Verde pastel suave
   text: "#4A4A4A", // Gris oscuro
   secondaryText: "#6B6B6B", // Gris más claro
   cardBackground:"#A0937D",

@@ -183,20 +183,22 @@ const Tabs = styled.div`
 `;
 
 const TabButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.primary : 'transparent')};
-  color: ${({ active, theme }) => (active ? theme.text : theme.primary)};
-  border: 1px solid ${({ theme }) => theme.primary};
+  background: ${({ active, theme }) => (active ? 'transparent' : theme.primary)};
+  color: ${({ active, theme }) => (active ? theme.tertiary : theme.text)};
+  border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.primary)};
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 1.15rem;
 
   &:hover {
-    background: ${({ theme }) => theme.secondary};
-    color: ${({ theme }) => theme.text};
+    background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
+    color: ${({ active, theme }) => (active ? theme.text : theme.text)};
   }
 `;
+
 
 const StatsSection = styled.div`
   width: 100%;

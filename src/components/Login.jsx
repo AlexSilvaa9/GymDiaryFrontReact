@@ -16,26 +16,28 @@ const LoginContainer = styled.div`
   position: relative;
   overflow: hidden;
   padding: 1rem;
+  box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
 `;
 
 const LoginForm = styled.div`
   padding: 2rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   text-align: center;
   position: relative;
   z-index: 2;
   background: ${({ theme }) => theme.formBackground};
   border-radius: 8px;
+  box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
 
   @media (max-width: 600px) {
-    padding: 1.75rem;  /* Aumenta un poco el padding para mayor comodidad */
-    max-width: 90%;  /* Aumenta el ancho máximo del formulario */
+    padding: 1.75rem;
+    max-width: 90%;
   }
 
   @media (max-width: 400px) {
-    padding: 1.75rem;  /* Mantén el padding aumentado para comodidad */
-    max-width: 95%;  /* Aumenta aún más el ancho máximo del formulario */
+    padding: 1.75rem;
+    max-width: 95%;
   }
 `;
 
@@ -49,7 +51,7 @@ const Title = styled.h1`
   }
 
   @media (max-width: 400px) {
-    font-size: 1.6rem;  /* Aumenta ligeramente el tamaño de la fuente */
+    font-size: 1.6rem;
   }
 `;
 
@@ -59,12 +61,12 @@ const Subtitle = styled.h2`
   color: ${({ theme }) => theme.secondaryText};
 
   @media (max-width: 600px) {
-    font-size: 1.1rem;  /* Aumenta ligeramente el tamaño de la fuente */
-    margin-bottom: 1.75rem;  /* Mantén el espacio entre el subtítulo y los inputs */
+    font-size: 1.1rem;
+    margin-bottom: 1.75rem;
   }
 
   @media (max-width: 400px) {
-    font-size: 1rem;  /* Mantén un buen tamaño de fuente en pantallas muy pequeñas */
+    font-size: 1rem;
     margin-bottom: 1.5rem;
   }
 `;
@@ -78,7 +80,6 @@ const Input = styled.input`
   font-size: 1rem;
   margin-bottom: 1rem;
   width: 100%;
-  max-width: 100%;
   box-sizing: border-box;
 
   &:focus {
@@ -86,13 +87,11 @@ const Input = styled.input`
   }
 
   @media (max-width: 600px) {
-    width: 80%;  /* Aumenta el ancho del input para mayor comodidad */
-    padding: 0.6rem;  /* Aumenta ligeramente el padding */
-    font-size: 0.9rem;  /* Aumenta ligeramente el tamaño de la fuente */
+    padding: 0.6rem;
+    font-size: 0.9rem;
   }
 
   @media (max-width: 400px) {
-    width: 85%;  /* Aumenta aún más el ancho del input */
     padding: 0.6rem;
     font-size: 0.9rem;
   }
@@ -108,7 +107,6 @@ const Button = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   width: 100%;
-  max-width: 100%;
   box-sizing: border-box;
 
   &:hover {
@@ -116,13 +114,11 @@ const Button = styled.button`
   }
 
   @media (max-width: 600px) {
-    width: 80%;  /* Coincide con el ancho de los inputs */
     padding: 0.6rem;
     font-size: 0.9rem;
   }
 
   @media (max-width: 400px) {
-    width: 85%;  /* Coincide con el ancho de los inputs */
     padding: 0.6rem;
     font-size: 0.9rem;
   }
@@ -150,14 +146,13 @@ const RegisterLink = styled.p`
 const GymDecor = styled.div`
   position: absolute;
   bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  width: 100%;
+  left: 0;
+  right: 0;  /* Asegura que cubra todo el ancho del contenedor */
   height: 100px;
   background-image: url('/gym-decor.png');
   background-size: cover;
   background-position: center;
+  z-index: 1;
 
   @media (max-width: 600px) {
     height: 80px;

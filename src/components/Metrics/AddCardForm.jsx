@@ -31,7 +31,7 @@ const InputGroup = styled.div`
 
 // Estilos para los inputs
 const Input = styled.input`
-  background-color: ${({ theme }) => theme.inputBackground};
+  background: ${({ theme }) => theme.cardInput};
   color: ${({ theme }) => theme.text};
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;

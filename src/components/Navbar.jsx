@@ -42,7 +42,7 @@ const NavLinks = styled.div`
 `;
 
 const NavLink = styled(Link)`
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.cardText};
   margin: 0 1rem;
   text-decoration: none;
   font-size: 1rem;
@@ -51,11 +51,11 @@ const NavLink = styled(Link)`
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.tertiary};
+    color: ${({ theme }) => theme.cardTitle};
   }
 
   &.active {
-    color: ${({ theme }) => theme.tertiary};
+    color: ${({ theme }) => theme.cardTitle};
   }
 
   @media (max-width: 768px) {
@@ -67,7 +67,7 @@ const NavLink = styled(Link)`
 
 const ProgressBar = styled.div`
   height: 6px;
-  background: ${({ theme }) => theme.tertiary};
+  background: ${({ theme }) => theme.cardTitle};
   position: absolute;
   bottom: 0;
   left: ${({ left }) => left};

@@ -30,20 +30,21 @@ const TabContainer = styled.div`
 `;
 
 const TabButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.secondary: theme.primary )};
-  color: ${({ active, theme }) => (active ? theme.text : theme.secondaryText)};
-  border: none;
+  background: ${({ active, theme }) => (active ? 'transparent' : theme.primary)};
+  color: ${({ active, theme }) => (active ? theme.tertiary : theme.text)};
+  border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.primary)};
+  border-radius: 8px;
   padding: 0.75rem 1.5rem;
-  border-radius: 5px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
-  margin: 0 0.5rem;
-
+  transition: background-color 0.3s ease;
+  font-size: 1.15rem;
+  margin: 0 0.5rem; /* Ajusta el margen entre los botones */
   &:hover {
-    background: ${({ theme }) => theme.tertiary};
+    background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
+    color: ${({ active, theme }) => (active ? theme.text : theme.text)};
   }
 `;
-
 const ExerciseManager = () => {
   const [activeTab, setActiveTab] = useState('history');
 

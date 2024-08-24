@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import CoheteDark from './animations/CoheteDark'; // Asegúrate de que la ruta sea correcta
-import CoheteLight from './animations/CoheteLight'; // Asegúrate de que la ruta sea correcta
+import CoheteLight from './animations/Tiesos'; // Asegúrate de que la ruta sea correcta
 import { Link } from 'react-router-dom'; // Importa Link para la navegación
 
 // Animación para que el cohete suba desde abajo

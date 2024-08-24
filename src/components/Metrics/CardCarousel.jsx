@@ -24,16 +24,19 @@ const Filters = styled.div`
 `;
 
 const FilterButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.secondary : theme.primary)};
-  color: ${({ active, theme }) => (active ? theme.text : theme.secondaryText)};
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+  background: ${({ active, theme }) => (active ? 'transparent' : theme.primary)};
+  color: ${({ active, theme }) => (active ? theme.tertiary : theme.text)};
+  border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.primary)};
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
-
+  transition: background-color 0.3s ease;
+  font-size: 1.15rem;
+  margin: 0 0.5rem;
   &:hover {
-    background: ${({ theme }) => theme.tertiary};
+    background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
+    color: ${({ active, theme }) => (active ? theme.text : theme.text)};
   }
 `;
 
@@ -57,6 +60,10 @@ const SliderWrapper = styled.div`
   .slick-list {
     margin: 0 -0.5rem; /* Ajusta el margen para evitar el recorte */
   }
+
+  @media (max-width: 600px) {
+    display: none; /* Oculta el carrusel en pantallas pequeñas */
+  }
 `;
 
 const CardsList = styled.div`
@@ -67,27 +74,29 @@ const CardsList = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    margin: 0;
+    padding: 0;
   }
 `;
 
 const LoadMoreButton = styled.button`
-  display: none; /* Oculta el botón por defecto */
+  display: ${({ show }) => (show ? 'block' : 'none')};
+  margin: 1rem auto;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
 
-  @media (max-width: 600px) {
-    display: block; /* Muestra el botón solo en pantallas pequeñas */
-    margin: 1rem auto;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    background: ${({ theme }) => theme.primary};
-    color: ${({ theme }) => theme.text};
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.3s ease;
+  &:hover {
+    background: ${({ theme }) => theme.secondary};
+  }
 
-    &:hover {
-      background: ${({ theme }) => theme.secondary};
-    }
+  @media (min-width: 601px) {
+    display: none; /* Oculta el botón en pantallas grandes */
   }
 `;
 
@@ -121,7 +130,7 @@ const CardCarousel = ({ cards, setCards }) => {
   const getFilteredCards = () => {
     const today = new Date();
 
-    return cards.filter(card => {
+    let filtered = cards.filter(card => {
       const cardDate = new Date(card.date);
 
       if (filter === 'lastMonth') {
@@ -136,6 +145,9 @@ const CardCarousel = ({ cards, setCards }) => {
 
       return true; // 'all' or unrecognized filter
     });
+
+    // Ordenar las tarjetas por fecha en orden descendente
+    return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
   };
 
   const handleDelete = async (date) => {
@@ -161,6 +173,7 @@ const CardCarousel = ({ cards, setCards }) => {
   };
 
   const filteredCards = getFilteredCards();
+  const cardsToShow = filteredCards.slice(0, visibleCount);
 
   const settings = {
     dots: true,
@@ -205,6 +218,8 @@ const CardCarousel = ({ cards, setCards }) => {
     setVisibleCount(prevCount => prevCount + 4);
   };
 
+  const hasMoreToLoad = filteredCards.length > visibleCount;
+
   return (
     <div>
       <Filters>
@@ -220,9 +235,10 @@ const CardCarousel = ({ cards, setCards }) => {
       </Filters>
 
       <CarouselContainer>
+        {/* Mostrar solo el carrusel en pantallas grandes */}
         <SliderWrapper>
           <Slider {...settings}>
-            {filteredCards.slice(0, visibleCount).map((card, index) => (
+            {cardsToShow.map((card, index) => (
               <Card
                 key={index}
                 date={card.date}
@@ -235,8 +251,10 @@ const CardCarousel = ({ cards, setCards }) => {
             ))}
           </Slider>
         </SliderWrapper>
+
+        {/* Mostrar solo la lista en pantallas pequeñas */}
         <CardsList>
-          {filteredCards.slice(0, visibleCount).map((card, index) => (
+          {cardsToShow.map((card, index) => (
             <Card
               key={index}
               date={card.date}
@@ -248,7 +266,8 @@ const CardCarousel = ({ cards, setCards }) => {
             />
           ))}
         </CardsList>
-        <LoadMoreButton show={filteredCards.length > visibleCount} onClick={handleLoadMore}>
+
+        <LoadMoreButton show={hasMoreToLoad} onClick={handleLoadMore}>
           Load More
         </LoadMoreButton>
       </CarouselContainer>
