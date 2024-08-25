@@ -2,6 +2,8 @@
 
 GymDiary is a web application designed to help users track their exercise routines and nutrition. It offers a user-friendly interface to log daily meals, track calorie intake, manage workout routines, and monitor fitness metrics over time.
 
+<img src="readmeImage.png" alt="App Screenshot" style="width:100%; max-width:800px;">
+
 ## Features
 
 - **Nutrition Tracking**: Log daily meals, track calorie intake, and view a list of added meals.
