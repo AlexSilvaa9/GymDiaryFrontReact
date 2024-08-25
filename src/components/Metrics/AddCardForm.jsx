@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import Button from '../utils/GradientButton';
 
-// Estilos para el contenedor del formulario
 const FormContainer = styled.div`
   width: 100%;
   max-width: 600px;
@@ -19,7 +19,6 @@ const FormContainer = styled.div`
   }
 `;
 
-// Estilos para los grupos de inputs
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,7 +27,6 @@ const InputGroup = styled.div`
   padding: 1rem 0;
 `;
 
-// Estilos para los inputs
 const Input = styled.input`
   background: ${({ theme }) => theme.cardInput};
   color: ${({ theme }) => theme.cardText};
@@ -48,34 +46,20 @@ const Input = styled.input`
     border-color: ${({ theme }) => theme.primary};
     outline: none;
   }
-`;
 
-// Estilos para el botón de envío
-const Button = styled.button`
-  background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.text};
-  border: none;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 1rem;
-  width: 100%;
-  box-sizing: border-box;
+  /* Estilo específico para el input de tipo date */
+  &[type="date"] {
+    background: ${({ theme }) => theme.cardInput};
+    color: ${({ theme }) => theme.cardText};
+    padding: 0.75rem;
+    cursor: pointer;
 
-  &:hover {
-    background-color: ${({ theme }) => theme.secondary};
-    transform: scale(1.02);
-  }
-
-  &:focus {
-    outline: 2px solid ${({ theme }) => theme.primary};
-    outline-offset: 2px;
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(0.5) brightness(1.2);
+    }
   }
 `;
 
-// Estilos para el título del formulario
 const FormTitle = styled.h2`
   margin-bottom: 1.5rem;
   color: ${({ theme }) => theme.text};
@@ -87,14 +71,13 @@ const FormTitle = styled.h2`
   }
 `;
 
-// Estilos para el mensaje de advertencia
 const WarningMessage = styled.p`
   color: ${({ theme }) => theme.danger};
   margin-top: 1rem;
   font-size: 1rem;
 `;
 
-const API_URL = process.env.REACT_APP_SERVER_NAME; // Usa REACT_APP_ como prefijo
+const API_URL = process.env.REACT_APP_SERVER_NAME;
 
 const AddCardForm = ({ fetchMetrics }) => {
   const [newMetric, setNewMetric] = useState({
@@ -116,7 +99,6 @@ const AddCardForm = ({ fetchMetrics }) => {
     e.preventDefault();
     const { weight, bodyFat, muscleMass, bodyWater, date } = newMetric;
 
-    // Verificar si la fecha está vacía
     if (!date) {
       setWarning('La fecha es obligatoria.');
       return;
@@ -124,7 +106,6 @@ const AddCardForm = ({ fetchMetrics }) => {
 
     setWarning('');
 
-    // Establecer valores predeterminados para los campos vacíos
     const metricToSubmit = {
       weight: weight.trim() === '' ? '0' : weight,
       bodyFat: bodyFat.trim() === '' ? '0' : bodyFat,
@@ -134,14 +115,14 @@ const AddCardForm = ({ fetchMetrics }) => {
     };
 
     try {
-      let response= await axios.post(`${API_URL}/users/me/metrics`, metricToSubmit, {
+      let response = await axios.post(`${API_URL}/users/me/metrics`, metricToSubmit, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      fetchMetrics(); // Refresca las métricas después de agregar una nueva
+      fetchMetrics();
       setNewMetric({ weight: '', bodyFat: '', muscleMass: '', bodyWater: '', date: '' });
-      if(response.status === 200) {
+      if (response.status === 200) {
         alert('Metric added successfully');
       }
     } catch (error) {
@@ -190,7 +171,7 @@ const AddCardForm = ({ fetchMetrics }) => {
           />
         </InputGroup>
         {warning && <WarningMessage>{warning}</WarningMessage>}
-        <Button type="submit">Add Metric</Button>
+        <Button type="submit" style={{ width: '100%' }}>Add Metric</Button>
       </form>
     </FormContainer>
   );

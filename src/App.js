@@ -15,7 +15,7 @@ import colors from './styles/colors';
 import GlobalStyle from './styles/GlobalStyle';
 import { AuthProvider } from './components/contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-
+import Privacy from './components/PrivacyPolicy';
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -57,6 +57,7 @@ function App() {
                 <Route path="/landingPage" element={<LandingPage isDarkMode={isDarkMode} />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/privacy-policy" element={<Privacy/>} />
                 <Route path="/home" element={<ProtectedRoute element={<Home isDarkMode={isDarkMode}/>} />} />
                 <Route path="/nutrition" element={<ProtectedRoute element={<Nutrition />} />} />
                 <Route path="/exercise" element={<ProtectedRoute element={<Exercise />} />} />

@@ -9,13 +9,13 @@ import MetricsImg from '../../Assets/coffee.png';     // Imagen para la sección
 import LightHome2 from '../../Assets/light_home2.svg'; // Imagen para el tema claro
 import DarkHome2 from '../../Assets/dark_home2.svg';   // Imagen para el tema oscuro
 import Button from '../utils/GradientButton'; // Importa el botón con gradiente
+
 // Contenedor principal para la página de inicio
 const HomePage = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   background: ${({ theme }) => theme.background};
-  bottom: 4re
 `;
 
 // Estilos para cada sección
@@ -142,36 +142,34 @@ const SectionContent = styled.p`
   }
 `;
 
-
-
 // Componente Home
 const Home = ({ isDarkMode }) => {
   return (
     <HomePage>
-      {/* Primera sección */}
+      {/* Primera sección dedicada al ejercicio */}
       <HomeSection isDarkMode={isDarkMode}>
         <ContentWrapper>
-          <ImageContent src={NutritionImg} alt="Nutrition" />
+          <ImageContent src={ExerciseImg} alt="Exercise" />
           <TextContent>
-            <SectionTitle>Welcome Back to GymDiary!</SectionTitle>
-            <SectionSubtitle>Track your nutrition and exercise to achieve your health goals</SectionSubtitle>
-            <SectionContent>GymDiary offers comprehensive tools to monitor your nutrition, exercise routines, and overall performance. Easily set goals and stay motivated with our intuitive interface and advanced tracking features.</SectionContent>
-            <SectionContent>Whether you're looking to improve your diet, track your workouts, or monitor your body metrics, GymDiary is here to support you every step of the way. Start today and see the difference!</SectionContent>
-            <Button onClick={() => window.location.href = '/exercise'}>Get Started</Button>
+            <SectionTitle>Maximize Your Workout</SectionTitle>
+            <SectionSubtitle>Track and optimize your exercise routines</SectionSubtitle>
+            <SectionContent>GymDiary helps you track your workouts and optimize your exercise routines. With detailed logging and performance analytics, you can push yourself to achieve better results and reach your fitness goals.</SectionContent>
+            <SectionContent>From setting workout plans to tracking progress, GymDiary provides the tools you need to stay motivated and achieve your fitness ambitions. Start tracking today and see the difference in your workouts!</SectionContent>
+            <Button onClick={() => window.location.href = '#/exercise'}>Get Started</Button>
           </TextContent>
         </ContentWrapper>
       </HomeSection>
 
-      {/* Segunda sección con fondo SVG */}
+      {/* Segunda sección dedicada a la comida */}
       <HomeSection isDarkMode={isDarkMode}>
         <ContentWrapper>
           <TextContent>
             <SectionTitle>Track Your Nutrition</SectionTitle>
-            <SectionContent>Our nutrition tracking tools help you monitor what you eat and how it affects your health. With detailed insights and personalized recommendations, you can make better food choices and stay on top of your dietary goals.</SectionContent>
+            <SectionContent>Our nutrition tracking tools help you monitor what you eat and how it affects your health. You can make better food choices and stay on top of your dietary goals.</SectionContent>
             <SectionContent>From tracking calories to understanding nutrient intake, our platform provides all the information you need to maintain a balanced diet and achieve your health objectives.</SectionContent>
-            <Button onClick={() => window.location.href = '/nutrition'}>Get Started</Button>            
+            <Button onClick={() => window.location.href = '#/nutrition'}>Get Started</Button>            
           </TextContent>
-          <ImageContent src={ExerciseImg} alt="Exercise" />
+          <ImageContent src={NutritionImg} alt="Nutrition" />
         </ContentWrapper>
       </HomeSection>
 
@@ -183,7 +181,9 @@ const Home = ({ isDarkMode }) => {
             <SectionTitle>Our Mission</SectionTitle>
             <SectionContent>At GymDiary, our mission is to empower individuals to lead healthier lives through data-driven insights and personalized tracking solutions. We believe that understanding your nutrition, exercise, and body metrics is key to achieving your wellness goals.</SectionContent>
             <SectionContent>Our platform is designed to be intuitive and user-friendly, providing you with the tools and support you need to make informed decisions about your health. Join us in our mission to promote a healthier, more active lifestyle.</SectionContent>
-            <Button onClick={() => window.location.href = '/about'}>About us</Button>
+            <SectionContent>This App was designed and developed by Alex Silva, feel free to contact with me if you have any trouble or you want to contribute either developing new features or giving feedback.</SectionContent>
+            <Button onClick={() => window.location.href = 'https://alexsilvaa9.github.io'}>Contact</Button>
+
           </TextContent>
         </ContentWrapper>
       </HomeSection>

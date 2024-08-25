@@ -103,8 +103,8 @@ const Footer = () => {
         </FooterBlock>
         <FooterBlock>
           <FooterText>
-            <a href="/privacy-policy">Privacy Policy</a> | 
-            <a href="/contact"> Contact</a>
+            <a href="#/privacy-policy">Privacy Policy</a> | 
+            <a href="https://alexsilvaa9.github.io/"> Contact</a>
           </FooterText>
         </FooterBlock>
       </FooterContent>

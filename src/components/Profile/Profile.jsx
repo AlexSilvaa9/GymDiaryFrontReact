@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useAuth from '../contexts/useAuth'; // Asegúrate de que la ruta sea correcta
-
+import Button from '../utils/GradientButton'; // Asegúrate de que la ruta sea correcta
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -119,20 +119,7 @@ const InputContainer = styled.div`
   }
 `;
 
-const Button = styled.button`
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background: ${({ theme }) => theme.secondary};
-  color: ${({ theme }) => theme.text};
-  font-size: 0.875em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 
-  &:hover {
-    background-color: ${({ theme }) => theme.tertiary};
-  }
-`;
 
 const ErrorMessage = styled.p`
   color: red;
