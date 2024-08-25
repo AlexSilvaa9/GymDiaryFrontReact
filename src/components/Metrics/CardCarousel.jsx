@@ -5,8 +5,7 @@ import Card from './Card';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
-import axios from 'axios'; // Asegúrate de tener axios instalado
-
+import FilterButton from '../utils/TabButton' ;
 // Estilos para el carrusel
 const CarouselContainer = styled.div`
   width: 100%;
@@ -23,36 +22,13 @@ const Filters = styled.div`
   margin-bottom: 1rem;
 `;
 
-const FilterButton = styled.button`
-  background: ${({ active, theme }) => (active ? 'transparent' : theme.primary)};
-  color: ${({ active, theme }) => (active ? theme.tertiary : theme.text)};
-  border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.primary)};
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 0 0.5rem; /* Agrega un margen general */
 
-  &:hover {
-    background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
-    color: ${({ active, theme }) => (active ? theme.text : theme.text)};
-    border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.tertiary)};
-  }
-
-  @media (max-width: 480px) {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    margin: 0 0.25rem; /* Reduce el margen en pantallas más pequeñas */
-  }
-
-`;
 
 const SliderWrapper = styled.div`
   .slick-slide {
     display: flex;
     justify-content: center;
-    margin: 0 0.5rem; /* Ajusta el margen entre las cartas */
+    margin: 0 0.5rem;
   }
 
   .slick-track {
@@ -62,20 +38,16 @@ const SliderWrapper = styled.div`
 
   .slick-slide > div {
     margin: 0;
-    width: 100%; /* Asegúrate de que las cartas ocupen todo el espacio disponible */
+    width: 100%;
   }
 
   .slick-list {
-    margin: 0 -0.5rem; /* Ajusta el margen para evitar el recorte */
-  }
-
-  @media (max-width: 600px) {
-    display: none; /* Oculta el carrusel en pantallas pequeñas */
+    margin: 0 -0.5rem;
   }
 `;
 
 const CardsList = styled.div`
-  display: none; /* Oculta por defecto el listado de tarjetas */
+  display: none;
 
   @media (max-width: 600px) {
     display: flex;
@@ -87,45 +59,22 @@ const CardsList = styled.div`
   }
 `;
 
-const LoadMoreButton = styled.button`
-  display: ${({ show }) => (show ? 'block' : 'none')};
-  margin: 1rem auto;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.text};
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.secondary};
-  }
-
-  @media (min-width: 601px) {
-    display: none; /* Oculta el botón en pantallas grandes */
-  }
-`;
-
-// Estilos para las gráficas
 const ChartContainer = styled.div`
   margin-top: 2rem;
-  width: 100%; /* Ajuste al 100% del contenedor */
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 `;
 
-// Aplica los colores del tema a las líneas del gráfico
 const LineChartStyled = styled(LineChart)`
   .recharts-cartesian-grid line {
-    stroke: ${({ theme }) => theme.secondaryText}; // Líneas de la cuadrícula
+    stroke: ${({ theme }) => theme.secondaryText};
   }
   .recharts-xAxis .recharts-cartesian-axis-line {
-    stroke: ${({ theme }) => theme.secondaryText}; // Línea del eje X
+    stroke: ${({ theme }) => theme.secondaryText};
   }
   .recharts-yAxis .recharts-cartesian-axis-line {
-    stroke: ${({ theme }) => theme.secondaryText}; // Línea del eje Y
+    stroke: ${({ theme }) => theme.secondaryText};
   }
 `;
 
@@ -133,12 +82,10 @@ const API_URL = process.env.REACT_APP_SERVER_NAME;
 
 const CardCarousel = ({ cards, setCards }) => {
   const [filter, setFilter] = useState('all');
-  const [visibleCount, setVisibleCount] = useState(4); // Número inicial de tarjetas visibles
-  const theme = useContext(ThemeContext); // Accede al tema
+  const theme = useContext(ThemeContext);
 
   const getFilteredCards = () => {
     const today = new Date();
-
     let filtered = cards.filter(card => {
       const cardDate = new Date(card.date);
 
@@ -152,10 +99,9 @@ const CardCarousel = ({ cards, setCards }) => {
         return cardDate >= lastYear && cardDate <= today;
       }
 
-      return true; // 'all' or unrecognized filter
+      return true;
     });
 
-    // Ordenar las tarjetas por fecha en orden descendente
     return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
   };
 
@@ -171,7 +117,6 @@ const CardCarousel = ({ cards, setCards }) => {
       });
 
       if (response.ok) {
-        // Actualiza el estado para eliminar la métrica localmente si la eliminación en el servidor fue exitosa
         setCards(prevCards => prevCards.filter(card => card.date !== date));
       } else {
         console.error('Error deleting metric:', await response.text());
@@ -182,39 +127,6 @@ const CardCarousel = ({ cards, setCards }) => {
   };
 
   const filteredCards = getFilteredCards();
-  const cardsToShow = filteredCards.slice(0, visibleCount);
-
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: filteredCards.length > 1 ? 3 : filteredCards.length,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: filteredCards.length > 1 ? 3 : filteredCards.length,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: filteredCards.length > 1 ? 2 : filteredCards.length,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: filteredCards.length > 1 ? 1 : filteredCards.length,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
   const chartData = filteredCards.map(card => ({
     date: new Date(card.date).toLocaleDateString(),
     weight: card.weight,
@@ -223,11 +135,36 @@ const CardCarousel = ({ cards, setCards }) => {
     bodyWater: card.bodyWater,
   }));
 
-  const handleLoadMore = () => {
-    setVisibleCount(prevCount => prevCount + 4);
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: filteredCards.length > 1 ? 3 : 1, // Ajustar según el número de tarjetas
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: filteredCards.length > 1 ? 3 : 1,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: filteredCards.length > 1 ? 2 : 1,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
-
-  const hasMoreToLoad = filteredCards.length > visibleCount;
 
   return (
     <div>
@@ -244,10 +181,9 @@ const CardCarousel = ({ cards, setCards }) => {
       </Filters>
 
       <CarouselContainer>
-        {/* Mostrar solo el carrusel en pantallas grandes */}
         <SliderWrapper>
           <Slider {...settings}>
-            {cardsToShow.map((card, index) => (
+            {filteredCards.map((card, index) => (
               <Card
                 key={index}
                 date={card.date}
@@ -261,9 +197,8 @@ const CardCarousel = ({ cards, setCards }) => {
           </Slider>
         </SliderWrapper>
 
-        {/* Mostrar solo la lista en pantallas pequeñas */}
         <CardsList>
-          {cardsToShow.map((card, index) => (
+          {filteredCards.map((card, index) => (
             <Card
               key={index}
               date={card.date}
@@ -275,10 +210,6 @@ const CardCarousel = ({ cards, setCards }) => {
             />
           ))}
         </CardsList>
-
-        <LoadMoreButton show={hasMoreToLoad} onClick={handleLoadMore}>
-          Load More
-        </LoadMoreButton>
       </CarouselContainer>
 
       <ChartContainer>
@@ -289,10 +220,10 @@ const CardCarousel = ({ cards, setCards }) => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="weight" stroke={theme.text} /> {/* Color de peso */}
-            <Line type="monotone" dataKey="bodyFat" stroke='#FFDA76' /> {/* Color de grasa corporal */}
-            <Line type="monotone" dataKey="muscleMass" stroke="#C7253E" /> {/* Color de masa muscular */}
-            <Line type="monotone" dataKey="bodyWater" stroke="#3FA2F6" /> {/* Color de agua corporal */}
+            <Line type="monotone" dataKey="weight" stroke={theme.text} />
+            <Line type="monotone" dataKey="bodyFat" stroke='#FFDA76' />
+            <Line type="monotone" dataKey="muscleMass" stroke="#C7253E" />
+            <Line type="monotone" dataKey="bodyWater" stroke="#3FA2F6" />
           </LineChartStyled>
         </ResponsiveContainer>
       </ChartContainer>

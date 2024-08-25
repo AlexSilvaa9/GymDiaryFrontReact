@@ -8,7 +8,7 @@ import MetricsImg from '../../Assets/coffee.png';     // Imagen para la sección
 
 import LightHome2 from '../../Assets/light_home2.svg'; // Imagen para el tema claro
 import DarkHome2 from '../../Assets/dark_home2.svg';   // Imagen para el tema oscuro
-
+import Button from '../utils/GradientButton'; // Importa el botón con gradiente
 // Contenedor principal para la página de inicio
 const HomePage = styled.div`
   display: flex;
@@ -142,31 +142,7 @@ const SectionContent = styled.p`
   }
 `;
 
-const Button = styled.button`
-  background: ${({ theme }) => theme.secondary};
-  color: ${({ theme }) => theme.text};
-  border: none;
-  padding: 1.25rem 1.75rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 1rem;
 
-  &:hover {
-    background: ${({ theme }) => theme.tertiary};
-  }
-
-  @media (max-width: 768px) {
-    padding: 1rem 1.5rem;
-    font-size: 0.875rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.75rem;
-  }
-`;
 
 // Componente Home
 const Home = ({ isDarkMode }) => {

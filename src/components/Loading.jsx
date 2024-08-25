@@ -32,7 +32,7 @@ const BarsContainer = styled.div`
 const Bar = styled.div`
   width: 7px;
   height: 45px;
-  background: ${({ theme }) => theme.secondary}; /* Color del tema */
+  background: ${({ theme }) => theme.tertiary}; /* Color del tema */
   animation: ${bounce} 1.5s infinite;
   
   &:nth-child(2) {

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import Loading from '../Loading'; // Importa el componente Loading
-
+import Loading from '../Loading';
+import MealForm from './AddMeal';
+import MealsView from './ViewMeals';
+import TabButton from '../utils/TabButton';
+import CalendarWrapper from '../utils/CalendarWrapper';
 // Styled Components
 const AppWrapper = styled.div`
   display: flex;
@@ -26,159 +29,6 @@ const Title = styled.h1`
   margin-bottom: 1.5rem;
 `;
 
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 600px;
-  margin-bottom: 2rem;
-  background: ${({ theme }) => theme.cardBackground};
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  width: 100%;
-`;
-
-const Input = styled.input`
-  background-color: ${({ theme }) => theme.cardInput};
-  color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 5px;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
-  box-sizing: border-box;
-  color: ${({ theme }) => theme.text};
-  &::placeholder {
-    color: ${({ theme }) => theme.secondaryText};
-  }
-`;
-
-const Button = styled.button`
-  background-color: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.text};
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 1rem;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.secondary};
-  }
-`;
-const CalendarWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-  width: 100%;
-  max-width: 100%; // Asegúrate de que el calendario no se expanda más allá del contenedor
-  overflow: hidden; // Oculta cualquier contenido desbordado
-
-  .react-calendar {
-    border: none;
-    background: ${({ theme }) => theme.calendarBackground}; /* Fondo del calendario */
-    color: ${({ theme }) => theme.calendarText}; /* Texto del calendario */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    max-width: 100%; // Ajusta el ancho máximo del calendario
-  }
-
-  .react-calendar__tile {
-    border-radius: 4px;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .react-calendar__tile--active {
-    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa */
-    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa */
-  }
-
-  .react-calendar__tile--active:hover {
-    background: ${({ theme }) => theme.primary}; /* Fondo para la fecha activa al hacer hover */
-    color: ${({ theme }) => theme.text}; /* Texto para la fecha activa al hacer hover */
-  }
-
-  .react-calendar__tile--hasActive {
-    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos */
-  }
-
-  .react-calendar__tile--hasActive:hover {
-    background: ${({ theme }) => theme.secondary}; /* Fondo para las fechas con eventos al hacer hover */
-    color: ${({ theme }) => theme.text}; /* Texto para las fechas con eventos al hacer hover */
-  }
-
-  .react-calendar__tile:hover {
-    background: ${({ theme }) => theme.hoverBackground}; /* Fondo para los días al hacer hover */
-    color: ${({ theme }) => theme.hoverText}; /* Texto para los días al hacer hover */
-  }
-
-  .react-calendar__month-view__days__day {
-    color: ${({ theme }) => theme.calendarText}; /* Texto de los días del mes */
-  }
-
-  .react-calendar__navigation__label {
-    color: ${({ theme }) => theme.calendarText}; /* Texto de los encabezados de mes/año */
-  }
-
-  .react-calendar__navigation__arrow {
-    fill: ${({ theme }) => theme.calendarText}; /* Flechas de navegación */
-  }
-`;
-
-const MealsList = styled.div`
-  width: 100%;
-  max-width: 800px;
-  margin-top: 2rem;
-`;
-
-const MealCard = styled.div`
-  position: relative;
-  background-color: ${({ theme }) => theme.cardBackground};
-  color: ${({ theme }) => theme.cardText};
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  & > h3 {
-    margin: 0;
-    color: ${({ theme }) => theme.cardTitle};
-  }
-
-  & > p {
-    margin: 0.25rem 0;
-    color: ${({ theme }) => theme.cardText};
-  }
-`;
-
-const DeleteButton = styled.button`
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: transparent;
-  border: none;
-  color: ${({ theme }) => theme.text};
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: ${({ theme }) => theme.secondary};
-  }
-`;
-
 const Tabs = styled.div`
   display: flex;
   width: 100%;
@@ -186,55 +36,20 @@ const Tabs = styled.div`
   margin-bottom: 2rem;
   justify-content: space-between;
 `;
-const TabButton = styled.button`
-  background: ${({ active, theme }) => (active ? 'transparent' : theme.primary)};
-  color: ${({ active, theme }) => (active ? theme.tertiary : theme.text)};
-  border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.primary)};
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 0.5rem; /* Agrega un margen general */
 
-  &:hover {
-    background: ${({ active, theme }) => (active ? theme.tertiary : theme.secondary)};
-    color: ${({ active, theme }) => (active ? theme.text : theme.text)};
-    border: 3px solid ${({ active, theme }) => (active ? theme.tertiary : theme.tertiary)};
-  }
 
-  @media (max-width: 480px) {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    margin: 0.25rem; /* Reduce el margen en pantallas más pequeñas */
-  }
 
-`;
 
-const StatsSection = styled.div`
-  width: 100%;
-  max-width: 800px;
-  margin-top: 2rem;
-  background: ${({ theme }) => theme.cardBackground};
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: ${({ theme }) => theme.cardText};
-`;
-
-const CardTitle = styled.h2`
-  color: ${({ theme }) => theme.cardTitle};
-`;
 
 const API_URL = process.env.REACT_APP_SERVER_NAME;
 
 const Nutrition = () => {
   const [meals, setMeals] = useState([]);
   const [mealName, setMealName] = useState('');
-  const [calories, setCalories] = useState('');
-  const [protein, setProtein] = useState('');
-  const [carbs, setCarbs] = useState('');
-  const [fats, setFats] = useState('');
+  const [calories, setCalories] = useState('0');
+  const [protein, setProtein] = useState('0');
+  const [carbs, setCarbs] = useState('0');
+  const [fats, setFats] = useState('0');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState('viewMeals');
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -298,17 +113,20 @@ const Nutrition = () => {
 
         if (response.ok) {
           setMealName('');
-          setCalories('');
-          setProtein('');
-          setCarbs('');
-          setFats('');
+          setCalories('0');
+          setProtein('0');
+          setCarbs('0');
+          setFats('0');
           setMeals((prevMeals) => [...prevMeals, newMeal]);
+          alert('Meal added successfully');
         } else {
           console.error('Failed to add meal');
         }
       } catch (error) {
         console.error('Error adding meal:', error);
       }
+    } else {
+      alert('Please fill in all fields');
     }
   };
 
@@ -385,75 +203,28 @@ const Nutrition = () => {
         ) : (
           <>
             {view === 'addMeal' && (
-              <Form>
-                <InputGroup>
-                  <Input
-                    type="text"
-                    placeholder="Meal Name"
-                    value={mealName}
-                    onChange={(e) => setMealName(e.target.value)}
-                    required
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Calories"
-                    value={calories}
-                    onChange={(e) => setCalories(e.target.value)}
-                    required
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Protein (g)"
-                    value={protein}
-                    onChange={(e) => setProtein(e.target.value)}
-                    required
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Carbs (g)"
-                    value={carbs}
-                    onChange={(e) => setCarbs(e.target.value)}
-                    required
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Fats (g)"
-                    value={fats}
-                    onChange={(e) => setFats(e.target.value)}
-                    required
-                  />
-                </InputGroup>
-                <Button onClick={handleAddMeal}>Add Meal</Button>
-              </Form>
+              <MealForm
+                mealName={mealName}
+                setMealName={setMealName}
+                calories={calories}
+                setCalories={setCalories}
+                protein={protein}
+                setProtein={setProtein}
+                carbs={carbs}
+                setCarbs={setCarbs}
+                fats={fats}
+                setFats={setFats}
+                handleAddMeal={handleAddMeal}
+              />
             )}
 
             {view === 'viewMeals' && (
-              <>
-                <StatsSection>
-                  <CardTitle>Resume for {new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}</CardTitle>
-                  <p>Total Calories: {stats.totalCalories} kcal</p>
-                  <p>Total Protein: {stats.totalProtein} g</p>
-                  <p>Total Carbs: {stats.totalCarbs} g</p>
-                  <p>Total Fats: {stats.totalFats} g</p>
-                </StatsSection>
-
-                <MealsList>
-                  {meals.length > 0 ? (
-                    meals.map((meal, index) => (
-                      <MealCard key={index}>
-                        <DeleteButton onClick={() => handleDeleteMeal(meal)}>×</DeleteButton>
-                        <h3>{meal.name}</h3>
-                        <p>Calories: {meal.calories}</p>
-                        <p>Protein: {meal.macros.protein}g</p>
-                        <p>Carbs: {meal.macros.carbs}g</p>
-                        <p>Fats: {meal.macros.fats}g</p>
-                      </MealCard>
-                    ))
-                  ) : (
-                    <MealCard>No meals recorded for this day.</MealCard>
-                  )}
-                </MealsList>
-              </>
+              <MealsView
+                meals={meals}
+                stats={stats}
+                handleDeleteMeal={handleDeleteMeal}
+                selectedDate={selectedDate}
+              />
             )}
           </>
         )}

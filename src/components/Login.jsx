@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from './contexts/AuthContext';
 import Loading from './Loading'; // Importa el componente Loading
-
+import Button from './utils/GradientButton'; // Importa el botón personalizado
 const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -97,32 +97,7 @@ const Input = styled.input`
   }
 `;
 
-const Button = styled.button`
-  background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.text};
-  border: none;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
 
-  &:hover {
-    background: ${({ theme }) => theme.secondary};
-  }
-
-  @media (max-width: 600px) {
-    padding: 0.6rem;
-    font-size: 0.9rem;
-  }
-
-  @media (max-width: 400px) {
-    padding: 0.6rem;
-    font-size: 0.9rem;
-  }
-`;
 
 const RegisterLink = styled.p`
   margin-top: 1rem;
@@ -218,7 +193,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           {errors.general && <p>{errors.general}</p>}
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading}style={{ width: '100%' }}>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>

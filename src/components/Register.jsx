@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Loading from './Loading'; // Import Loading component
 import PasswordStrengthBar from 'react-password-strength-bar';
 import zxcvbn from 'zxcvbn'; // Library for password strength evaluation
-
+import Button from './utils/GradientButton'; // Import custom button
 const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -97,32 +97,6 @@ const Input = styled.input`
   }
 `;
 
-const Button = styled.button`
-  background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.text};
-  border: none;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
-
-  &:hover {
-    background: ${({ theme }) => theme.secondary};
-  }
-
-  @media (max-width: 600px) {
-    padding: 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  @media (max-width: 400px) {
-    padding: 0.45rem;
-    font-size: 0.8rem;
-  }
-`;
 
 const LoginLink = styled.p`
   margin-top: 1rem;
@@ -307,7 +281,7 @@ const Register = () => {
           
           {errors.general && <ErrorMessage>{errors.general}</ErrorMessage>}
           
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading} style={{ width: '100%' }}>
             {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
