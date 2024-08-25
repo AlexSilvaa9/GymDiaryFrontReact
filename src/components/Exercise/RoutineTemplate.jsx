@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Exercise from './Exercise'; // Asegúrate de que el nombre del archivo y la importación coincidan
-import { FaEdit } from 'react-icons/fa'; // Icono de edición
+import Exercise from './Exercise'; 
+import { FaEdit, FaTrash } from 'react-icons/fa'; 
 
+
+// Estilos para los componentes
 const RoutineContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,41 +58,53 @@ const InputContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  margin-bottom: 1rem; /* Espacio debajo del campo de entrada */
+  margin-bottom: 1rem; 
 `;
 
 const RoutineTitle = styled.input`
-  font-size: 1.8rem; /* Tamaño de fuente visible */
-  font-weight: normal; /* Fuente normal */
-  color: ${({ theme }) => theme.text}; /* Color del texto */
-  border: none; /* Sin borde */
-  background: transparent; /* Fondo transparente */
-  border-radius: 0; /* Sin bordes redondeados */
-  padding: 0 2rem 0 0.5rem; /* Espacio para el icono */
-  width: 100%; /* Ancho completo del contenedor */
-  box-sizing: border-box; /* Incluye padding en el ancho total */
-  text-align: center; /* Alineación del texto al centro */
+  font-size: 2rem; 
+  font-weight: normal; 
+  color: ${({ theme }) => theme.cardText}; 
+  border: none; 
+  background: transparent; 
+  border-radius: 0; 
+  padding: 0 2rem 0 0.5rem; 
+  width: 100%; 
+  box-sizing: border-box; 
+  text-align: center; 
+  margin-top: 0.5rem; 
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 
   &:focus {
-    outline: none; /* Sin resaltado visible al enfocarse */
-    border: none; /* Sin borde al enfocarse */
-    background: transparent; /* Fondo sigue siendo transparente */
+    outline: none; 
+    border: none; 
+    background: transparent; 
   }
 
   &::placeholder {
-    color: transparent; /* Placeholder invisible */
+    color: transparent; 
   }
 `;
 
 const EditIcon = styled(FaEdit)`
   position: absolute;
-  right: 0.5rem; /* Posición del icono */
-  color: ${({ theme }) => theme.text}; /* Color del icono */
-  cursor: pointer; /* Indicador de interactividad */
-  font-size: 1.25rem; /* Tamaño del icono */
+  right: 0.5rem; 
+  color: ${({ theme }) => theme.text}; 
+  cursor: pointer; 
+  font-size: 1.25rem; 
 `;
 
-const RoutineTemplate = ({ routine, token, onSelect, onSave }) => {
+const DeleteIcon = styled(FaTrash)`
+  position: absolute;
+  right: 2.5rem; 
+  color: ${({ theme }) => theme.danger}; 
+  cursor: pointer; 
+  font-size: 1.25rem; 
+`;
+
+const RoutineTemplate = ({ routine, token, onSelect, onSave, onDelete }) => {
   const [updatedRoutine, setUpdatedRoutine] = useState(routine);
 
   useEffect(() => {
@@ -155,10 +169,35 @@ const RoutineTemplate = ({ routine, token, onSelect, onSave }) => {
       if (response.ok) {
         const data = await response.json();
         alert(data.message || 'Routine saved successfully');
-        if (onSave) onSave(data); // Pasa la rutina guardada al componente padre
+        if (onSave) onSave(data); 
       } else {
         const errorData = await response.json();
         alert(errorData.message || 'Error saving routine');
+      }
+    } catch (error) {
+      console.error('Error submitting request:', error);
+      alert('Error submitting request');
+    }
+  };
+
+  const handleDeleteRoutine = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_NAME}/users/me/routine-templates`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: updatedRoutine.name }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message || 'Routine deleted successfully');
+        if (onDelete) onDelete(updatedRoutine._id);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Error deleting routine');
       }
     } catch (error) {
       console.error('Error submitting request:', error);
@@ -175,6 +214,7 @@ const RoutineTemplate = ({ routine, token, onSelect, onSave }) => {
           placeholder="Título de la rutina"
         />
         <EditIcon />
+        <DeleteIcon onClick={handleDeleteRoutine} />
       </InputContainer>
       <ExerciseListContainer>
         {updatedRoutine.exercises && updatedRoutine.exercises.length > 0 ? (

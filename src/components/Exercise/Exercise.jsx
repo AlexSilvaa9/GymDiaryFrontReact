@@ -37,7 +37,7 @@ const TextInput = styled.input`
   box-sizing: border-box;
   transition: border-color 0.3s ease;
   background: ${({ theme }) => theme.cardInput};
-
+  color: ${({ theme }) => theme.text};
 
 `;
 

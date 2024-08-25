@@ -11,10 +11,11 @@ const lightColors = {
   cardTitle:"#FFDA76",
   cardText:"#F5EDED",
   cardInput:"#E7D4B5",
-  routineBackground:"#B6C7AA",
+  routineBackground:"rgba(182, 199, 170, 0.4)",
   calendarBackground:"#A0937D",
   calendarText:"#F5EDED",
-  danger:"#FF8A8A"
+  danger:"#FF8A8A",
+  border: "rgba(0, 0, 0, 0.1)"
  
 };
 
@@ -29,7 +30,7 @@ const darkColors = {
   cardText:"#E0E0E0",
   cardTitle:"rgb(6, 182, 212)",  
   cardInput:"#3C3D37",
-  routineBackground:"#3C3D37",
+  routineBackground:"rgba(60, 61, 55, 0.3)",
   calendarBackground:"#2C2C2C",
   calendarText:"#E0E0E0",
   danger:"#C7253E",

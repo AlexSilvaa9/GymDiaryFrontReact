@@ -49,13 +49,13 @@ const InputGroup = styled.div`
 const Input = styled.input`
   background-color: ${({ theme }) => theme.cardInput};
   color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.primary};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 5px;
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   width: 100%;
   box-sizing: border-box;
-
+  color: ${({ theme }) => theme.text};
   &::placeholder {
     color: ${({ theme }) => theme.secondaryText};
   }
