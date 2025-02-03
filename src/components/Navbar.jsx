@@ -216,6 +216,16 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             >
               Profile
             </NavLink>
+            <NavLink 
+              to="/goals"
+              className={location.pathname === '/goals' ? 'active' : ''}
+              onClick={closeMenu} 
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Goals
+            </NavLink>
+            
           </>
         ) : (
           <NavLink 

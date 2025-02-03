@@ -16,6 +16,7 @@ import GlobalStyle from './styles/GlobalStyle';
 import { AuthProvider } from './components/contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Privacy from './components/PrivacyPolicy';
+import Goals from './components/Goals/Goals';
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -63,6 +64,7 @@ function App() {
                 <Route path="/exercise" element={<ProtectedRoute element={<Exercise />} />} />
                 <Route path="/metrics" element={<ProtectedRoute element={<Metrics />} />} />
                 <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+                <Route path="/goals" element={<ProtectedRoute element={<Goals />} />} />
               </Routes>
             </MainContent>
             <Footer />
