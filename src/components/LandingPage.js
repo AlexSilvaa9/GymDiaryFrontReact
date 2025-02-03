@@ -1,20 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
-import CoheteDark from './animations/CoheteDark'; // Asegúrate de que la ruta sea correcta
-import CoheteLight from './animations/CoheteLight'; // Asegúrate de que la ruta sea correcta
+import React from 'react';
+import styled from 'styled-components';
+import background_dark from '../Assets/gym_dark.jpg';
+import background_light from '../Assets/gym_light.jpg';
 import { Link } from 'react-router-dom'; // Importa Link para la navegación
 
-// Animación para que el cohete suba desde abajo
-const rocketAnimation = keyframes`
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-`;
 
 // Estilo para el contenedor de la landing page
 const LandingContainer = styled.div`
@@ -24,12 +13,16 @@ const LandingContainer = styled.div`
   justify-content: center;
   height: 100vh;
   width: 100%;
-  background-color: ${({ theme }) => theme.background}; /* Fondo según el tema */
+  background-image: url(${({ isDarkMode }) => (isDarkMode ? background_dark : background_light)});
+  background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita la repetición de la imagen */
   color: ${({ theme }) => theme.text}; /* Texto según el tema */
   position: relative;
   overflow: hidden;
   margin: 0; /* Asegura que no haya márgenes */
 `;
+
 
 // Estilo para el contenido
 const Content = styled.div`
@@ -77,41 +70,13 @@ const Button = styled(Link)`
   }
 `;
 
-// Estilo para la animación de fondo
-const BackgroundAnimation = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; /* Asegura que el cohete esté detrás del contenido */
-  overflow: hidden; /* Asegura que la animación no se salga del contenedor */
-  display: flex;
-  align-items: flex-end; /* Alinea el cohete al fondo del contenedor */
-`;
 
-// Estilo para el componente de cohete
-const AnimatedCohete = styled.div`
-  animation: ${rocketAnimation} 2s ease-out; /* Aplica la animación */
-  width: 100%;
-  height: auto; /* Mantiene la proporción del cohete */
-`;
-
-const Highlight = styled.span`
-  color: ${({ theme }) => theme.secondary}; /* Color del texto resaltado según el tema */
-  text-shadow: 0 0 10px ${({ theme }) => theme.secondary}, 0 0 15px ${({ theme }) => theme.secondary}; /* Sombra más sutil para el brillo */
-  filter: brightness(1.2); /* Brillo general sutil del texto */
-`;
 
 const LandingPage = ({ isDarkMode }) => {
-  // Determina el componente del cohete basado en el tema
-  const CoheteComponent = isDarkMode ? CoheteDark : CoheteLight;
 
   return (
-    <LandingContainer>
-      <BackgroundAnimation>
-        <AnimatedCohete as={CoheteComponent} />
-      </BackgroundAnimation>
+    <LandingContainer  isDarkMode={isDarkMode}>
+
       <Content>
         <Title>Are You Ready to Challenge Your Limits?</Title>
         <Subtitle>Push Beyond Boundaries and Achieve More</Subtitle>
